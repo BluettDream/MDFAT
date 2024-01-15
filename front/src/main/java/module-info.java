@@ -4,8 +4,10 @@ module com.bluett.front {
 
     requires org.controlsfx.controls;
 
-    opens com.bluett.front to javafx.fxml;
     exports com.bluett.front;
+    opens com.bluett.front to javafx.fxml;
     exports com.bluett.front.controller;
     opens com.bluett.front.controller to javafx.fxml;
+    exports com.bluett.front.component;
+    opens com.bluett.front.component to javafx.fxml;
 }
