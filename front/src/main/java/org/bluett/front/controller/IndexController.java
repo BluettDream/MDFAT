@@ -1,4 +1,4 @@
-package com.bluett.front.controller;
+package org.bluett.front.controller;
 
 import javafx.fxml.Initializable;
 
@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class IndexController implements Initializable {
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    public void initialize(URL location, ResourceBundle resources) {
+        // TODO
     }
 }

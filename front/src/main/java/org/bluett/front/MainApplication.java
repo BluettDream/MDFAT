@@ -1,4 +1,4 @@
-package com.bluett.front;
+package org.bluett.front;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

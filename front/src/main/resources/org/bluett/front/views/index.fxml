@@ -6,7 +6,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<HBox xmlns="http://javafx.com/javafx/17.0.0" xmlns:fx="http://javafx.com/fxml/1">
+<HBox xmlns="http://javafx.com/javafx/17.0.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bluett.front.controller.IndexController">
    <children>
       <VBox maxWidth="150.0" minWidth="50.0" prefWidth="100.0">
          <children>
