@@ -5,6 +5,9 @@ module org.bluett.front {
 
     requires org.apache.logging.log4j;
 
+    requires java.desktop;
+    requires com.github.joonasvali.naturalmouse;
+
     exports org.bluett.front;
     opens org.bluett.front to javafx.fxml;
     exports org.bluett.front.controller;

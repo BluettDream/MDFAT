@@ -20,11 +20,19 @@
     </properties>
 
     <dependencies>
-        <!--日志-->
+        <!--hutool-->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
+        <!--仿人鼠标-->
+        <dependency>
+            <groupId>com.github.joonasvali.naturalmouse</groupId>
+            <artifactId>naturalmouse</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/naturalmouse-2.0.4-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <!--日志-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>

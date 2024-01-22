@@ -21,16 +21,33 @@
     <controlsfx.version>11.1.2</controlsfx.version>
     <jackson.version>2.16.1</jackson.version>
     <log4j2.version>2.22.1</log4j2.version>
+    <naturalmouse.version>2.0.4-SNAPSHOT</naturalmouse.version>
+    <hutool.version>5.8.25</hutool.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!--日志-begin-->
+      <!--hutool-begin-->
       <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>${log4j2.version}</version>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>${hutool.version}</version>
       </dependency>
+      <!--hutool-end-->
+      <!--仿人鼠标-begin-->
+      <dependency>
+        <groupId>com.github.joonasvali.naturalmouse</groupId>
+        <artifactId>naturalmouse</artifactId>
+        <version>${naturalmouse.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!--仿人鼠标-end-->
+      <!--日志-begin-->
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
