@@ -1,7 +1,6 @@
 module org.bluett.front {
     requires javafx.controls;
     requires javafx.fxml;
-    requires org.controlsfx.controls;
 
     requires org.apache.logging.log4j;
 
