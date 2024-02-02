@@ -16,52 +16,35 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.9.2</junit.version>
+    <junit.version>5.9.3</junit.version>
     <jfx.version>17.0.6</jfx.version>
     <controlsfx.version>11.1.2</controlsfx.version>
     <jackson.version>2.16.1</jackson.version>
     <log4j2.version>2.22.1</log4j2.version>
-    <naturalmouse.version>2.0.4-SNAPSHOT</naturalmouse.version>
     <hutool.version>5.8.25</hutool.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!--hutool-begin-->
+      <!--hutool-->
       <dependency>
         <groupId>cn.hutool</groupId>
         <artifactId>hutool-all</artifactId>
         <version>${hutool.version}</version>
       </dependency>
-      <!--hutool-end-->
-      <!--仿人鼠标-begin-->
-      <dependency>
-        <groupId>com.github.joonasvali.naturalmouse</groupId>
-        <artifactId>naturalmouse</artifactId>
-        <version>${naturalmouse.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <!--仿人鼠标-end-->
-      <!--日志-begin-->
+      <!--日志-->
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
-      <!--日志-end-->
-      <!--JSON-begin-->
+      <!--JSON-->
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-      <!--JSON-end-->
-      <!--javafx-begin-->
+      <!--javafx-->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
@@ -77,27 +60,12 @@
         <artifactId>controlsfx</artifactId>
         <version>${controlsfx.version}</version>
       </dependency>
-      <!--javafx-end-->
-      <!--测试-begin-->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <scope>test</scope>
-      </dependency>
+      <!--测试-->
       <dependency>
         <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
+        <artifactId>junit-jupiter</artifactId>
         <version>${junit.version}</version>
-        <scope>test</scope>
       </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <!--测试-end-->
     </dependencies>
   </dependencyManagement>
 
