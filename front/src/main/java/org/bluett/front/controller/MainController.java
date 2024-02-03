@@ -2,36 +2,36 @@ package org.bluett.front.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.bluett.front.util.ViewUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-    private static final Logger log = LogManager.getLogger(MainController.class);
     @FXML
-    private AnchorPane paneWrapper;
+    private AnchorPane viewWrapper;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        viewWrapper.getChildren().add(ViewUtil.getView("index"));
+        viewWrapper.getChildren().add(ViewUtil.getView("setting"));
+        viewWrapper.getChildren().add(ViewUtil.getView("about"));
+        ViewUtil.setVisible("index");
     }
 
     @FXML
-    void clickIndex(MouseEvent event) {
-        log.info("click index");
+    void clickIndex() {
+        ViewUtil.setVisible("index");
     }
 
     @FXML
-    void clickSetting(MouseEvent event) {
-        log.info("click setting");
+    void clickSetting() {
+        ViewUtil.setVisible("setting");
     }
 
     @FXML
-    void clickAbout(MouseEvent event) {
-        log.info("click about");
+    void clickAbout() {
+        ViewUtil.setVisible("about");
     }
 }
