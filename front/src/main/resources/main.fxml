@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="600.0" maxWidth="1000.0" minHeight="600.0" minWidth="1000.0" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bluett.front.controller.MainController">
+  <children>
+      <fx:include source="header.fxml" VBox.vgrow="ALWAYS" />
+    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <items>
+           <VBox alignment="TOP_CENTER" maxWidth="140.0" minWidth="50.0" prefWidth="140.0" spacing="20.0">
+             <Label alignment="CENTER" lineSpacing="5.0" prefWidth="140.0" text="%stage.title" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+               <font>
+                 <Font size="18.0" />
+               </font>
+             </Label>
+             <Label alignment="CENTER" lineSpacing="5.0" maxWidth="140.0" text="BluettDream" textAlignment="CENTER" textOverrun="WORD_ELLIPSIS" wrapText="true" VBox.vgrow="ALWAYS">
+               <font>
+                 <Font size="20.0" />
+               </font>
+             </Label>
+             <ScrollPane hbarPolicy="NEVER" minWidth="50.0" prefWidth="140.0" VBox.vgrow="ALWAYS">
+               <content>
+                 <VBox alignment="TOP_CENTER" prefWidth="140.0">
+                        <children>
+                           <HBox alignment="CENTER" maxWidth="155.0" minWidth="50.0" onMouseClicked="#clickIndex" prefWidth="155.0" style="-fx-border-color: black; -fx-border-width: 0 0 1 0;" VBox.vgrow="ALWAYS">
+                              <children>
+                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                                    <image>
+                                       <Image url="@assets/img/index.png" />
+                                    </image>
+                                 </ImageView>
+                                 <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" prefWidth="100.0" text="%navbar.index" wrapText="true" HBox.hgrow="ALWAYS">
+                                    <font>
+                                       <Font size="20.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </HBox>
+                           <HBox alignment="CENTER" maxWidth="155.0" minWidth="50.0" onMouseClicked="#clickSetting" prefWidth="155.0" style="-fx-border-color: black; -fx-border-width: 0 0 1 0;" VBox.vgrow="ALWAYS">
+                              <children>
+                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                                    <image>
+                                       <Image url="@assets/img/setting.png" />
+                                    </image>
+                                 </ImageView>
+                                 <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" prefWidth="100.0" text="%navbar.setting" wrapText="true" HBox.hgrow="ALWAYS">
+                                    <font>
+                                       <Font size="20.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </HBox>
+                           <HBox alignment="CENTER" maxWidth="155.0" minWidth="50.0" onMouseClicked="#clickAbout" prefWidth="155.0" style="-fx-border-color: black; -fx-border-width: 0 0 1 0;" VBox.vgrow="ALWAYS">
+                              <children>
+                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                                    <image>
+                                       <Image url="@assets/img/about.png" />
+                                    </image>
+                                 </ImageView>
+                                 <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="100.0" prefWidth="100.0" text="%navbar.about" wrapText="true" HBox.hgrow="ALWAYS">
+                                    <font>
+                                       <Font size="20.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </HBox>
+                        </children></VBox>
+               </content>
+               <cursor>
+                 <Cursor fx:constant="HAND" />
+               </cursor>
+             </ScrollPane>
+             <cursor>
+               <Cursor fx:constant="DEFAULT" />
+             </cursor>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+           </VBox>
+           <AnchorPane fx:id="viewWrapper" />
+         </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" maxHeight="25.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label maxWidth="-1.0" text="Bluett" HBox.hgrow="ALWAYS" />
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label maxWidth="-1.0" text="Dream" HBox.hgrow="ALWAYS" />
+      </children>
+    </HBox>
+  </children>
+</VBox>
