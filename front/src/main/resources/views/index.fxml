@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
@@ -8,28 +13,76 @@
 
 <HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bluett.front.controller.IndexController">
    <children>
-      <VBox maxWidth="150.0" minWidth="50.0" prefWidth="100.0">
+      <VBox maxWidth="150.0" minWidth="100.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="测试集" textAlignment="CENTER" wrapText="false">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <textFill>
-                  <Color red="0.624" green="0.624" blue="0.624" />
-               </textFill>
-            </Label>
+            <HBox alignment="CENTER_RIGHT" maxHeight="35.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" prefWidth="-1.0" style="&#10;" text="测试集" textAlignment="CENTER" wrapText="false" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <textFill>
+                        <Color red="0.624" green="0.624" blue="0.624" />
+                     </textFill>
+                  </Label>
+                  <Button mnemonicParsing="false" onMouseClicked="#addTestsuite" HBox.hgrow="ALWAYS">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/img/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="1.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <ScrollPane hbarPolicy="NEVER" maxHeight="515.0" prefHeight="515.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="testSuiteList" alignment="TOP_CENTER" />
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
       <VBox minWidth="400.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="测试用例" textAlignment="CENTER" wrapText="false">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <textFill>
-                  <Color red="0.624" green="0.624" blue="0.624" />
-               </textFill>
-            </Label>
+            <HBox alignment="CENTER_LEFT" maxHeight="35.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" prefWidth="-1.0" style="&#10;" text="测试用例" textAlignment="CENTER" wrapText="false" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <textFill>
+                        <Color red="0.624" green="0.624" blue="0.624" />
+                     </textFill>
+                  </Label>
+                  <Button mnemonicParsing="false" onMouseClicked="#addTestcase" HBox.hgrow="ALWAYS">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/img/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="1.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <ScrollPane hbarPolicy="NEVER" maxHeight="515.0" maxWidth="1.7976931348623157E308" prefHeight="515.0" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="testCaseList" />
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </children>
