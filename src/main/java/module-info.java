@@ -6,6 +6,7 @@ module org.bluett {
 
     requires java.desktop;
     requires static lombok;
+    requires com.github.joonasvali.naturalmouse;
 
     exports org.bluett;
     opens org.bluett to javafx.fxml;

@@ -1,5 +1,6 @@
 package org.bluett.engine.impl;
 
+import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
 import org.bluett.engine.AutomationEngine;
 import org.bluett.entity.MouseMoveType;
 
@@ -55,10 +56,10 @@ public class WinAutoMationEngine implements AutomationEngine {
     }
 
     private void mouseMoveTo(Point point) throws InterruptedException {
-//        switch (MOUSE_MOVE_TYPE) {
-//            case MouseMoveType.PROFESSIONAL -> FactoryTemplates.createFastGamerMotionFactory().move(point.getX(), point.getY());
-//            case MouseMoveType.NORMAL -> FactoryTemplates.createAverageComputerUserMotionFactory().move(point.getX(), point.getY());
-//            case MouseMoveType.FRESHMAN -> FactoryTemplates.createGrannyMotionFactory().move(point.getX(), point.getY());
-//        }
+        switch (MOUSE_MOVE_TYPE) {
+            case PROFESSIONAL -> FactoryTemplates.createFastGamerMotionFactory().move((int) point.getX(), (int) point.getY());
+            case NORMAL -> FactoryTemplates.createAverageComputerUserMotionFactory().move((int) point.getX(), (int) point.getY());
+            case FRESHMAN -> FactoryTemplates.createGrannyMotionFactory().move((int) point.getX(), (int) point.getY());
+        }
     }
 }
