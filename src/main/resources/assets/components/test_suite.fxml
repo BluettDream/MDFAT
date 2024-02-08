@@ -30,25 +30,11 @@
             <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
                <children>
                   <Button fx:id="changeTestSuiteBtn" mnemonicParsing="false" HBox.hgrow="ALWAYS">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../assets/img/setting.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                      <font>
                         <Font size="1.0" />
                      </font>
                   </Button>
                   <Button fx:id="deleteTestSuiteBtn" mnemonicParsing="false" HBox.hgrow="ALWAYS">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../assets/img/delete.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                      <font>
                         <Font size="1.0" />
                      </font>

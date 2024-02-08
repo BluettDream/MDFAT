@@ -16,7 +16,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         ViewCache.putStage(ViewCache.DEFAULT_STAGE_NAME, primaryStage);
-        FXMLLoader fxmlLoader = new FXMLLoader(PathUtil.getLocation("/main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(PathUtil.getViewLocation("main.fxml"));
         ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
         fxmlLoader.setResources(bundle);
         ViewCache.putScene(ViewCache.DEFAULT_SCENE_NAME, new Scene(fxmlLoader.load(), 1000, 600));
