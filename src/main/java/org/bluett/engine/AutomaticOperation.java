@@ -6,20 +6,15 @@ import java.awt.image.BufferedImage;
 /**
  * 自动化引擎, 用于模拟点击、滑动、截图等操作
  */
-public interface AutomationEngine {
-    /**
-     * 点击指定位置后松开
-     * @param point 点击位置
-     * @throws Exception 异常
-     */
-    void click(Point point) throws Exception;
+public interface AutomaticOperation {
 
     /**
-     * 双击指定位置后松开
+     * 指定位置点击多次
      * @param point 点击位置
+     * @param times 点击次数
      * @throws Exception 异常
      */
-    void doubleClick(Point point) throws Exception;
+    void multipleClick(Point point, int times) throws Exception;
 
     /**
      * 长按指定位置delay毫秒后松开

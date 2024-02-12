@@ -1,4 +1,4 @@
-package org.bluett.entity;
+package org.bluett.entity.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

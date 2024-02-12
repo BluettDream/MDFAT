@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import org.bluett.engine.impl.WinAutoMationEngine;
+import org.bluett.engine.PCAutomaticOperation;
 import org.bluett.entity.MouseMoveType;
 
 import java.net.URL;
@@ -22,7 +22,7 @@ public class SettingController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mouseMoveTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            WinAutoMationEngine.MOUSE_MOVE_TYPE = mouseMoveTypeMap.get(((RadioButton) newValue).getText());
+            PCAutomaticOperation.MOUSE_MOVE_TYPE = mouseMoveTypeMap.get(((RadioButton) newValue).getText());
         });
     }
 }

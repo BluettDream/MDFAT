@@ -1,12 +1,16 @@
-package org.bluett.entity;
+package org.bluett.entity.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.nio.file.Path;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TestImage implements Serializable, Comparable<TestImage>{
     @Serial
     private static final long serialVersionUID = 545599542964493604L;

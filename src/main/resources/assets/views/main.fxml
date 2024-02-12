@@ -15,7 +15,7 @@
                <content>
                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
                      <children>
-                        <fx:include source="views/index.fxml" />
+                        <fx:include source="index.fxml" />
                      </children>
                   </AnchorPane>
                </content>
@@ -24,7 +24,7 @@
                <content>
                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
                      <children>
-                        <fx:include source="views/setting.fxml" />
+                        <fx:include source="setting.fxml" />
                      </children></AnchorPane>
                </content>
           </Tab>
