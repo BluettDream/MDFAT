@@ -3,6 +3,7 @@ package org.bluett.entity.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bluett.entity.TestResult;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class TestCase implements Serializable, Comparable<TestCase> {
     private String description;
     private int priority;
     private TestImage expectedImage;
+    private TestResult status;
 
     @Override
     public int compareTo(TestCase o) {

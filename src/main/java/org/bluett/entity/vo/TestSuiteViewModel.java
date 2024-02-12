@@ -6,14 +6,25 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.bluett.converter.TestSuiteConverter;
 import org.bluett.entity.TestResult;
-import org.bluett.service.TestViewService;
+import org.bluett.service.ITestSuiteService;
+import org.bluett.service.impl.TestSuiteService;
 
 public class TestSuiteViewModel {
     private final StringProperty name = new SimpleStringProperty("Test Suite");
+    private final StringProperty describe = new SimpleStringProperty();
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
 
-    private final TestSuiteConverter converter = new TestSuiteConverter();
-    private final TestViewService service = new TestViewService();
+    public String getDescribe() {
+        return describe.get();
+    }
+
+    public StringProperty describeProperty() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe.set(describe);
+    }
 
     public String getName() {
         return name.get();
@@ -37,5 +48,17 @@ public class TestSuiteViewModel {
 
     public void setStatus(TestResult status) {
         this.status.set(status);
+    }
+
+
+    private final TestSuiteConverter converter = new TestSuiteConverter();
+    private final ITestSuiteService service = new TestSuiteService();
+
+    public void saveTestSuite() {
+        service.save(converter.toTestSuite(this));
+    }
+
+    public void updateTestSuite() {
+        service.update(converter.toTestSuite(this));
     }
 }
