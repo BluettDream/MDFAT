@@ -14,7 +14,6 @@
     <pversion>0.2</pversion>
     <junit.version>5.9.3</junit.version>
     <jfx.version>21.0.2</jfx.version>
-    <jackson.version>2.16.1</jackson.version>
     <log4j2.version>2.22.1</log4j2.version>
     <hutool.version>5.8.25</hutool.version>
     <lombok.version>1.18.30</lombok.version>
@@ -45,12 +44,6 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>${log4j2.version}</version>
-    </dependency>
-    <!--JSON-->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
     <!--javafx-->
     <dependency>

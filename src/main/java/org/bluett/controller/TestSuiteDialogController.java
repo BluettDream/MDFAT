@@ -4,21 +4,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import org.bluett.entity.StageType;
 import org.bluett.entity.vo.TestSuiteViewModel;
+import org.bluett.util.ViewUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@RequiredArgsConstructor
+@Getter
 public class TestSuiteDialogController implements Initializable {
     @FXML
     private TextArea lDescribe;
     @FXML
     private TextField lName;
 
-    private final TestSuiteViewModel viewModel;
+    private final TestSuiteViewModel viewModel = new TestSuiteViewModel();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bindViewModel();
@@ -30,17 +31,18 @@ public class TestSuiteDialogController implements Initializable {
     }
 
     @FXML
-    void saveTestSuite(MouseEvent event) {
+    void saveTestSuite() {
         viewModel.saveTestSuite();
+        ViewUtil.getStageOrSave(StageType.SECONDARY).close();
     }
 
     @FXML
-    void createTestCase(MouseEvent event) {
+    void createTestCase() {
         viewModel.updateTestSuite();
     }
 
     @FXML
-    void deleteTestCase(MouseEvent event) {
+    void deleteTestCase() {
         viewModel.updateTestSuite();
     }
 }

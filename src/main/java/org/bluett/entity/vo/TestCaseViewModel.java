@@ -2,7 +2,7 @@ package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
 import org.bluett.converter.TestCaseConverter;
-import org.bluett.entity.TestResult;
+import org.bluett.entity.pojo.TestResult;
 import org.bluett.entity.pojo.TestImage;
 import org.bluett.service.ITestCaseService;
 import org.bluett.service.impl.TestCaseService;

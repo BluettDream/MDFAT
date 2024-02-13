@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.bluett.converter.TestSuiteConverter;
-import org.bluett.entity.TestResult;
+import org.bluett.entity.pojo.TestResult;
 import org.bluett.service.ITestSuiteService;
 import org.bluett.service.impl.TestSuiteService;
 
@@ -49,7 +49,6 @@ public class TestSuiteViewModel {
     public void setStatus(TestResult status) {
         this.status.set(status);
     }
-
 
     private final TestSuiteConverter converter = new TestSuiteConverter();
     private final ITestSuiteService service = new TestSuiteService();

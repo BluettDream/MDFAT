@@ -1,5 +1,8 @@
 package org.bluett.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum MouseMoveType {
     PROFESSIONAL("专业"), NORMAL("普通"), FRESHMAN("新手");
 
@@ -9,7 +12,4 @@ public enum MouseMoveType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

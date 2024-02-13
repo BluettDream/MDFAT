@@ -1,26 +1,29 @@
 package org.bluett.controller;
 
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bluett.converter.TestSuiteConverter;
-import org.bluett.entity.TestResult;
-import org.bluett.entity.pojo.TestSuite;
+import org.bluett.entity.NodeType;
+import org.bluett.entity.StageType;
+import org.bluett.entity.vo.IndexViewModel;
 import org.bluett.entity.vo.TestSuiteViewModel;
 import org.bluett.util.ViewUtil;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+@Getter
 public class IndexController implements Initializable {
     private final static Logger log = LogManager.getLogger(IndexController.class);
     @FXML
@@ -29,15 +32,29 @@ public class IndexController implements Initializable {
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
-    private final TestSuiteConverter converter = new TestSuiteConverter();
+    private final IndexViewModel viewModel = new IndexViewModel();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         createView();
+        bindViewModel();
     }
 
     private void createView() {
-        contextMenu = createContextMenu();
+        contextMenu = initContextMenu();
+    }
+
+    private void bindViewModel() {
+        viewModel.getTestSuites().addListener((ListChangeListener<TestSuiteViewModel>) c -> {
+            testSuiteVBox.getChildren().clear();
+            while (c.next()) {
+                if(!c.wasAdded()) continue;
+                c.getAddedSubList().forEach(testSuiteViewModel -> {
+                    Node node = ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE, new TestsuiteController(testSuiteViewModel), false);
+                    testSuiteVBox.getChildren().add(node);
+                });
+            }
+        });
     }
 
     @FXML
@@ -47,38 +64,38 @@ public class IndexController implements Initializable {
                 contextMenu.hide();
                 break;
             case SECONDARY:
-                contextMenu.show(ViewUtil.getScene(ViewUtil.DEFAULT_SCENE_NAME).getWindow(), event.getScreenX(), event.getScreenY());
+                contextMenu.show(ViewUtil.getNodeOrCreate(NodeType.MAIN), event.getScreenX(), event.getScreenY());
                 break;
             default:
                 log.info("Unknown button clicked");
         }
     }
 
-    private ContextMenu createContextMenu() {
+    private ContextMenu initContextMenu() {
         if(contextMenu != null) return contextMenu;
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem item1 = new MenuItem(ResourceBundle.getBundle("i18n").getString("test.suite.new"));
-        item1.setOnAction(event -> {
-            try {
-                TestSuite testSuite = new TestSuite("测试集", "", TestResult.READY, null);
-                Node testSuiteNode = createTestSuiteNode(converter.toTestSuiteViewModel(testSuite));
-                testSuiteNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
-                    if (!event1.getButton().equals(MouseButton.PRIMARY)) return;
-                    Label label = (Label) testSuiteNode.lookup("#lName");
-                    log.info("mouse click" + label.getText());
-                });
-                testSuiteVBox.getChildren().add(testSuiteNode);
-            } catch (IOException e) {
-                log.error("Error creating test suite", e);
-            }
-        });
-        contextMenu.getItems().add(item1);
+        contextMenu.getItems().add(createMenuItem());
         return contextMenu;
     }
 
-    private Node createTestSuiteNode(TestSuiteViewModel viewModel) throws IOException {
-        TestsuiteController testSuiteController = new TestsuiteController(viewModel);
-        return ViewUtil.createNode("components/test_suite", testSuiteController);
+    private MenuItem createMenuItem() {
+        MenuItem item = new MenuItem(ResourceBundle.getBundle("i18n").getString("test.suite.new"));
+        item.setOnAction(event -> {
+            Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
+            if(stage.getScene()!=null) {
+                stage.show();
+                return;
+            }
+            stage.setAlwaysOnTop(true);
+            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE_DIALOG, new TestSuiteDialogController(), false);
+            stage.setScene(new Scene(root));
+            stage.showingProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue) return;
+                viewModel.getTestSuites().setAll(viewModel.getTestSuiteViewModelList());
+            });
+            stage.show();
+        });
+        return item;
     }
 
 }

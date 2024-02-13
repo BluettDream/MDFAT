@@ -5,12 +5,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import lombok.RequiredArgsConstructor;
-import org.bluett.entity.TestResult;
+import org.bluett.entity.pojo.TestResult;
 import org.bluett.entity.vo.TestSuiteViewModel;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 @RequiredArgsConstructor
 public class TestsuiteController implements Initializable {
     @FXML

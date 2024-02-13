@@ -1,4 +1,4 @@
-package org.bluett.entity;
+package org.bluett.entity.pojo;
 
 import lombok.Getter;
 
@@ -9,7 +9,6 @@ public enum TestResult {
     FINISH("FINISH"),
     SUCCESS("SUCCESS"),
     FAIL("FAIL");
-
 
     private final String name;
 

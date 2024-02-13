@@ -4,7 +4,7 @@ module org.bluett {
 
     requires org.apache.logging.log4j;
     requires cn.hutool;
-
+    requires java.sql;
     requires java.desktop;
     requires static lombok;
     requires com.github.joonasvali.naturalmouse;
@@ -13,4 +13,6 @@ module org.bluett {
     opens org.bluett to javafx.fxml;
     exports org.bluett.controller;
     opens org.bluett.controller to javafx.fxml;
+
+    exports org.bluett.entity.pojo to cn.hutool;
 }
