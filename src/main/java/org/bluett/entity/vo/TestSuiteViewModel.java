@@ -4,29 +4,31 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import lombok.RequiredArgsConstructor;
-import org.bluett.converter.TestSuiteConverter;
 import org.bluett.entity.pojo.TestCase;
 import org.bluett.entity.pojo.TestResult;
+import org.bluett.entity.pojo.TestSuite;
+import org.bluett.service.IConverter;
 import org.bluett.service.ITestSuiteService;
 
 import java.util.TreeSet;
 
 @RequiredArgsConstructor
-public class TestSuiteViewModel {
+public class TestSuiteViewModel implements IConverter<TestSuite> {
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty describe = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final SetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+    private final SimpleSetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+    private final BooleanProperty save = new SimpleBooleanProperty(false);
 
     private final ITestSuiteService service;
-    private final TestSuiteConverter converter;
 
     public void saveTestSuite() {
-        service.save(converter.toTestSuite(this));
+        save.set(true);
+        service.save(convertTo());
     }
 
     public void updateTestSuite() {
-        service.update(converter.toTestSuite(this));
+        service.update(convertTo());
     }
 
     public String getDescribe() {
@@ -69,11 +71,33 @@ public class TestSuiteViewModel {
         return testCases.get();
     }
 
-    public SetProperty<TestCase> testCasesProperty() {
+    public SimpleSetProperty<TestCase> testCasesProperty() {
         return testCases;
     }
 
     public void setTestCases(ObservableSet<TestCase> testCases) {
         this.testCases.set(testCases);
+    }
+
+    public boolean isSave() {
+        return save.get();
+    }
+
+    public BooleanProperty saveProperty() {
+        return save;
+    }
+
+    public void setSave(boolean save) {
+        this.save.set(save);
+    }
+
+    @Override
+    public TestSuite convertTo() {
+        return new TestSuite(
+                getName(),
+                getDescribe(),
+                getStatus(),
+                new TreeSet<>(getTestCases())
+        );
     }
 }

@@ -33,8 +33,11 @@ public class TestSuiteDialogController implements Initializable {
     @FXML
     void saveTestSuite() {
         viewModel.saveTestSuite();
+    }
+
+    @FXML
+    void closeStage() {
         ViewUtil.getStageOrSave(StageType.SECONDARY).close();
-        ViewUtil.removeStage(StageType.SECONDARY);
     }
 
     @FXML
