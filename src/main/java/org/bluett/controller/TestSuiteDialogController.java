@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bluett.entity.StageType;
 import org.bluett.entity.vo.TestSuiteViewModel;
 import org.bluett.util.ViewUtil;
@@ -12,14 +12,14 @@ import org.bluett.util.ViewUtil;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@Getter
+@RequiredArgsConstructor
 public class TestSuiteDialogController implements Initializable {
     @FXML
     private TextArea lDescribe;
     @FXML
     private TextField lName;
 
-    private final TestSuiteViewModel viewModel = new TestSuiteViewModel();
+    private final TestSuiteViewModel viewModel;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bindViewModel();
@@ -34,6 +34,7 @@ public class TestSuiteDialogController implements Initializable {
     void saveTestSuite() {
         viewModel.saveTestSuite();
         ViewUtil.getStageOrSave(StageType.SECONDARY).close();
+        ViewUtil.removeStage(StageType.SECONDARY);
     }
 
     @FXML

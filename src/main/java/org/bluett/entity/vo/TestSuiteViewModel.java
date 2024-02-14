@@ -1,18 +1,33 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import lombok.RequiredArgsConstructor;
 import org.bluett.converter.TestSuiteConverter;
+import org.bluett.entity.pojo.TestCase;
 import org.bluett.entity.pojo.TestResult;
 import org.bluett.service.ITestSuiteService;
-import org.bluett.service.impl.TestSuiteService;
 
+import java.util.TreeSet;
+
+@RequiredArgsConstructor
 public class TestSuiteViewModel {
-    private final StringProperty name = new SimpleStringProperty("Test Suite");
-    private final StringProperty describe = new SimpleStringProperty();
+    private final StringProperty name = new SimpleStringProperty("");
+    private final StringProperty describe = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
+    private final SetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+
+    private final ITestSuiteService service;
+    private final TestSuiteConverter converter;
+
+    public void saveTestSuite() {
+        service.save(converter.toTestSuite(this));
+    }
+
+    public void updateTestSuite() {
+        service.update(converter.toTestSuite(this));
+    }
 
     public String getDescribe() {
         return describe.get();
@@ -50,14 +65,15 @@ public class TestSuiteViewModel {
         this.status.set(status);
     }
 
-    private final TestSuiteConverter converter = new TestSuiteConverter();
-    private final ITestSuiteService service = new TestSuiteService();
-
-    public void saveTestSuite() {
-        service.save(converter.toTestSuite(this));
+    public ObservableSet<TestCase> getTestCases() {
+        return testCases.get();
     }
 
-    public void updateTestSuite() {
-        service.update(converter.toTestSuite(this));
+    public SetProperty<TestCase> testCasesProperty() {
+        return testCases;
+    }
+
+    public void setTestCases(ObservableSet<TestCase> testCases) {
+        this.testCases.set(testCases);
     }
 }

@@ -14,10 +14,12 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bluett.converter.TestSuiteConverter;
 import org.bluett.entity.NodeType;
 import org.bluett.entity.StageType;
 import org.bluett.entity.vo.IndexViewModel;
 import org.bluett.entity.vo.TestSuiteViewModel;
+import org.bluett.service.impl.TestSuiteService;
 import org.bluett.util.ViewUtil;
 
 import java.net.URL;
@@ -32,7 +34,7 @@ public class IndexController implements Initializable {
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
-    private final IndexViewModel viewModel = new IndexViewModel();
+    private final IndexViewModel viewModel = new IndexViewModel(new TestSuiteService(), new TestSuiteConverter());
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,7 +48,6 @@ public class IndexController implements Initializable {
 
     private void bindViewModel() {
         viewModel.getTestSuites().addListener((ListChangeListener<TestSuiteViewModel>) c -> {
-            testSuiteVBox.getChildren().clear();
             while (c.next()) {
                 if(!c.wasAdded()) continue;
                 c.getAddedSubList().forEach(testSuiteViewModel -> {
@@ -55,6 +56,7 @@ public class IndexController implements Initializable {
                 });
             }
         });
+        viewModel.loadTestSuites();
     }
 
     @FXML
@@ -81,17 +83,15 @@ public class IndexController implements Initializable {
     private MenuItem createMenuItem() {
         MenuItem item = new MenuItem(ResourceBundle.getBundle("i18n").getString("test.suite.new"));
         item.setOnAction(event -> {
+            TestSuiteViewModel testSuiteViewModel = new TestSuiteViewModel(new TestSuiteService(), new TestSuiteConverter());
             Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
-            if(stage.getScene()!=null) {
-                stage.show();
-                return;
-            }
+            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE_DIALOG,
+                    new TestSuiteDialogController(testSuiteViewModel), false);
             stage.setAlwaysOnTop(true);
-            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE_DIALOG, new TestSuiteDialogController(), false);
             stage.setScene(new Scene(root));
             stage.showingProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue) return;
-                viewModel.getTestSuites().setAll(viewModel.getTestSuiteViewModelList());
+                viewModel.getTestSuites().add(testSuiteViewModel);
             });
             stage.show();
         });
