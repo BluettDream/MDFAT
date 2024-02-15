@@ -1,17 +1,15 @@
 package org.bluett.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import lombok.RequiredArgsConstructor;
 import org.bluett.entity.pojo.TestResult;
 import org.bluett.entity.vo.TestSuiteViewModel;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 @RequiredArgsConstructor
-public class TestsuiteController implements Initializable {
+public class TestsuiteController {
     @FXML
     private Label lName;
     @FXML
@@ -19,8 +17,8 @@ public class TestsuiteController implements Initializable {
 
     private final TestSuiteViewModel viewModel;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
         bindViewModel();
     }
 

@@ -2,7 +2,6 @@ package org.bluett.controller;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,22 +20,19 @@ import org.bluett.entity.vo.TestSuiteViewModel;
 import org.bluett.service.impl.TestSuiteService;
 import org.bluett.util.ViewUtil;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 
 @Getter
-public class IndexController implements Initializable {
+public class IndexController {
     private final static Logger log = LogManager.getLogger(IndexController.class);
-    @FXML
-    private VBox testCaseVBox;
     @FXML
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
     private final IndexViewModel indexViewModel = new IndexViewModel(new TestSuiteService());
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
         createView();
         bindViewModel();
     }
