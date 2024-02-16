@@ -1,5 +1,6 @@
 package org.bluett.entity.pojo;
 
+import javafx.collections.FXCollections;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.bluett.service.impl.TestSuiteService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.TreeSet;
 
 @Data
@@ -24,6 +26,10 @@ public class TestSuite implements Serializable, IConverter<TestSuiteViewModel> {
 
     @Override
     public TestSuiteViewModel convertTo() {
-        return new TestSuiteViewModel(new TestSuiteService());
+        TestSuiteViewModel viewModel = new TestSuiteViewModel(new TestSuiteService());
+        viewModel.setName(name);
+        viewModel.setDescribe(description);
+        viewModel.setTestCases(FXCollections.observableSet(Optional.ofNullable(testCases).orElseGet(TreeSet::new)));
+        return viewModel;
     }
 }
