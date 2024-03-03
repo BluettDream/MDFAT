@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.bluett.MainApplication;
-import org.bluett.entity.NodeType;
+import org.bluett.entity.NodeEnum;
 import org.bluett.entity.StageType;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ViewUtil {
     /**
      * Map of nodes, can be used to switch between nodes
      */
-    private static final Map<NodeType, Node> NODE_MAP = new HashMap<>();
+    private static final Map<NodeEnum, Node> NODE_MAP = new HashMap<>();
 
     public static final String FXML_PATH = "/assets/views/";
 
@@ -31,17 +31,17 @@ public class ViewUtil {
         return MainApplication.class.getResource(FXML_PATH + fxmlName + ".fxml");
     }
 
-    public static Node getNodeOrCreate(NodeType nodeType) {
-        return getNodeOrCreate(nodeType, null, true);
+    public static Node getNodeOrCreate(NodeEnum nodeEnum) {
+        return getNodeOrCreate(nodeEnum, null, true);
     }
 
-    public static Node getNodeOrCreate(NodeType nodeType, boolean cache) {
-        return getNodeOrCreate(nodeType, null, cache);
+    public static Node getNodeOrCreate(NodeEnum nodeEnum, boolean cache) {
+        return getNodeOrCreate(nodeEnum, null, cache);
     }
 
-    public static Node getNodeOrCreate(NodeType nodeType, Object controller, boolean cache) {
-        if(NODE_MAP.containsKey(nodeType)) return NODE_MAP.get(nodeType);
-        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodeType.getFxmlName()));
+    public static Node getNodeOrCreate(NodeEnum nodeEnum, Object controller, boolean cache) {
+        if(NODE_MAP.containsKey(nodeEnum)) return NODE_MAP.get(nodeEnum);
+        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodeEnum.getFxmlName()));
         ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
         fxmlLoader.setResources(bundle);
         if(controller != null) fxmlLoader.setControllerFactory(param -> controller);
@@ -51,12 +51,12 @@ public class ViewUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(cache) NODE_MAP.put(nodeType, node);
+        if(cache) NODE_MAP.put(nodeEnum, node);
         return node;
     }
 
-    public static Node removeNode(NodeType nodeType) {
-        return NODE_MAP.remove(nodeType);
+    public static Node removeNode(NodeEnum nodeEnum) {
+        return NODE_MAP.remove(nodeEnum);
     }
 
     public static Stage getStageOrSave(StageType stageType) {

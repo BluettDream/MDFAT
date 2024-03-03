@@ -3,7 +3,7 @@ package org.bluett.entity;
 import lombok.Getter;
 
 @Getter
-public enum NodeType {
+public enum NodeEnum {
     MAIN("main"),
     INDEX("index"),
     SETTING("setting"),
@@ -16,7 +16,7 @@ public enum NodeType {
 
     private final String fxmlName;
 
-    NodeType(String fxmlName) {
+    NodeEnum(String fxmlName) {
         this.fxmlName = fxmlName;
     }
 }

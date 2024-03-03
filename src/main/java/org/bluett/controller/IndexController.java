@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bluett.entity.NodeType;
+import org.bluett.entity.NodeEnum;
 import org.bluett.entity.StageType;
 import org.bluett.entity.vo.IndexViewModel;
 import org.bluett.entity.vo.TestSuiteViewModel;
@@ -50,7 +50,7 @@ public class IndexController {
             while (c.next()) {
                 if(!c.wasAdded()) continue;
                 c.getAddedSubList().forEach(testSuiteViewModel -> {
-                    Node node = ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE,
+                    Node node = ViewUtil.getNodeOrCreate(NodeEnum.TEST_SUITE,
                             new TestSuiteController(testSuiteViewModel), false);
                     testSuiteVBox.getChildren().add(node);
                 });
@@ -71,7 +71,7 @@ public class IndexController {
                 contextMenu.hide();
                 break;
             case SECONDARY:
-                contextMenu.show(ViewUtil.getNodeOrCreate(NodeType.MAIN), event.getScreenX(), event.getScreenY());
+                contextMenu.show(ViewUtil.getNodeOrCreate(NodeEnum.MAIN), event.getScreenX(), event.getScreenY());
                 break;
             default:
                 contextMenu.hide();
@@ -104,7 +104,7 @@ public class IndexController {
             // 创建或者获取第二个舞台
             Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
             // 创建测试集弹窗节点
-            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE_DIALOG,
+            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.TEST_SUITE_DIALOG,
                     new TestSuiteDialogController(testSuiteViewModel), false);
             if(stage.getScene() != null) stage.getScene().setRoot(root);
             else stage.setScene(new Scene(root));

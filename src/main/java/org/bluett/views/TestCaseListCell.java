@@ -1,7 +1,7 @@
 package org.bluett.views;
 
 import javafx.scene.control.ListCell;
-import org.bluett.entity.NodeType;
+import org.bluett.entity.NodeEnum;
 import org.bluett.entity.pojo.TestCase;
 import org.bluett.util.ViewUtil;
 
@@ -18,6 +18,6 @@ public class TestCaseListCell extends ListCell<TestCase> {
             setGraphic(null);
             return;
         }
-        ViewUtil.getNodeOrCreate(NodeType.TEST_CASE_LIST_CELL, false);
+        ViewUtil.getNodeOrCreate(NodeEnum.TEST_CASE_LIST_CELL, false);
     }
 }

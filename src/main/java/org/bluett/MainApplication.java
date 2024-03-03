@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.bluett.entity.NodeType;
+import org.bluett.entity.NodeEnum;
 import org.bluett.entity.StageType;
 import org.bluett.util.ViewUtil;
 
@@ -14,7 +14,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeType.MAIN);
+        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.MAIN);
         ViewUtil.getStageOrSave(StageType.PRIMARY, primaryStage);
 
         primaryStage.setTitle(ResourceBundle.getBundle("i18n").getString("title"));
@@ -23,8 +23,8 @@ public class MainApplication extends Application {
     }
 
     private void registerNode() {
-        ViewUtil.getNodeOrCreate(NodeType.INDEX, true);
-        ViewUtil.getNodeOrCreate(NodeType.SETTING, true);
+        ViewUtil.getNodeOrCreate(NodeEnum.INDEX, true);
+        ViewUtil.getNodeOrCreate(NodeEnum.SETTING, true);
     }
 
     public static void main(String[] args) {
