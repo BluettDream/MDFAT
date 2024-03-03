@@ -9,7 +9,7 @@ import org.bluett.entity.vo.TestSuiteViewModel;
 
 import java.util.ResourceBundle;
 @RequiredArgsConstructor
-public class TestsuiteController {
+public class TestSuiteController {
     @FXML
     private Label lName;
     @FXML

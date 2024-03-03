@@ -51,7 +51,7 @@ public class IndexController {
                 if(!c.wasAdded()) continue;
                 c.getAddedSubList().forEach(testSuiteViewModel -> {
                     Node node = ViewUtil.getNodeOrCreate(NodeType.TEST_SUITE,
-                            new TestsuiteController(testSuiteViewModel), false);
+                            new TestSuiteController(testSuiteViewModel), false);
                     testSuiteVBox.getChildren().add(node);
                 });
             }
