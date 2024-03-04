@@ -26,6 +26,8 @@
       <groupId>com.github.joonasvali.naturalmouse</groupId>
       <artifactId>naturalmouse</artifactId>
       <version>${naturalmouse.version}</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/naturalmouse-2.0.4.jar</systemPath>
     </dependency>
     <!--lombok-->
     <dependency>
