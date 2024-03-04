@@ -1,28 +1,30 @@
 package org.bluett;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.bluett.entity.ViewCache;
-import org.bluett.util.PathUtil;
+import org.bluett.entity.NodeEnum;
+import org.bluett.entity.StageType;
+import org.bluett.util.ViewUtil;
 
-import java.io.IOException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MainApplication extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        ViewCache.putStage(ViewCache.DEFAULT_STAGE_NAME, primaryStage);
-        FXMLLoader fxmlLoader = new FXMLLoader(PathUtil.getLocation("/main.fxml"));
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
-        fxmlLoader.setResources(bundle);
-        ViewCache.putScene(ViewCache.DEFAULT_SCENE_NAME, new Scene(fxmlLoader.load(), 1000, 600));
-        primaryStage.setTitle(bundle.getString("title"));
-        primaryStage.setScene(ViewCache.getScene(ViewCache.DEFAULT_SCENE_NAME));
+    public void start(Stage primaryStage) {
+        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.MAIN);
+        ViewUtil.getStageOrSave(StageType.PRIMARY, primaryStage);
+
+        primaryStage.setTitle(ResourceBundle.getBundle("i18n").getString("title"));
+        primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.show();
+    }
+
+    private void registerNode() {
+        ViewUtil.getNodeOrCreate(NodeEnum.INDEX, true);
+        ViewUtil.getNodeOrCreate(NodeEnum.SETTING, true);
     }
 
     public static void main(String[] args) {
