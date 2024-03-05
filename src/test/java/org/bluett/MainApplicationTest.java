@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
+import java.sql.DriverManager;
+
 class MainApplicationTest {
 
     private final static Logger log = LogManager.getLogger(MainApplicationTest.class);
@@ -21,6 +23,7 @@ class MainApplicationTest {
 
     @Test
     void test2() throws InterruptedException {
+
     }
 
 }
