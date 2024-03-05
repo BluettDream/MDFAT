@@ -16,12 +16,12 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="org.sqlite.JDBC"/>
-                <property name="url" value="${url}"/>
+                <property name="url" value="${dbUrl}"/>
             </dataSource>
         </environment>
     </environments>
 
     <mappers>
-        <mapper resource="TestSuiteMapper.xml"/>
+        <mapper url="${mapperUrl}/TestSuiteMapper.xml"/>
     </mappers>
 </configuration>
