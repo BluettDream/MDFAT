@@ -19,4 +19,6 @@ public interface ITestSuiteService {
     boolean delete(List<TestSuite> testSuiteList);
 
     List<TestSuite> getTestSuiteList();
+
+    TestSuite selectTestSuite(Integer id);
 }

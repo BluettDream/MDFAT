@@ -19,9 +19,16 @@
     <lombok.version>1.18.30</lombok.version>
     <naturalmouse.version>2.0.4</naturalmouse.version>
     <sqlite.version>3.45.1.0</sqlite.version>
+    <mybatis.version>3.5.15</mybatis.version>
   </properties>
 
   <dependencies>
+    <!-- mybatis -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis.version}</version>
+    </dependency>
     <!-- sqlite-jdbc -->
     <dependency>
       <groupId>org.xerial</groupId>
