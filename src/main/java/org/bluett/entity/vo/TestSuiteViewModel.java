@@ -8,7 +8,7 @@ import org.bluett.entity.pojo.TestCase;
 import org.bluett.entity.pojo.TestResult;
 import org.bluett.entity.pojo.TestSuite;
 import org.bluett.service.IConverter;
-import org.bluett.service.ITestSuiteService;
+import org.bluett.service.TestSuiteService;
 
 import java.util.TreeSet;
 
@@ -20,7 +20,7 @@ public class TestSuiteViewModel implements IConverter<TestSuite> {
     private final SimpleSetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
     private final BooleanProperty save = new SimpleBooleanProperty(false);
 
-    private final ITestSuiteService service;
+    private final TestSuiteService service;
 
     public void saveTestSuite() {
         save.set(true);
@@ -28,7 +28,7 @@ public class TestSuiteViewModel implements IConverter<TestSuite> {
     }
 
     public void updateTestSuite() {
-        service.update(convertTo());
+//        service.update(convertTo());
     }
 
     public String getDescribe() {

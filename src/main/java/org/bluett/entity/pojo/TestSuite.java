@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bluett.entity.vo.TestSuiteViewModel;
 import org.bluett.service.IConverter;
-import org.bluett.service.impl.TestSuiteService;
+import org.bluett.service.impl.TestSuiteServiceImpl;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,9 +25,16 @@ public class TestSuite implements Serializable, IConverter<TestSuiteViewModel> {
     private TestResult status;
     private TreeSet<TestCase> testCases;
 
+    public TestSuite(String name, String description, TestResult status, TreeSet<TestCase> testCases) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.testCases = testCases;
+    }
+
     @Override
     public TestSuiteViewModel convertTo() {
-        TestSuiteViewModel viewModel = new TestSuiteViewModel(new TestSuiteService());
+        TestSuiteViewModel viewModel = new TestSuiteViewModel(TestSuiteServiceImpl.getINSTANCE());
         viewModel.setName(name);
         viewModel.setDescribe(description);
         viewModel.setTestCases(FXCollections.observableSet(Optional.ofNullable(testCases).orElseGet(TreeSet::new)));

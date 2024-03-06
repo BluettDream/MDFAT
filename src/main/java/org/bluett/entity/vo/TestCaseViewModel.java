@@ -6,7 +6,7 @@ import org.bluett.entity.pojo.TestCase;
 import org.bluett.entity.pojo.TestImage;
 import org.bluett.entity.pojo.TestResult;
 import org.bluett.service.IConverter;
-import org.bluett.service.ITestCaseService;
+import org.bluett.service.TestCaseService;
 
 @RequiredArgsConstructor
 public class TestCaseViewModel implements IConverter<TestCase> {
@@ -16,7 +16,7 @@ public class TestCaseViewModel implements IConverter<TestCase> {
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final ObjectProperty<TestImage> expectedImage = new SimpleObjectProperty<>();
 
-    private final ITestCaseService service;
+    private final TestCaseService service;
 
     public String getName() {
         return name.get();

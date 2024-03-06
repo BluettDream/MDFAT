@@ -17,7 +17,7 @@ import org.bluett.entity.NodeEnum;
 import org.bluett.entity.StageType;
 import org.bluett.entity.vo.IndexViewModel;
 import org.bluett.entity.vo.TestSuiteViewModel;
-import org.bluett.service.impl.TestSuiteService;
+import org.bluett.service.impl.TestSuiteServiceImpl;
 import org.bluett.util.ViewUtil;
 
 import java.util.ResourceBundle;
@@ -29,7 +29,7 @@ public class IndexController {
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
-    private final IndexViewModel indexViewModel = new IndexViewModel(new TestSuiteService());
+    private final IndexViewModel indexViewModel = new IndexViewModel(TestSuiteServiceImpl.getINSTANCE());
 
     @FXML
     public void initialize() {
@@ -100,7 +100,7 @@ public class IndexController {
         MenuItem item = new MenuItem(ResourceBundle.getBundle("i18n").getString("test.suite.new"));
         // 点击菜单项之后弹出创建测试集对话框
         item.setOnAction(event -> {
-            TestSuiteViewModel testSuiteViewModel = new TestSuiteViewModel(new TestSuiteService());
+            TestSuiteViewModel testSuiteViewModel = new TestSuiteViewModel(TestSuiteServiceImpl.getINSTANCE());
             // 创建或者获取第二个舞台
             Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
             // 创建测试集弹窗节点

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bluett.entity.vo.TestCaseViewModel;
 import org.bluett.service.IConverter;
-import org.bluett.service.impl.TestCaseService;
+import org.bluett.service.impl.TestCaseServiceImpl;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +23,14 @@ public class TestCase implements Serializable, Comparable<TestCase>, IConverter<
     private TestImage expectedImage;
     private TestResult status;
 
+    public TestCase(String name, String description, int priority, TestImage expectedImage, TestResult status) {
+        this.name = name;
+        this.description = description;
+        this.priority = priority;
+        this.expectedImage = expectedImage;
+        this.status = status;
+    }
+
     @Override
     public int compareTo(TestCase o) {
         if(expectedImage != null && o.expectedImage != null)
@@ -32,6 +40,6 @@ public class TestCase implements Serializable, Comparable<TestCase>, IConverter<
 
     @Override
     public TestCaseViewModel convertTo() {
-        return new TestCaseViewModel(new TestCaseService());
+        return new TestCaseViewModel(new TestCaseServiceImpl());
     }
 }
