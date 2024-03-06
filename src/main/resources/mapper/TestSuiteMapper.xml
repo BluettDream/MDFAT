@@ -19,23 +19,18 @@
         <set>
             <if test="name != null">name=#{name},</if>
             <if test="description != null">description=#{description},</if>
-            <if test="status != null">status=#{status}</if>
+            <if test="status != null">status=#{status},</if>
+            update_time=datetime('now', '+8 hour')
         </set>
         where id=#{id}
     </update>
 
-    <insert id="save" parameterType="testSuite">
-        insert into test_suite(name, description, status) values(#{name},#{description},#{status})
+    <insert id="insert" parameterType="testSuite">
+        insert into test_suite(name, description, status, create_time, update_time)
+        values(#{name}, #{description}, #{status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
 
     <delete id="deleteById">
         delete from test_suite where id=#{id}
-    </delete>
-
-    <delete id="deleteByIds" parameterType="list">
-        delete from test_suite where id in
-        <foreach collection="testSuiteIds" item="testSuiteId" open="(" separator="," close=")">
-            #{testSuiteId}
-        </foreach>
     </delete>
 </mapper>

@@ -9,11 +9,9 @@ public interface TestSuiteMapper {
 
     TestSuite selectTestSuiteById(Integer id);
 
-    boolean updateById(TestSuite testSuite);
+    Integer updateById(TestSuite testSuite);
 
-    boolean save(TestSuite testSuite);
+    Integer insert(TestSuite testSuite);
 
-    boolean deleteById(Integer testSuiteId);
-
-    boolean deleteByIds(List<Integer> testSuiteIds);
+    Integer deleteById(Integer testSuiteId);
 }

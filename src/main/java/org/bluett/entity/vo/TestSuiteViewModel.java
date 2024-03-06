@@ -24,7 +24,7 @@ public class TestSuiteViewModel implements IConverter<TestSuite> {
 
     public void saveTestSuite() {
         save.set(true);
-        service.save(convertTo());
+        service.insert(convertTo());
     }
 
     public void updateTestSuite() {

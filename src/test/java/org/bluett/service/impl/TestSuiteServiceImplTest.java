@@ -28,13 +28,13 @@ class TestSuiteServiceImplTest {
 
     @Test
     void updateById() {
-        boolean ret = service.updateById(new TestSuite(1, "Frank", "haha", TestResult.SUCCESS, null));
+        boolean ret = service.updateById(new TestSuite(6, "Frank", "haha", TestResult.SUCCESS, null));
         log.info(ret);
     }
 
     @Test
     void save() {
-        boolean save = service.save(new TestSuite("Bluett", "kuku", TestResult.READY, null));
+        boolean save = service.insert(new TestSuite("Bluett", "kuku", TestResult.READY, null));
         log.info(save);
     }
 
@@ -45,19 +45,19 @@ class TestSuiteServiceImplTest {
         testSuites.add(new TestSuite("Bluett2", "22222", TestResult.READY, null));
         testSuites.add(new TestSuite("Bluett3", "33333", TestResult.READY, null));
         testSuites.add(new TestSuite("Bluett4", "44444", TestResult.READY, null));
-        boolean save = service.save(testSuites);
+        boolean save = service.insertBatch(testSuites);
         log.info(save);
     }
 
     @Test
     void deleteById() {
-        boolean ret = service.deleteById(1);
+        boolean ret = service.deleteById(7);
         log.info(ret);
     }
 
     @Test
     void deleteByIds() {
-        boolean ret = service.deleteByIds(List.of(new Integer[]{2, 3, 4, 5}));
+        boolean ret = service.deleteByIds(List.of(new Integer[]{1, 2, 3, 4}));
         log.info(ret);
     }
 }

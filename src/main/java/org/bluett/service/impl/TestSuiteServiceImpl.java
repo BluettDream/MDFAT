@@ -42,9 +42,9 @@ public class TestSuiteServiceImpl implements org.bluett.service.TestSuiteService
     public boolean updateById(TestSuite testSuite) {
         try(SqlSession session = DBUtil.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            testSuiteMapper.updateById(testSuite);
+            Integer cnt = testSuiteMapper.updateById(testSuite);
             session.commit();
-            return true;
+            return cnt > 0;
         }catch (Exception e){
             log.error("更新test_suite失败:", e);
         }
@@ -52,12 +52,15 @@ public class TestSuiteServiceImpl implements org.bluett.service.TestSuiteService
     }
 
     @Override
-    public boolean save(List<TestSuite> testSuiteList) {
+    public boolean insertBatch(List<TestSuite> testSuiteList) {
         try(SqlSession session = DBUtil.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            testSuiteList.forEach(testSuiteMapper::save);
+            Integer cnt = 0;
+            for (TestSuite testSuite : testSuiteList) {
+                cnt += testSuiteMapper.insert(testSuite);
+            }
             session.commit();
-            return true;
+            return cnt == testSuiteList.size();
         }catch (Exception e){
             log.error("插入test_suite失败:", e);
         }
@@ -65,12 +68,12 @@ public class TestSuiteServiceImpl implements org.bluett.service.TestSuiteService
     }
 
     @Override
-    public boolean save(TestSuite testSuite) {
+    public boolean insert(TestSuite testSuite) {
         try(SqlSession session = DBUtil.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            testSuiteMapper.save(testSuite);
-            session.commit();
-            return true;
+            Integer cnt = testSuiteMapper.insert(testSuite);
+            if(cnt > 0) session.commit();
+            return cnt > 0;
         }catch (Exception e){
             log.error("插入test_suite失败:", e);
         }
@@ -81,9 +84,9 @@ public class TestSuiteServiceImpl implements org.bluett.service.TestSuiteService
     public boolean deleteById(Integer testSuiteId) {
         try(SqlSession session = DBUtil.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            testSuiteMapper.deleteById(testSuiteId);
+            Integer cnt = testSuiteMapper.deleteById(testSuiteId);
             session.commit();
-            return true;
+            return cnt > 0;
         }catch (Exception e){
             log.error("删除test_suite失败:", e);
         }
@@ -94,11 +97,14 @@ public class TestSuiteServiceImpl implements org.bluett.service.TestSuiteService
     public boolean deleteByIds(List<Integer> testSuiteIds) {
         try(SqlSession session = DBUtil.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            testSuiteMapper.deleteByIds(testSuiteIds);
+            Integer cnt = 0;
+            for (Integer testSuiteId : testSuiteIds) {
+                cnt += testSuiteMapper.deleteById(testSuiteId);
+            }
             session.commit();
-            return true;
+            return cnt == testSuiteIds.size();
         }catch (Exception e){
-            log.error("删除test_suite失败:", e);
+            log.error("删除test_suites失败:", e);
         }
         return false;
     }

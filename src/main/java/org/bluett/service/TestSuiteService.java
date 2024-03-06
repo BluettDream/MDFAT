@@ -12,9 +12,9 @@ public interface TestSuiteService {
 
     boolean updateById(TestSuite testSuite);
 
-    boolean save(List<TestSuite> testSuiteList);
+    boolean insertBatch(List<TestSuite> testSuiteList);
 
-    boolean save(TestSuite testSuite);
+    boolean insert(TestSuite testSuite);
 
     boolean deleteById(Integer testSuiteId);
 
