@@ -19,6 +19,7 @@ import java.util.TreeSet;
 public class TestSuite implements Serializable, IConverter<TestSuiteViewModel> {
     @Serial
     private static final long serialVersionUID = -7015566039515718297L;
+    private Integer id;
     private String name;
     private String description;
     private TestResult status;

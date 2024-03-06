@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class TestCase implements Serializable, Comparable<TestCase>, IConverter<TestCaseViewModel> {
     @Serial
     private static final long serialVersionUID = -5101342570102128295L;
+    private Integer id;
     private String name;
     private String description;
     private int priority;
