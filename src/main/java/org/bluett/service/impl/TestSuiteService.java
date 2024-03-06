@@ -5,11 +5,14 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bluett.entity.SystemCache;
 import org.bluett.entity.pojo.TestSuite;
+import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.service.ITestSuiteService;
+import org.bluett.util.DBUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -143,5 +146,16 @@ public class TestSuiteService implements ITestSuiteService {
             log.error("Get test suite list failed", e);
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public TestSuite selectTestSuite(Integer id) {
+        try(SqlSession session = DBUtil.getSqlSession()){
+            TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
+            return testSuiteMapper.selectTestSuite(1);
+        }catch (Exception e){
+            log.error(e);
+        }
+        return null;
     }
 }

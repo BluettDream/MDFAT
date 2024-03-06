@@ -91,6 +91,7 @@
         <Logger name="org.springframework" level="INFO"/>
         <Logger name="org.apache" level="ERROR"/>
         <Logger name="org.thymeleaf" level="WARN"/>
+        <Logger name="org.mybatis" level="DEBUG"/>
         <Root level="DEBUG">
             <AppenderRef ref="Console" />
             <AppenderRef ref="DebugFile"/>
