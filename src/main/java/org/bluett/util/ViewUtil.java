@@ -4,8 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.bluett.MainApplication;
-import org.bluett.entity.NodeEnum;
-import org.bluett.entity.StageType;
+import org.bluett.entity.enums.NodeEnum;
+import org.bluett.entity.enums.StageType;
 
 import java.io.IOException;
 import java.net.URL;

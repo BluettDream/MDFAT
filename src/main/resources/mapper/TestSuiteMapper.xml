@@ -9,7 +9,7 @@
 
     <select id="selectTestSuiteByIds" resultType="testSuite">
         select * from test_suite where id in 
-        <foreach collection="testSuiteIds" item="testSuiteId" open="(" separator="," close=")">
+        <foreach collection="list" item="testSuiteId" open="(" separator="," close=")">
             #{testSuiteId}
         </foreach>
     </select>
@@ -30,7 +30,22 @@
         values(#{name}, #{description}, #{status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
 
+    <insert id="insertBatch">
+        insert into test_suite(name, description, status, create_time, update_time)
+        values
+        <foreach collection="list" item="testSuite" separator=",">
+            (#{testSuite.name}, #{testSuite.description}, #{testSuite.status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+        </foreach>
+    </insert>
+
     <delete id="deleteById">
         delete from test_suite where id=#{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from test_suite where id in
+        <foreach collection="list" item="testSuiteId" open="(" separator="," close=")">
+            #{testSuiteId}
+        </foreach>
     </delete>
 </mapper>

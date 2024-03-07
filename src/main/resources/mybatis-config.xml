@@ -11,7 +11,7 @@
     </settings>
 
     <typeAliases>
-        <package name="org.bluett.entity.pojo"/>
+        <package name="org.bluett.entity"/>
     </typeAliases>
 
     <environments default="development">
@@ -26,5 +26,7 @@
 
     <mappers>
         <mapper url="${mapperUrl}/TestSuiteMapper.xml"/>
+        <mapper url="${mapperUrl}/TestSuiteMapper.xml"/>
+        <mapper url="${mapperUrl}/TestImageMapper.xml"/>
     </mappers>
 </configuration>

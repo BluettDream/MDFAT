@@ -3,7 +3,7 @@ package org.bluett.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import org.bluett.entity.pojo.TestCase;
+import org.bluett.entity.TestCase;
 import org.bluett.views.TestCaseListCell;
 
 public class TestCaseController {

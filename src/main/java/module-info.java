@@ -1,4 +1,4 @@
-module org.bluett {
+open module org.bluett {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.apache.logging.log4j;
@@ -11,8 +11,8 @@ module org.bluett {
     requires org.xerial.sqlitejdbc;
 
     exports org.bluett;
-    opens org.bluett to javafx.fxml;
     exports org.bluett.controller;
-    opens org.bluett.controller to javafx.fxml;
-    exports org.bluett.entity.pojo to cn.hutool, org.mybatis;
+    exports org.bluett.entity to cn.hutool, org.mybatis;
+    exports org.bluett.entity.enums to cn.hutool, org.mybatis;
+    exports org.bluett.util to cn.hutool, org.mybatis;
 }

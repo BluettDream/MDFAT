@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import org.bluett.engine.PCAutomaticOperation;
-import org.bluett.entity.MouseMoveType;
+import org.bluett.entity.enums.MouseMoveType;
 
 import java.util.Arrays;
 import java.util.HashMap;

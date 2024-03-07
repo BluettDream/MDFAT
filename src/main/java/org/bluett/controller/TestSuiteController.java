@@ -4,8 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import lombok.RequiredArgsConstructor;
-import org.bluett.entity.pojo.TestResult;
-import org.bluett.entity.vo.TestSuiteViewModel;
+import org.bluett.entity.TestResult;
+import org.bluett.entity.vo.TestSuiteVO;
 
 import java.util.ResourceBundle;
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ public class TestSuiteController {
     @FXML
     private Label lStatus;
 
-    private final TestSuiteViewModel viewModel;
+    private final TestSuiteVO viewModel;
 
     @FXML
     public void initialize() {

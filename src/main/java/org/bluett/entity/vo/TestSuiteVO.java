@@ -4,36 +4,18 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import lombok.RequiredArgsConstructor;
-import org.bluett.entity.pojo.TestCase;
-import org.bluett.entity.pojo.TestResult;
-import org.bluett.entity.pojo.TestSuite;
-import org.bluett.service.IConverter;
-import org.bluett.service.TestSuiteService;
+import org.bluett.entity.TestCase;
+import org.bluett.entity.TestResult;
 
 import java.util.TreeSet;
 
 @RequiredArgsConstructor
-public class TestSuiteViewModel implements IConverter<TestSuite> {
+public class TestSuiteVO {
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty describe = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final SimpleSetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
     private final BooleanProperty save = new SimpleBooleanProperty(false);
-
-    private final TestSuiteService service;
-
-    public void saveTestSuite() {
-        save.set(true);
-        service.insert(convertTo());
-    }
-
-    public void updateTestSuite() {
-//        service.update(convertTo());
-    }
-
-    public String getDescribe() {
-        return describe.get();
-    }
 
     public StringProperty describeProperty() {
         return describe;
@@ -89,15 +71,5 @@ public class TestSuiteViewModel implements IConverter<TestSuite> {
 
     public void setSave(boolean save) {
         this.save.set(save);
-    }
-
-    @Override
-    public TestSuite convertTo() {
-        return new TestSuite(
-                getName(),
-                getDescribe(),
-                getStatus(),
-                new TreeSet<>(getTestCases())
-        );
     }
 }

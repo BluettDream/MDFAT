@@ -4,8 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
-import org.bluett.entity.StageType;
-import org.bluett.entity.vo.TestSuiteViewModel;
+import org.bluett.entity.enums.StageType;
+import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.util.ViewUtil;
 
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ public class TestSuiteDialogController {
     @FXML
     private TextField lName;
 
-    private final TestSuiteViewModel viewModel;
+    private final TestSuiteVO viewModel;
     @FXML
     public void initialize() {
         bindViewModel();
@@ -28,7 +28,6 @@ public class TestSuiteDialogController {
 
     @FXML
     void saveTestSuite() {
-        viewModel.saveTestSuite();
     }
 
     @FXML
@@ -38,11 +37,9 @@ public class TestSuiteDialogController {
 
     @FXML
     void createTestCase() {
-        viewModel.updateTestSuite();
     }
 
     @FXML
     void deleteTestCase() {
-        viewModel.updateTestSuite();
     }
 }
