@@ -21,7 +21,7 @@ class TestSuiteServiceImplTest {
 
     @Test
     void selectTestSuiteById() {
-        TestSuite testSuite = service.selectTestSuiteById(6);
+        TestSuite testSuite = service.selectTestSuiteById(6).orElse(null);
         log.info(testSuite);
     }
 

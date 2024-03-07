@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.nio.file.Path;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class TestImage implements Serializable{
     private static final long serialVersionUID = 545599542964493604L;
     private Integer id;
     // 图像路径
-    private Path imagePath;
+    private String path;
     // 相似度
     private double similarity;
     // 置信度

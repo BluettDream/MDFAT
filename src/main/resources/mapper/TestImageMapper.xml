@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.bluett.mapper.TestImageMapper">
+    <select id="selectTestImageById" resultType="testImage">
+        select * from test_image where id=#{id}
+    </select>
+
+    <select id="selectTestImageByIds" resultType="testImage">
+        select * from test_image where id in 
+        <foreach collection="list" item="testImageId" open="(" separator="," close=")">
+            #{testImageId}
+        </foreach>
+    </select>
+
+    <update id="updateById" parameterType="testImage">
+        update test_image
+        <set>
+            <if test="path != null">path=#{path},</if>
+            <if test="similarity != null">similarity=#{similarity},</if>
+            <if test="confidence != null">confidence=#{confidence},</if>
+            update_time=datetime('now', '+8 hour')
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="testImage">
+        insert into test_image(path, similarity, confidence, create_time, update_time)
+        values(#{path}, #{similarity}, #{confidence}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+    </insert>
+
+    <insert id="insertBatch">
+        insert into test_image(path, similarity, confidence, create_time, update_time)
+        values
+        <foreach collection="list" item="testImage" separator=",">
+            (#{testImage.path}, #{testImage.similarity}, #{testImage.confidence}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+        </foreach>
+    </insert>
+
+    <delete id="deleteById">
+        delete from test_image where id=#{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from test_image where id in
+        <foreach collection="list" item="testImageId" open="(" separator="," close=")">
+            #{testImageId}
+        </foreach>
+    </delete>
+</mapper>

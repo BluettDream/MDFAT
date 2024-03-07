@@ -7,7 +7,9 @@ import org.bluett.entity.TestSuite;
 import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.util.DatabaseHelper;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class TestSuiteService {
     private static final Logger log = LogManager.getLogger(TestSuiteService.class);
@@ -19,17 +21,17 @@ public class TestSuiteService {
         }catch (Exception e){
             log.error("批量查询test_suite失败:", e);
         }
-        return null;
+        return Collections.emptyList();
     }
 
-    public TestSuite selectTestSuiteById(Integer id) {
+    public Optional<TestSuite> selectTestSuiteById(Integer id) {
         try(SqlSession session = DatabaseHelper.getSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
-            return testSuiteMapper.selectTestSuiteById(id);
+            return Optional.ofNullable(testSuiteMapper.selectTestSuiteById(id));
         }catch (Exception e){
             log.error("查询test_suite失败:", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     public boolean updateById(TestSuite testSuite) {
