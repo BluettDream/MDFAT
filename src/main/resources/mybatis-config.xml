@@ -5,6 +5,9 @@
 <configuration>
     <settings>
         <setting name="logImpl" value="LOG4J2"/>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     </settings>
 
     <typeAliases>

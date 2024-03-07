@@ -14,6 +14,7 @@ import java.nio.file.Path;
 public class TestImage implements Serializable, Comparable<TestImage>{
     @Serial
     private static final long serialVersionUID = 545599542964493604L;
+    private Integer id;
     // 图像路径
     private Path imagePath;
     // 相似度
