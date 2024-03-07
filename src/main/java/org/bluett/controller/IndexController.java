@@ -13,11 +13,10 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bluett.entity.NodeEnum;
-import org.bluett.entity.StageType;
-import org.bluett.entity.vo.IndexViewModel;
-import org.bluett.entity.vo.TestSuiteViewModel;
-import org.bluett.service.impl.TestSuiteServiceImpl;
+import org.bluett.entity.enums.NodeEnum;
+import org.bluett.entity.enums.StageType;
+import org.bluett.entity.vo.IndexVO;
+import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.util.ViewUtil;
 
 import java.util.ResourceBundle;
@@ -29,7 +28,7 @@ public class IndexController {
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
-    private final IndexViewModel indexViewModel = new IndexViewModel(TestSuiteServiceImpl.getINSTANCE());
+    private final IndexVO indexVO = new IndexVO();
 
     @FXML
     public void initialize() {
@@ -45,19 +44,6 @@ public class IndexController {
      * 绑定视图模型
      */
     private void bindViewModel() {
-        // 监听测试集列表是否更改,若添加内容则更新对应的测试集vbox
-        indexViewModel.getTestSuites().addListener((ListChangeListener<TestSuiteViewModel>) c -> {
-            while (c.next()) {
-                if(!c.wasAdded()) continue;
-                c.getAddedSubList().forEach(testSuiteViewModel -> {
-                    Node node = ViewUtil.getNodeOrCreate(NodeEnum.TEST_SUITE,
-                            new TestSuiteController(testSuiteViewModel), false);
-                    testSuiteVBox.getChildren().add(node);
-                });
-            }
-        });
-        // 初始化读取本地json文件
-        indexViewModel.loadTestSuites();
     }
 
     /**
@@ -100,20 +86,20 @@ public class IndexController {
         MenuItem item = new MenuItem(ResourceBundle.getBundle("i18n").getString("test.suite.new"));
         // 点击菜单项之后弹出创建测试集对话框
         item.setOnAction(event -> {
-            TestSuiteViewModel testSuiteViewModel = new TestSuiteViewModel(TestSuiteServiceImpl.getINSTANCE());
+            TestSuiteVO testSuiteVO = new TestSuiteVO();
             // 创建或者获取第二个舞台
             Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
             // 创建测试集弹窗节点
             Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.TEST_SUITE_DIALOG,
-                    new TestSuiteDialogController(testSuiteViewModel), false);
+                    new TestSuiteDialogController(testSuiteVO), false);
             if(stage.getScene() != null) stage.getScene().setRoot(root);
             else stage.setScene(new Scene(root));
             stage.setAlwaysOnTop(true);
             // 根据是否点击保存按钮来更新测试集视图
-            testSuiteViewModel.saveProperty().addListener((observable, oldValue, newValue) -> {
+            testSuiteVO.saveProperty().addListener((observable, oldValue, newValue) -> {
                 if(!newValue) return;
-                indexViewModel.getTestSuites().add(testSuiteViewModel);
-                testSuiteViewModel.saveProperty().set(false);
+//                indexVO.getTestSuites().add(testSuiteVO);
+                testSuiteVO.saveProperty().set(false);
                 // 保存之后关闭舞台,断开对象关联
                 stage.close();
             });

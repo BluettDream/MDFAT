@@ -7,31 +7,32 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bluett.MainApplication;
-import org.bluett.entity.SystemCache;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-public class DBUtil {
-    private static final Logger log = LogManager.getLogger(DBUtil.class);
-    private static final String DB_URL = "jdbc:sqlite:" + SystemCache.DATABASE_PATH;
+public class DatabaseHelper {
+    private static final Logger log = LogManager.getLogger(DatabaseHelper.class);
     private static final URL MAPPER_URL = MainApplication.class.getResource("/mapper");
-    private static SqlSessionFactory FACTORY;
+    private static final String DB_URL = "jdbc:sqlite:" + CacheUtil.DATABASE_PATH;
+    private static final String MYBATIS_CONFIG = "mybatis-config.xml";
+    private static final SqlSessionFactory FACTORY = getSqlSessionFactory();
 
-    static {
-        String resource = "mybatis-config.xml";
-        try (InputStream stream = Resources.getResourceAsStream(resource)) {
-            FACTORY = new SqlSessionFactoryBuilder().build(stream, fillProperties());
+    private DatabaseHelper(){}
+
+    public static SqlSession getSession(){
+        if(FACTORY == null) throw new RuntimeException("数据库初始化失败");
+        return FACTORY.openSession();
+    }
+
+    private static SqlSessionFactory getSqlSessionFactory(){
+        try (InputStream stream = Resources.getResourceAsStream(MYBATIS_CONFIG)) {
+            return new SqlSessionFactoryBuilder().build(stream, fillProperties());
         }catch (Exception e){
             log.error("数据库初始化失败", e);
         }
-    }
-
-    private DBUtil(){}
-
-    public static SqlSession getSqlSession(){
-        return FACTORY.openSession();
+        return null;
     }
 
     private static Properties fillProperties(){

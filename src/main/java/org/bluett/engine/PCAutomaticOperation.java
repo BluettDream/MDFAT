@@ -1,7 +1,7 @@
 package org.bluett.engine;
 
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
-import org.bluett.entity.MouseMoveType;
+import org.bluett.entity.enums.MouseMoveType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

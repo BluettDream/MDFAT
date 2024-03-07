@@ -1,6 +1,7 @@
-package org.bluett.entity.pojo;
+package org.bluett.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,8 @@ import java.nio.file.Path;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestImage implements Serializable, Comparable<TestImage>{
+@Builder
+public class TestImage implements Serializable{
     @Serial
     private static final long serialVersionUID = 545599542964493604L;
     private Integer id;
@@ -21,9 +23,4 @@ public class TestImage implements Serializable, Comparable<TestImage>{
     private double similarity;
     // 置信度
     private double confidence;
-
-    @Override
-    public int compareTo(TestImage o) {
-        return Double.compare(this.similarity, o.similarity);
-    }
 }

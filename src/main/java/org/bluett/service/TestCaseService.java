@@ -1,4 +1,4 @@
 package org.bluett.service;
 
-public interface TestCaseService {
+public class TestCaseService {
 }

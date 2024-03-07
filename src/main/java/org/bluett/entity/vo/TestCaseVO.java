@@ -1,22 +1,17 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
-import lombok.RequiredArgsConstructor;
-import org.bluett.entity.pojo.TestCase;
-import org.bluett.entity.pojo.TestImage;
-import org.bluett.entity.pojo.TestResult;
-import org.bluett.service.IConverter;
-import org.bluett.service.TestCaseService;
+import lombok.Builder;
+import org.bluett.entity.TestImage;
+import org.bluett.entity.TestResult;
 
-@RequiredArgsConstructor
-public class TestCaseViewModel implements IConverter<TestCase> {
+@Builder
+public class TestCaseVO {
     private final StringProperty name = new SimpleStringProperty("Test Case");
     private final StringProperty describe = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final ObjectProperty<TestImage> expectedImage = new SimpleObjectProperty<>();
-
-    private final TestCaseService service;
 
     public String getName() {
         return name.get();
@@ -76,10 +71,5 @@ public class TestCaseViewModel implements IConverter<TestCase> {
 
     public void setExpectedImage(TestImage expectedImage) {
         this.expectedImage.set(expectedImage);
-    }
-
-    @Override
-    public TestCase convertTo() {
-        return new TestCase(getName(), getDescribe(), getPriority(), getExpectedImage(), getStatus());
     }
 }

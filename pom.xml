@@ -4,14 +4,19 @@
 
   <groupId>org.bluett</groupId>
   <artifactId>MDFAT</artifactId>
-  <version>${pversion}</version>
+  <version>0.2.5</version>
   <packaging>jar</packaging>
 
   <name>MDFAT</name>
+  <developers>
+    <developer>
+      <name>BluettDream</name>
+      <email>tianmh0625@qq.com</email>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <pversion>0.2</pversion>
     <junit.version>5.9.3</junit.version>
     <jfx.version>21.0.2</jfx.version>
     <log4j2.version>2.21.1</log4j2.version>

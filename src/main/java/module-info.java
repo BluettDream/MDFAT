@@ -12,5 +12,7 @@ open module org.bluett {
 
     exports org.bluett;
     exports org.bluett.controller;
-    exports org.bluett.entity.pojo to cn.hutool, org.mybatis;
+    exports org.bluett.entity to cn.hutool, org.mybatis;
+    exports org.bluett.entity.enums to cn.hutool, org.mybatis;
+    exports org.bluett.util to cn.hutool, org.mybatis;
 }
