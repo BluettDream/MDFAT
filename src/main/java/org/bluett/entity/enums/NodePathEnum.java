@@ -1,9 +1,11 @@
 package org.bluett.entity.enums;
 
 import lombok.Getter;
+import org.bluett.entity.TestCase;
+import org.bluett.entity.TestSuite;
 
 @Getter
-public enum NodeEnum {
+public enum NodePathEnum {
     MAIN("main"),
     INDEX("index"),
     SETTING("setting"),
@@ -16,7 +18,7 @@ public enum NodeEnum {
 
     private final String fxmlName;
 
-    NodeEnum(String fxmlName) {
+    NodePathEnum(String fxmlName) {
         this.fxmlName = fxmlName;
     }
 }

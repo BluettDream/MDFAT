@@ -3,12 +3,12 @@ package org.bluett.entity.enums;
 import lombok.Getter;
 
 @Getter
-public enum MouseMoveType {
+public enum MouseMoveTypeEnum {
     PROFESSIONAL("专业"), NORMAL("普通"), FRESHMAN("新手");
 
     private final String name;
 
-    MouseMoveType(String name) {
+    MouseMoveTypeEnum(String name) {
         this.name = name;
     }
 

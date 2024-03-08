@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
-import org.bluett.entity.enums.StageType;
+import org.bluett.entity.enums.StageTypeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.util.ViewUtil;
 
@@ -23,7 +23,7 @@ public class TestSuiteDialogController {
 
     private void bindViewModel() {
         lName.textProperty().bindBidirectional(viewModel.nameProperty());
-        lDescribe.textProperty().bindBidirectional(viewModel.describeProperty());
+        lDescribe.textProperty().bindBidirectional(viewModel.descriptionProperty());
     }
 
     @FXML
@@ -32,7 +32,7 @@ public class TestSuiteDialogController {
 
     @FXML
     void closeStage() {
-        ViewUtil.getStageOrSave(StageType.SECONDARY).close();
+        ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY).close();
     }
 
     @FXML

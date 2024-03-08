@@ -6,8 +6,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bluett.entity.enums.NodeEnum;
-import org.bluett.entity.enums.StageType;
+import org.bluett.entity.enums.NodePathEnum;
+import org.bluett.entity.enums.StageTypeEnum;
 import org.bluett.util.ViewUtil;
 
 import java.util.ResourceBundle;
@@ -22,8 +22,8 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.MAIN);
-        ViewUtil.getStageOrSave(StageType.PRIMARY, primaryStage);
+        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodePathEnum.MAIN);
+        ViewUtil.getStageOrSave(StageTypeEnum.PRIMARY, primaryStage);
         primaryStage.setTitle(ResourceBundle.getBundle("i18n").getString("title"));
         primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.show();

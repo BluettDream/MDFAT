@@ -1,39 +1,48 @@
 package org.bluett.controller;
 
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bluett.entity.TestResult;
+import org.bluett.entity.bo.ControllerCache;
+import org.bluett.entity.enums.NodePathEnum;
 import org.bluett.entity.vo.TestSuiteVO;
+import org.bluett.service.TestSuiteService;
 
-import java.util.ResourceBundle;
-@RequiredArgsConstructor
 public class TestSuiteController {
     @FXML
     private Label lName;
     @FXML
     private Label lStatus;
 
-    private final TestSuiteVO viewModel;
+    private TestSuiteVO testSuiteVO;
 
     @FXML
     public void initialize() {
-        bindViewModel();
+        getData();
+        bindVO();
     }
 
-    private void bindViewModel() {
-        lName.textProperty().bindBidirectional(viewModel.nameProperty());
-        lStatus.textProperty().bindBidirectional(viewModel.statusProperty(), new StringConverter<>() {
+    public void getData() {
+        testSuiteVO = (TestSuiteVO) ControllerCache.getData(NodePathEnum.TEST_SUITE);
+    }
+
+    private void bindVO() {
+        lName.textProperty().bindBidirectional(testSuiteVO.nameProperty());
+        lStatus.textProperty().bindBidirectional(testSuiteVO.statusProperty(), new StringConverter<>() {
             @Override
             public String toString(TestResult object) {
-                return ResourceBundle.getBundle("i18n").getString(object.name());
+                return object.name();
             }
 
             @Override
             public TestResult fromString(String string) {
-                return null;
+                return TestResult.valueOf(string);
             }
         });
     }
+
 }

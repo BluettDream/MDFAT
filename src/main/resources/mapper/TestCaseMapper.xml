@@ -14,6 +14,26 @@
         </foreach>
     </select>
 
+    <select id="selectTestCaseList" resultType="testCase">
+        select * from test_suite
+        <where>
+            <if test="testCase.id != null">id=#{testCase.id}</if>
+            <if test="testCase.name != null">name=#{testCase.name}</if>
+            <if test="testCase.description != null">description=#{testCase.description}</if>
+            <if test="testCase.status != null">status=#{testCase.status}</if>
+            <if test="testCase.suiteId != null">suite_id=#{testCase.suiteId}</if>
+        </where>
+        <if test="page != null">
+            limit #{page.startIndex}, #{page.pageSize}
+        </if>
+    </select>
+    <select id="selectTestCaseBySuiteIds" resultType="testCase">
+        select * from test_case where suite_id in
+        <foreach collection="list" item="suiteId" open="(" separator="," close=")">
+            #{suiteId}
+        </foreach>
+    </select>
+
     <update id="updateById" parameterType="testCase">
         update test_case
         <set>

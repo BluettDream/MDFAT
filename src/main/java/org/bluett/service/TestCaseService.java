@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bluett.entity.TestCase;
+import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.mapper.TestCaseMapper;
 import org.bluett.util.DatabaseHelper;
 
@@ -15,7 +16,7 @@ public class TestCaseService {
     private static final Logger log = LogManager.getLogger(TestCaseService.class);
 
     public List<TestCase> selectTestCaseByIds(List<Integer> testCaseIds) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             return testCaseMapper.selectTestCaseByIds(testCaseIds);
         }catch (Exception e){
@@ -25,7 +26,7 @@ public class TestCaseService {
     }
 
     public Optional<TestCase> selectTestCaseById(Integer id) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             return Optional.ofNullable(testCaseMapper.selectTestCaseById(id));
         }catch (Exception e){
@@ -35,7 +36,7 @@ public class TestCaseService {
     }
 
     public boolean updateById(TestCase testCase) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = testCaseMapper.updateById(testCase);
             if(cnt == 0) return false;
@@ -48,7 +49,7 @@ public class TestCaseService {
     }
 
     public boolean insertBatch(List<TestCase> testCaseList) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = testCaseMapper.insertBatch(testCaseList);
             if(cnt != testCaseList.size()) return false;
@@ -61,7 +62,7 @@ public class TestCaseService {
     }
 
     public boolean insert(TestCase testCase) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = testCaseMapper.insert(testCase);
             if(cnt == 0) return false;
@@ -74,7 +75,7 @@ public class TestCaseService {
     }
 
     public boolean deleteById(Integer testCaseId) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = testCaseMapper.deleteById(testCaseId);
             if(cnt == 0) return false;
@@ -87,7 +88,7 @@ public class TestCaseService {
     }
 
     public boolean deleteByIds(List<Integer> testCaseIds) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = testCaseMapper.deleteByIds(testCaseIds);
             if(cnt != testCaseIds.size()) return false;
@@ -97,5 +98,16 @@ public class TestCaseService {
             log.error("删除test_cases失败:", e);
         }
         return false;
+    }
+
+    public static TestCaseVO convertToTestCaseVO(TestCase testCase) {
+        TestCaseVO caseVO = new TestCaseVO();
+        caseVO.setId(testCase.getId());
+        caseVO.setName(testCase.getName());
+        caseVO.setDescription(testCase.getDescription());
+        caseVO.setPriority(testCase.getPriority());
+        caseVO.setStatus(testCase.getStatus());
+        caseVO.setSuiteId(testCase.getSuiteId());
+        return caseVO;
     }
 }

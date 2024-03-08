@@ -20,4 +20,5 @@ public class TestCase implements Serializable {
     private String description;
     private int priority;
     private TestResult status;
+    private Integer suiteId;
 }

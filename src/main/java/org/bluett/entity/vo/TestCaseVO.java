@@ -1,17 +1,41 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
-import lombok.Builder;
 import org.bluett.entity.TestImage;
 import org.bluett.entity.TestResult;
 
-@Builder
 public class TestCaseVO {
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty("Test Case");
-    private final StringProperty describe = new SimpleStringProperty("");
+    private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final ObjectProperty<TestImage> expectedImage = new SimpleObjectProperty<>();
+    private final IntegerProperty suiteId = new SimpleIntegerProperty();
+
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public int getSuiteId() {
+        return suiteId.get();
+    }
+
+    public IntegerProperty suiteIdProperty() {
+        return suiteId;
+    }
+
+    public void setSuiteId(int suiteId) {
+        this.suiteId.set(suiteId);
+    }
 
     public String getName() {
         return name.get();
@@ -25,16 +49,16 @@ public class TestCaseVO {
         this.name.set(name);
     }
 
-    public String getDescribe() {
-        return describe.get();
+    public String getDescription() {
+        return description.get();
     }
 
-    public StringProperty describeProperty() {
-        return describe;
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
-    public void setDescribe(String describe) {
-        this.describe.set(describe);
+    public void setDescription(String description) {
+        this.description.set(description);
     }
 
     public int getPriority() {

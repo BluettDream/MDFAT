@@ -1,6 +1,8 @@
 package org.bluett.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,27 +15,36 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bluett.entity.enums.NodeEnum;
-import org.bluett.entity.enums.StageType;
-import org.bluett.entity.vo.IndexVO;
+import org.bluett.entity.enums.NodePathEnum;
+import org.bluett.entity.enums.StageTypeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
+import org.bluett.service.IndexService;
+import org.bluett.util.LogUtil;
 import org.bluett.util.ViewUtil;
 
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 @Getter
 public class IndexController {
-    private final static Logger log = LogManager.getLogger(IndexController.class);
     @FXML
     private VBox testSuiteVBox;
 
     private ContextMenu contextMenu;
-    private final IndexVO indexVO = new IndexVO();
+
+    private final IndexService indexService = new IndexService();
+    private final ObservableList<TestSuiteVO> testSuiteVOList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         createView();
-        bindViewModel();
+        bindVO();
+        initData();
+    }
+
+    private void initData() {
+        testSuiteVOList.addAll(indexService.selectTestSuiteVOList(null, null));
     }
 
     private void createView() {
@@ -43,7 +54,16 @@ public class IndexController {
     /**
      * 绑定视图模型
      */
-    private void bindViewModel() {
+    private void bindVO() {
+        testSuiteVOList.addListener((ListChangeListener<TestSuiteVO>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().stream()
+                            .map((Function<TestSuiteVO, Node>) ViewUtil::createNode)
+                            .forEach(testSuiteVBox.getChildren()::add);
+                }
+            }
+        });
     }
 
     /**
@@ -57,11 +77,11 @@ public class IndexController {
                 contextMenu.hide();
                 break;
             case SECONDARY:
-                contextMenu.show(ViewUtil.getNodeOrCreate(NodeEnum.MAIN), event.getScreenX(), event.getScreenY());
+                contextMenu.show(ViewUtil.getNodeOrCreate(NodePathEnum.MAIN), event.getScreenX(), event.getScreenY());
                 break;
             default:
                 contextMenu.hide();
-                log.info("Unknown button clicked");
+                LogUtil.info("Unknown button clicked");
         }
     }
 
@@ -88,9 +108,9 @@ public class IndexController {
         item.setOnAction(event -> {
             TestSuiteVO testSuiteVO = new TestSuiteVO();
             // 创建或者获取第二个舞台
-            Stage stage = ViewUtil.getStageOrSave(StageType.SECONDARY, new Stage());
+            Stage stage = ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY, new Stage());
             // 创建测试集弹窗节点
-            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodeEnum.TEST_SUITE_DIALOG,
+            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodePathEnum.TEST_SUITE_DIALOG,
                     new TestSuiteDialogController(testSuiteVO), false);
             if(stage.getScene() != null) stage.getScene().setRoot(root);
             else stage.setScene(new Scene(root));
@@ -98,7 +118,6 @@ public class IndexController {
             // 根据是否点击保存按钮来更新测试集视图
             testSuiteVO.saveProperty().addListener((observable, oldValue, newValue) -> {
                 if(!newValue) return;
-//                indexVO.getTestSuites().add(testSuiteVO);
                 testSuiteVO.saveProperty().set(false);
                 // 保存之后关闭舞台,断开对象关联
                 stage.close();

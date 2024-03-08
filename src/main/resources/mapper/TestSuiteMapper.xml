@@ -14,6 +14,19 @@
         </foreach>
     </select>
 
+    <select id="selectTestSuiteList" resultType="testSuite">
+        select * from test_suite
+        <where>
+            <if test="testSuite.id != null">id=#{testSuite.id}</if>
+            <if test="testSuite.name != null">name=#{testSuite.name}</if>
+            <if test="testSuite.description != null">description=#{testSuite.description}</if>
+            <if test="testSuite.status != null">status=#{testSuite.status}</if>
+        </where>
+        <if test="page != null">
+            limit #{page.startIndex}, #{page.pageSize}
+        </if>
+    </select>
+
     <update id="updateById" parameterType="testSuite">
         update test_suite
         <set>

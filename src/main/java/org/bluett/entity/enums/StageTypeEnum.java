@@ -1,5 +1,5 @@
 package org.bluett.entity.enums;
 
-public enum StageType {
+public enum StageTypeEnum {
     PRIMARY, SECONDARY, LOWEST
 }

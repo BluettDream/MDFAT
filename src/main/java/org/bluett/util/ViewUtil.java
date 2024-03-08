@@ -4,8 +4,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.bluett.MainApplication;
-import org.bluett.entity.enums.NodeEnum;
-import org.bluett.entity.enums.StageType;
+import org.bluett.entity.bo.ControllerCache;
+import org.bluett.entity.enums.NodePathEnum;
+import org.bluett.entity.enums.StageTypeEnum;
+import org.bluett.entity.vo.TestSuiteVO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,11 +21,11 @@ public class ViewUtil {
     /**
      * Map of stages, can be used to switch between stages
      */
-    private static final Map<StageType, Stage> STAGE_MAP = new HashMap<>();
+    private static final Map<StageTypeEnum, Stage> STAGE_MAP = new HashMap<>();
     /**
      * Map of nodes, can be used to switch between nodes
      */
-    private static final Map<NodeEnum, Node> NODE_MAP = new HashMap<>();
+    private static final Map<NodePathEnum, Node> NODE_MAP = new HashMap<>();
 
     public static final String FXML_PATH = "/assets/views/";
 
@@ -31,17 +33,44 @@ public class ViewUtil {
         return MainApplication.class.getResource(FXML_PATH + fxmlName + ".fxml");
     }
 
-    public static Node getNodeOrCreate(NodeEnum nodeEnum) {
-        return getNodeOrCreate(nodeEnum, null, true);
+    /**
+     * Create a node based on the data type
+     * @param data The data to be used to create the node
+     * @return The created node
+     */
+    public static Node createNode(Object data){
+        return switch (data.getClass().getSimpleName()) {
+            case "TestSuiteVO" -> createNode(NodePathEnum.TEST_SUITE, data);
+            case "TestCaseVO" -> createNode(NodePathEnum.TEST_CASE, data);
+            default -> null;
+        };
     }
 
-    public static Node getNodeOrCreate(NodeEnum nodeEnum, boolean cache) {
-        return getNodeOrCreate(nodeEnum, null, cache);
+    public static Node createNode(NodePathEnum nodePathEnum, Object data){
+        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodePathEnum.getFxmlName()));
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
+        fxmlLoader.setResources(bundle);
+        ControllerCache.putData(nodePathEnum, data);
+        Node node = null;
+        try {
+            node = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return node;
     }
 
-    public static Node getNodeOrCreate(NodeEnum nodeEnum, Object controller, boolean cache) {
-        if(NODE_MAP.containsKey(nodeEnum)) return NODE_MAP.get(nodeEnum);
-        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodeEnum.getFxmlName()));
+    public static Node getNodeOrCreate(NodePathEnum nodePathEnum) {
+        return getNodeOrCreate(nodePathEnum, null, true);
+    }
+
+    public static Node getNodeOrCreate(NodePathEnum nodePathEnum, boolean cache) {
+        return getNodeOrCreate(nodePathEnum, null, cache);
+    }
+
+    public static Node getNodeOrCreate(NodePathEnum nodePathEnum, Object controller, boolean cache) {
+        if(NODE_MAP.containsKey(nodePathEnum)) return NODE_MAP.get(nodePathEnum);
+        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodePathEnum.getFxmlName()));
         ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
         fxmlLoader.setResources(bundle);
         if(controller != null) fxmlLoader.setControllerFactory(param -> controller);
@@ -51,29 +80,29 @@ public class ViewUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(cache) NODE_MAP.put(nodeEnum, node);
+        if(cache) NODE_MAP.put(nodePathEnum, node);
         return node;
     }
 
-    public static Node removeNode(NodeEnum nodeEnum) {
-        return NODE_MAP.remove(nodeEnum);
+    public static Node removeNode(NodePathEnum nodePathEnum) {
+        return NODE_MAP.remove(nodePathEnum);
     }
 
-    public static Stage getStageOrSave(StageType stageType) {
-        return getStageOrSave(stageType, null, true);
+    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum) {
+        return getStageOrSave(stageTypeEnum, null, true);
     }
 
-    public static Stage getStageOrSave(StageType stageType, Stage stage) {
-        return getStageOrSave(stageType, stage, true);
+    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum, Stage stage) {
+        return getStageOrSave(stageTypeEnum, stage, true);
     }
 
-    public static Stage getStageOrSave(StageType stageType, Stage stage, boolean cache) {
-        if(STAGE_MAP.containsKey(stageType)) return STAGE_MAP.get(stageType);
-        if(cache) STAGE_MAP.put(stageType, stage);
+    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum, Stage stage, boolean cache) {
+        if(STAGE_MAP.containsKey(stageTypeEnum)) return STAGE_MAP.get(stageTypeEnum);
+        if(cache) STAGE_MAP.put(stageTypeEnum, stage);
         return stage;
     }
 
-    public static Stage removeStage(StageType stageType) {
-        return STAGE_MAP.remove(stageType);
+    public static Stage removeStage(StageTypeEnum stageTypeEnum) {
+        return STAGE_MAP.remove(stageTypeEnum);
     }
 }

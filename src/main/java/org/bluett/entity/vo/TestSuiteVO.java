@@ -2,27 +2,29 @@ package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
-import lombok.RequiredArgsConstructor;
-import org.bluett.entity.TestCase;
+import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
 
-import java.util.TreeSet;
+import java.util.Objects;
 
-@RequiredArgsConstructor
 public class TestSuiteVO {
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final StringProperty name = new SimpleStringProperty("");
-    private final StringProperty describe = new SimpleStringProperty("");
+    private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final SimpleSetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+    private final ObservableList<TestCaseVO> testCases = FXCollections.emptyObservableList();
     private final BooleanProperty save = new SimpleBooleanProperty(false);
 
-    public StringProperty describeProperty() {
-        return describe;
+    public Integer getId() {
+        return id.get();
     }
 
-    public void setDescribe(String describe) {
-        this.describe.set(describe);
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getName() {
@@ -37,6 +39,18 @@ public class TestSuiteVO {
         this.name.set(name);
     }
 
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
     public TestResult getStatus() {
         return status.get();
     }
@@ -49,16 +63,8 @@ public class TestSuiteVO {
         this.status.set(status);
     }
 
-    public ObservableSet<TestCase> getTestCases() {
-        return testCases.get();
-    }
-
-    public SimpleSetProperty<TestCase> testCasesProperty() {
+    public ObservableList<TestCaseVO> getTestCases() {
         return testCases;
-    }
-
-    public void setTestCases(ObservableSet<TestCase> testCases) {
-        this.testCases.set(testCases);
     }
 
     public boolean isSave() {
@@ -71,5 +77,18 @@ public class TestSuiteVO {
 
     public void setSave(boolean save) {
         this.save.set(save);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestSuiteVO that = (TestSuiteVO) o;
+        return Objects.equals(id.get(), that.id.get()) && Objects.equals(name.get(), that.name.get()) && Objects.equals(description.get(), that.description.get()) && Objects.equals(status.get(), that.status.get()) && Objects.equals(testCases, that.testCases) && Objects.equals(save.get(), that.save.get());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id.get(), name.get(), description.get(), status.get(), testCases, save.get());
     }
 }

@@ -15,7 +15,7 @@ public class TestImageService {
     private static final Logger log = LogManager.getLogger(TestImageService.class);
 
     public List<TestImage> selectTestImageByIds(List<Integer> testImageIds) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             return testImageMapper.selectTestImageByIds(testImageIds);
         }catch (Exception e){
@@ -25,7 +25,7 @@ public class TestImageService {
     }
 
     public Optional<TestImage> selectTestImageById(Integer id) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             return Optional.ofNullable(testImageMapper.selectTestImageById(id));
         }catch (Exception e){
@@ -35,7 +35,7 @@ public class TestImageService {
     }
 
     public boolean updateById(TestImage testImage) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             Integer cnt = testImageMapper.updateById(testImage);
             if(cnt == 0) return false;
@@ -48,7 +48,7 @@ public class TestImageService {
     }
 
     public boolean insertBatch(List<TestImage> testImageList) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             Integer cnt = testImageMapper.insertBatch(testImageList);
             if(cnt != testImageList.size()) return false;
@@ -61,7 +61,7 @@ public class TestImageService {
     }
 
     public boolean insert(TestImage testImage) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             Integer cnt = testImageMapper.insert(testImage);
             if(cnt == 0) return false;
@@ -74,7 +74,7 @@ public class TestImageService {
     }
 
     public boolean deleteById(Integer testImageId) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             Integer cnt = testImageMapper.deleteById(testImageId);
             if(cnt == 0) return false;
@@ -87,7 +87,7 @@ public class TestImageService {
     }
 
     public boolean deleteByIds(List<Integer> testImageIds) {
-        try(SqlSession session = DatabaseHelper.getSession()){
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestImageMapper testImageMapper = session.getMapper(TestImageMapper.class);
             Integer cnt = testImageMapper.deleteByIds(testImageIds);
             if(cnt != testImageIds.size()) return false;

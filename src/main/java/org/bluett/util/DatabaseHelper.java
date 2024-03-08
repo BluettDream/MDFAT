@@ -21,7 +21,7 @@ public class DatabaseHelper {
 
     private DatabaseHelper(){}
 
-    public static SqlSession getSession(){
+    public static SqlSession getSqlSession(){
         if(FACTORY == null) throw new RuntimeException("数据库初始化失败");
         return FACTORY.openSession();
     }

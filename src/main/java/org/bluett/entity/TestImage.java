@@ -22,4 +22,6 @@ public class TestImage implements Serializable{
     private double similarity;
     // 置信度
     private double confidence;
+
+    private Integer caseId;
 }

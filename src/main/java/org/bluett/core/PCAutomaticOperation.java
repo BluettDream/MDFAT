@@ -1,14 +1,14 @@
 package org.bluett.core;
 
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
-import org.bluett.entity.enums.MouseMoveType;
+import org.bluett.entity.enums.MouseMoveTypeEnum;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class PCAutomaticOperation implements AutomaticOperation{
 
-    public static MouseMoveType MOUSE_MOVE_TYPE = MouseMoveType.PROFESSIONAL;
+    public static MouseMoveTypeEnum MOUSE_MOVE_TYPE = MouseMoveTypeEnum.PROFESSIONAL;
 
     public void click(Point point) throws Exception {
         multipleClick(point, 1);
