@@ -13,8 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bluett.entity.enums.NodePathEnum;
 import org.bluett.entity.enums.StageTypeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
@@ -22,7 +20,6 @@ import org.bluett.service.IndexService;
 import org.bluett.util.LogUtil;
 import org.bluett.util.ViewUtil;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -59,7 +56,7 @@ public class IndexController {
             while (c.next()) {
                 if (c.wasAdded()) {
                     c.getAddedSubList().stream()
-                            .map((Function<TestSuiteVO, Node>) ViewUtil::createNode)
+                            .map((Function<TestSuiteVO, Node>) testSuiteVO -> ViewUtil.createNodeAndPutData(NodePathEnum.TEST_SUITE, testSuiteVO))
                             .forEach(testSuiteVBox.getChildren()::add);
                 }
             }
@@ -110,8 +107,7 @@ public class IndexController {
             // 创建或者获取第二个舞台
             Stage stage = ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY, new Stage());
             // 创建测试集弹窗节点
-            Parent root = (Parent) ViewUtil.getNodeOrCreate(NodePathEnum.TEST_SUITE_DIALOG,
-                    new TestSuiteDialogController(testSuiteVO), false);
+            Parent root = (Parent) ViewUtil.createNodeAndPutData(NodePathEnum.TEST_SUITE_DIALOG, testSuiteVO);
             if(stage.getScene() != null) stage.getScene().setRoot(root);
             else stage.setScene(new Scene(root));
             stage.setAlwaysOnTop(true);
@@ -119,6 +115,7 @@ public class IndexController {
             testSuiteVO.saveProperty().addListener((observable, oldValue, newValue) -> {
                 if(!newValue) return;
                 testSuiteVO.saveProperty().set(false);
+                testSuiteVOList.add(indexService.saveTestSuiteVO(testSuiteVO));
                 // 保存之后关闭舞台,断开对象关联
                 stage.close();
             });

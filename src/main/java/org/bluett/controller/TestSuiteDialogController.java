@@ -4,26 +4,32 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
+import org.bluett.entity.bo.ControllerCache;
+import org.bluett.entity.enums.NodePathEnum;
 import org.bluett.entity.enums.StageTypeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.util.ViewUtil;
 
-@RequiredArgsConstructor
 public class TestSuiteDialogController {
     @FXML
     private TextArea lDescribe;
     @FXML
     private TextField lName;
 
-    private final TestSuiteVO viewModel;
+    private TestSuiteVO testSuiteVO;
     @FXML
     public void initialize() {
-        bindViewModel();
+        bindVO();
+        getData();
     }
 
-    private void bindViewModel() {
-        lName.textProperty().bindBidirectional(viewModel.nameProperty());
-        lDescribe.textProperty().bindBidirectional(viewModel.descriptionProperty());
+    private void getData() {
+        testSuiteVO = (TestSuiteVO) ControllerCache.getData(NodePathEnum.TEST_SUITE_DIALOG);
+    }
+
+    private void bindVO() {
+        testSuiteVO.nameProperty().bindBidirectional(lName.textProperty());
+        testSuiteVO.descriptionProperty().bindBidirectional(lDescribe.textProperty());
     }
 
     @FXML
@@ -33,13 +39,5 @@ public class TestSuiteDialogController {
     @FXML
     void closeStage() {
         ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY).close();
-    }
-
-    @FXML
-    void createTestCase() {
-    }
-
-    @FXML
-    void deleteTestCase() {
     }
 }

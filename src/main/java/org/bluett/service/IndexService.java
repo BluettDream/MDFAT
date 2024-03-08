@@ -1,5 +1,8 @@
 package org.bluett.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.db.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +16,7 @@ import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.util.DatabaseHelper;
 import org.bluett.util.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,13 +29,23 @@ public class IndexService {
             List<TestSuite> suiteList = testSuiteMapper.selectTestSuiteList(testSuite, page);
             if(suiteList == null || suiteList.isEmpty()) return FXCollections.emptyObservableList();
             ObservableList<TestSuiteVO> suiteVOObservableList = suiteList.stream()
-                    .map(TestSuiteService::convertToTestSuiteVO)
+                    .map(suite -> {
+                        TestSuiteVO suiteVO = new TestSuiteVO();
+                        BeanUtil.copyProperties(suite, suiteVO);
+                        return suiteVO;
+                    })
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             // 获取testSuiteVO列表对应的testCaseVO列表
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
             List<Integer> suiteIdList = suiteList.stream().map(TestSuite::getId).toList();
             List<TestCase> testCaseList = testCaseMapper.selectTestCaseBySuiteIds(suiteIdList);
-            suiteVOObservableList.forEach(suiteVO -> suiteVO.getTestCases().addAll(getTestCaseVOList(suiteVO, testCaseList)));
+            suiteVOObservableList.forEach(suiteVO -> {
+                ObservableList<TestCaseVO> caseVOObservableList = testCaseList.stream()
+                        .filter(testCase -> suiteVO.getId() == testCase.getSuiteId())
+                        .map(testCase -> BeanUtil.copyProperties(testCase, TestCaseVO.class))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                suiteVO.getTestCaseList().addAll(caseVOObservableList);
+            });
             return suiteVOObservableList;
         }catch (Exception e){
             LogUtil.error("获取TestSuiteVO ObservableList失败:", e);
@@ -39,11 +53,27 @@ public class IndexService {
         return FXCollections.emptyObservableList();
     }
 
-    private static ObservableList<TestCaseVO> getTestCaseVOList(TestSuiteVO suiteVO, List<TestCase> testCaseList) {
-        return testCaseList.stream()
-                .filter(testCase -> suiteVO.getId().equals(testCase.getSuiteId()))
-                .map(TestCaseService::convertToTestCaseVO)
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    public TestSuiteVO saveTestSuiteVO(TestSuiteVO testSuiteVO) {
+        try(SqlSession session = DatabaseHelper.getSqlSession()) {
+            // 保存testSuite
+            TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
+            TestSuite testSuite = BeanUtil.copyProperties(testSuiteVO, TestSuite.class);
+            if(ObjectUtil.isEmpty(testSuite)) return null;
+            testSuiteMapper.insert(testSuite);
+            if(CollectionUtil.isEmpty(testSuiteVO.getTestCaseList())) {
+                session.commit();
+                return testSuiteVO;
+            }
+            // 保存testCase
+            List<TestCase> testCaseList = new ArrayList<>();
+            testSuiteVO.getTestCaseList().forEach(testCaseVO -> testCaseList.add(BeanUtil.copyProperties(testCaseVO, TestCase.class)));
+            TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
+            testCaseMapper.insertBatch(testCaseList);
+            session.commit();
+            return testSuiteVO;
+        }catch (Exception e){
+            LogUtil.error("保存TestSuiteVO失败:", e);
+        }
+        return null;
     }
-
 }

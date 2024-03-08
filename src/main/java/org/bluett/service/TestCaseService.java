@@ -99,15 +99,4 @@ public class TestCaseService {
         }
         return false;
     }
-
-    public static TestCaseVO convertToTestCaseVO(TestCase testCase) {
-        TestCaseVO caseVO = new TestCaseVO();
-        caseVO.setId(testCase.getId());
-        caseVO.setName(testCase.getName());
-        caseVO.setDescription(testCase.getDescription());
-        caseVO.setPriority(testCase.getPriority());
-        caseVO.setStatus(testCase.getStatus());
-        caseVO.setSuiteId(testCase.getSuiteId());
-        return caseVO;
-    }
 }

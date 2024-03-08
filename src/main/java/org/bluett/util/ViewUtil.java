@@ -7,7 +7,6 @@ import org.bluett.MainApplication;
 import org.bluett.entity.bo.ControllerCache;
 import org.bluett.entity.enums.NodePathEnum;
 import org.bluett.entity.enums.StageTypeEnum;
-import org.bluett.entity.vo.TestSuiteVO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,24 +32,11 @@ public class ViewUtil {
         return MainApplication.class.getResource(FXML_PATH + fxmlName + ".fxml");
     }
 
-    /**
-     * Create a node based on the data type
-     * @param data The data to be used to create the node
-     * @return The created node
-     */
-    public static Node createNode(Object data){
-        return switch (data.getClass().getSimpleName()) {
-            case "TestSuiteVO" -> createNode(NodePathEnum.TEST_SUITE, data);
-            case "TestCaseVO" -> createNode(NodePathEnum.TEST_CASE, data);
-            default -> null;
-        };
-    }
-
-    public static Node createNode(NodePathEnum nodePathEnum, Object data){
+    public static Node createNodeAndPutData(NodePathEnum nodePathEnum, Object data){
         FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodePathEnum.getFxmlName()));
         ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
         fxmlLoader.setResources(bundle);
-        ControllerCache.putData(nodePathEnum, data);
+        ControllerCache.putData(nodePathEnum, data);// 存入数据
         Node node = null;
         try {
             node = fxmlLoader.load();

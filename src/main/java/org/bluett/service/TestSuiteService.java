@@ -10,6 +10,7 @@ import org.bluett.util.LogUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class TestSuiteService {
 
@@ -59,6 +60,20 @@ public class TestSuiteService {
         return false;
     }
 
+    public boolean insert(TestSuite testSuite, Supplier<Boolean> supplier) {
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
+            TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
+            Integer cnt = testSuiteMapper.insert(testSuite);
+            if(cnt == 0) return false;
+            Boolean ret = supplier.get();
+            if(ret) session.commit();
+            return ret;
+        }catch (Exception e){
+            LogUtil.error("插入test_suite失败:", e);
+        }
+        return false;
+    }
+
     public boolean insert(TestSuite testSuite) {
         try(SqlSession session = DatabaseHelper.getSqlSession()){
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
@@ -96,14 +111,5 @@ public class TestSuiteService {
             LogUtil.error("删除test_suites失败:", e);
         }
         return false;
-    }
-
-    public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
-        TestSuiteVO suiteVO = new TestSuiteVO();
-        suiteVO.setId(testSuite.getId());
-        suiteVO.setName(testSuite.getName());
-        suiteVO.setDescription(testSuite.getDescription());
-        suiteVO.setStatus(testSuite.getStatus());
-        return suiteVO;
     }
 }

@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
+import org.bluett.entity.TestSuite;
 
 import java.util.Objects;
 
@@ -12,10 +13,10 @@ public class TestSuiteVO {
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final ObservableList<TestCaseVO> testCases = FXCollections.emptyObservableList();
+    private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final BooleanProperty save = new SimpleBooleanProperty(false);
 
-    public Integer getId() {
+    public int getId() {
         return id.get();
     }
 
@@ -63,8 +64,16 @@ public class TestSuiteVO {
         this.status.set(status);
     }
 
-    public ObservableList<TestCaseVO> getTestCases() {
-        return testCases;
+    public ObservableList<TestCaseVO> getTestCaseList() {
+        return testCaseList.get();
+    }
+
+    public SimpleListProperty<TestCaseVO> testCaseListProperty() {
+        return testCaseList;
+    }
+
+    public void setTestCaseList(ObservableList<TestCaseVO> testCaseList) {
+        this.testCaseList.set(testCaseList);
     }
 
     public boolean isSave() {
@@ -80,15 +89,15 @@ public class TestSuiteVO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TestSuiteVO that = (TestSuiteVO) o;
-        return Objects.equals(id.get(), that.id.get()) && Objects.equals(name.get(), that.name.get()) && Objects.equals(description.get(), that.description.get()) && Objects.equals(status.get(), that.status.get()) && Objects.equals(testCases, that.testCases) && Objects.equals(save.get(), that.save.get());
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        TestSuiteVO suiteVO = (TestSuiteVO) object;
+        return Objects.equals(id, suiteVO.id) && Objects.equals(name, suiteVO.name) && Objects.equals(description, suiteVO.description) && Objects.equals(status, suiteVO.status) && Objects.equals(testCaseList, suiteVO.testCaseList) && Objects.equals(save, suiteVO.save);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id.get(), name.get(), description.get(), status.get(), testCases, save.get());
+        return Objects.hash(id, name, description, status, testCaseList, save);
     }
 }
