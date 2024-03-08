@@ -1,16 +1,12 @@
 package org.bluett.controller;
 
-import javafx.beans.property.SimpleMapProperty;
-import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.StringConverter;
-import lombok.Setter;
 import org.bluett.entity.TestResult;
-import org.bluett.entity.bo.ControllerCache;
-import org.bluett.entity.enums.NodePathEnum;
+import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
-import org.bluett.service.TestSuiteService;
+import org.bluett.util.ViewUtil;
 
 public class TestSuiteController {
     @FXML
@@ -22,12 +18,12 @@ public class TestSuiteController {
 
     @FXML
     public void initialize() {
-        getData();
+        initData();
         bindVO();
     }
 
-    public void getData() {
-        testSuiteVO = (TestSuiteVO) ControllerCache.getData(NodePathEnum.TEST_SUITE);
+    public void initData() {
+        testSuiteVO = (TestSuiteVO) ViewUtil.getAndRemoveData(NodeEnum.TEST_SUITE);
     }
 
     private void bindVO() {

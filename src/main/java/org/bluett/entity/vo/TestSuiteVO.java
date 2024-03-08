@@ -4,7 +4,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
-import org.bluett.entity.TestSuite;
 
 import java.util.Objects;
 

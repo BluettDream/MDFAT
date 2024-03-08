@@ -1,17 +1,17 @@
 package org.bluett.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.TestSuite;
-import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.util.DatabaseHelper;
-import org.bluett.util.LogUtil;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+@Log4j2
 public class TestSuiteService {
 
     public List<TestSuite> selectTestSuiteByIds(List<Integer> testSuiteIds) {
@@ -19,7 +19,7 @@ public class TestSuiteService {
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
             return testSuiteMapper.selectTestSuiteByIds(testSuiteIds);
         }catch (Exception e){
-            LogUtil.error("批量查询test_suite失败:", e);
+            log.error("批量查询test_suite失败:", e);
         }
         return Collections.emptyList();
     }
@@ -29,7 +29,7 @@ public class TestSuiteService {
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
             return Optional.ofNullable(testSuiteMapper.selectTestSuiteById(id));
         }catch (Exception e){
-            LogUtil.error("查询test_suite失败:", e);
+            log.error("查询test_suite失败:", e);
         }
         return Optional.empty();
     }
@@ -42,7 +42,7 @@ public class TestSuiteService {
             session.commit();
             return true;
         }catch (Exception e){
-            LogUtil.error("更新test_suite失败:", e);
+            log.error("更新test_suite失败:", e);
         }
         return false;
     }
@@ -55,7 +55,7 @@ public class TestSuiteService {
             session.commit();
             return true;
         }catch (Exception e){
-            LogUtil.error("插入test_suite失败:", e);
+            log.error("插入test_suite失败:", e);
         }
         return false;
     }
@@ -69,7 +69,7 @@ public class TestSuiteService {
             if(ret) session.commit();
             return ret;
         }catch (Exception e){
-            LogUtil.error("插入test_suite失败:", e);
+            log.error("插入test_suite失败:", e);
         }
         return false;
     }
@@ -82,7 +82,7 @@ public class TestSuiteService {
             session.commit();
             return true;
         }catch (Exception e){
-            LogUtil.error("插入test_suite失败:", e);
+            log.error("插入test_suite失败:", e);
         }
         return false;
     }
@@ -95,7 +95,7 @@ public class TestSuiteService {
             session.commit();
             return true;
         }catch (Exception e){
-            LogUtil.error("删除test_suite失败:", e);
+            log.error("删除test_suite失败:", e);
         }
         return false;
     }
@@ -108,7 +108,7 @@ public class TestSuiteService {
             session.commit();
             return true;
         }catch (Exception e){
-            LogUtil.error("删除test_suites失败:", e);
+            log.error("删除test_suites失败:", e);
         }
         return false;
     }

@@ -4,34 +4,16 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bluett.entity.enums.NodePathEnum;
-import org.bluett.entity.enums.StageTypeEnum;
+import org.bluett.entity.enums.NodeEnum;
 import org.bluett.util.ViewUtil;
 
-import java.util.ResourceBundle;
-
 public class MainApplication extends Application {
-    private static final Logger log = LogManager.getLogger(MainApplication.class);
-
-    @Override
-    public void init() throws Exception {
-        super.init();
-    }
-
     @Override
     public void start(Stage primaryStage) {
-        Parent root = (Parent) ViewUtil.getNodeOrCreate(NodePathEnum.MAIN);
-        ViewUtil.getStageOrSave(StageTypeEnum.PRIMARY, primaryStage);
-        primaryStage.setTitle(ResourceBundle.getBundle("i18n").getString("title"));
+        Parent root = ViewUtil.createNode(NodeEnum.MAIN);
+        primaryStage.setTitle(ViewUtil.getResourceBundle().getString("title"));
         primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.show();
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
     }
 
     public static void main(String[] args) {

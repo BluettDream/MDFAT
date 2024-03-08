@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.db.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.TestCase;
 import org.bluett.entity.TestSuite;
@@ -14,12 +15,12 @@ import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.mapper.TestCaseMapper;
 import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.util.DatabaseHelper;
-import org.bluett.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class IndexService {
 
     public ObservableList<TestSuiteVO> selectTestSuiteVOList(TestSuite testSuite, Page page) {
@@ -29,11 +30,7 @@ public class IndexService {
             List<TestSuite> suiteList = testSuiteMapper.selectTestSuiteList(testSuite, page);
             if(suiteList == null || suiteList.isEmpty()) return FXCollections.emptyObservableList();
             ObservableList<TestSuiteVO> suiteVOObservableList = suiteList.stream()
-                    .map(suite -> {
-                        TestSuiteVO suiteVO = new TestSuiteVO();
-                        BeanUtil.copyProperties(suite, suiteVO);
-                        return suiteVO;
-                    })
+                    .map(this::convertToTestSuiteVO)
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             // 获取testSuiteVO列表对应的testCaseVO列表
             TestCaseMapper testCaseMapper = session.getMapper(TestCaseMapper.class);
@@ -42,13 +39,13 @@ public class IndexService {
             suiteVOObservableList.forEach(suiteVO -> {
                 ObservableList<TestCaseVO> caseVOObservableList = testCaseList.stream()
                         .filter(testCase -> suiteVO.getId() == testCase.getSuiteId())
-                        .map(testCase -> BeanUtil.copyProperties(testCase, TestCaseVO.class))
+                        .map(this::convertToTestCaseVO)
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
                 suiteVO.getTestCaseList().addAll(caseVOObservableList);
             });
             return suiteVOObservableList;
         }catch (Exception e){
-            LogUtil.error("获取TestSuiteVO ObservableList失败:", e);
+            log.error("获取TestSuiteVO ObservableList失败:", e);
         }
         return FXCollections.emptyObservableList();
     }
@@ -72,8 +69,39 @@ public class IndexService {
             session.commit();
             return testSuiteVO;
         }catch (Exception e){
-            LogUtil.error("保存TestSuiteVO失败:", e);
+            log.error("保存TestSuiteVO失败:", e);
         }
         return null;
+    }
+
+    private TestCaseVO convertToTestCaseVO(TestCase testCase) {
+        TestCaseVO testCaseVO = new TestCaseVO();
+        testCaseVO.setId(testCase.getId());
+        testCaseVO.setSuiteId(testCase.getSuiteId());
+        testCaseVO.setName(testCase.getName());
+        testCaseVO.setDescription(testCase.getDescription());
+        testCaseVO.setStatus(testCase.getStatus());
+        testCaseVO.setPriority(testCase.getPriority());
+        return testCaseVO;
+    }
+
+    private TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
+        if(ObjectUtil.isEmpty(testSuite)) return null;
+        TestSuiteVO testSuiteVO = new TestSuiteVO();
+        testSuiteVO.setId(testSuite.getId());
+        testSuiteVO.setName(testSuite.getName());
+        testSuiteVO.setDescription(testSuite.getDescription());
+        testSuiteVO.setStatus(testSuite.getStatus());
+        return testSuiteVO;
+    }
+
+    private TestSuite convertToTestSuite(TestSuiteVO testSuiteVO) {
+        if(ObjectUtil.isEmpty(testSuiteVO)) return null;
+        TestSuite testSuite = new TestSuite();
+        testSuite.setId(testSuiteVO.getId());
+        testSuite.setName(testSuiteVO.getName());
+        testSuite.setDescription(testSuiteVO.getDescription());
+        testSuite.setStatus(testSuiteVO.getStatus());
+        return testSuite;
     }
 }

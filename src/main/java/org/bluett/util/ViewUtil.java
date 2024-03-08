@@ -1,12 +1,12 @@
 package org.bluett.util;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.stage.Stage;
+import lombok.extern.log4j.Log4j2;
 import org.bluett.MainApplication;
-import org.bluett.entity.bo.ControllerCache;
-import org.bluett.entity.enums.NodePathEnum;
-import org.bluett.entity.enums.StageTypeEnum;
+import org.bluett.entity.enums.NodeEnum;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,80 +15,58 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-
+@Log4j2
 public class ViewUtil {
-    /**
-     * Map of stages, can be used to switch between stages
-     */
-    private static final Map<StageTypeEnum, Stage> STAGE_MAP = new HashMap<>();
-    /**
-     * Map of nodes, can be used to switch between nodes
-     */
-    private static final Map<NodePathEnum, Node> NODE_MAP = new HashMap<>();
+    private static final Map<NodeEnum, Stage> STAGE_MAP = new HashMap<>();
+    private static final Map<NodeEnum, Object> DATA_MAP = new HashMap<>();
+    private static final String RESOURCE_BUNDLE_NAME = "i18n";
 
-    public static final String FXML_PATH = "/assets/views/";
-
-    public static URL getViewURL(String fxmlName) {
-        return MainApplication.class.getResource(FXML_PATH + fxmlName + ".fxml");
+    public static Object getAndRemoveData(NodeEnum nodeEnum){
+        Object value = DATA_MAP.get(nodeEnum);
+        DATA_MAP.remove(nodeEnum);
+        return value;
     }
 
-    public static Node createNodeAndPutData(NodePathEnum nodePathEnum, Object data){
-        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodePathEnum.getFxmlName()));
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
-        fxmlLoader.setResources(bundle);
-        ControllerCache.putData(nodePathEnum, data);// 存入数据
-        Node node = null;
+    public static <T> T createNode(NodeEnum nodeEnum){
+        return createNodeAndPutData(nodeEnum, null);
+    }
+    public static <T> T createNodeAndPutData(NodeEnum nodeEnum, Object data){
+        T value = null;
         try {
-            node = fxmlLoader.load();
+            URL url = MainApplication.class.getResource(nodeEnum.getFxmlPath());
+            if(!ObjectUtil.isEmpty(data)) DATA_MAP.put(nodeEnum, data); // 初始化节点会获取数据,此条语句必须在加载节点之前
+            value = new FXMLLoader(url, getResourceBundle()).load();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("节点{}加载失败:", nodeEnum.getFxmlPath(), ExceptionUtil.getRootCause(e));
+            DATA_MAP.remove(nodeEnum); // 加载失败,删除数据
         }
-        return node;
+        return value;
     }
 
-    public static Node getNodeOrCreate(NodePathEnum nodePathEnum) {
-        return getNodeOrCreate(nodePathEnum, null, true);
-    }
-
-    public static Node getNodeOrCreate(NodePathEnum nodePathEnum, boolean cache) {
-        return getNodeOrCreate(nodePathEnum, null, cache);
-    }
-
-    public static Node getNodeOrCreate(NodePathEnum nodePathEnum, Object controller, boolean cache) {
-        if(NODE_MAP.containsKey(nodePathEnum)) return NODE_MAP.get(nodePathEnum);
-        FXMLLoader fxmlLoader = new FXMLLoader(getViewURL(nodePathEnum.getFxmlName()));
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n", Locale.getDefault());
-        fxmlLoader.setResources(bundle);
-        if(controller != null) fxmlLoader.setControllerFactory(param -> controller);
-        Node node = null;
-        try {
-            node = fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if(cache) NODE_MAP.put(nodePathEnum, node);
-        return node;
-    }
-
-    public static Node removeNode(NodePathEnum nodePathEnum) {
-        return NODE_MAP.remove(nodePathEnum);
-    }
-
-    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum) {
-        return getStageOrSave(stageTypeEnum, null, true);
-    }
-
-    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum, Stage stage) {
-        return getStageOrSave(stageTypeEnum, stage, true);
-    }
-
-    public static Stage getStageOrSave(StageTypeEnum stageTypeEnum, Stage stage, boolean cache) {
-        if(STAGE_MAP.containsKey(stageTypeEnum)) return STAGE_MAP.get(stageTypeEnum);
-        if(cache) STAGE_MAP.put(stageTypeEnum, stage);
+    public static Stage createAndSaveStage(NodeEnum nodeEnum){
+        Stage stage = new Stage();
+        saveStage(nodeEnum, stage);
         return stage;
     }
+    public static Stage getStage(NodeEnum nodeEnum) {
+        return STAGE_MAP.get(nodeEnum);
+    }
+    public static void saveStage(NodeEnum nodeEnum, Stage stage) {
+        STAGE_MAP.put(nodeEnum, stage);
+    }
+    public static void deleteStage(NodeEnum nodeEnum) {
+        Stage stage = STAGE_MAP.get(nodeEnum);
+        STAGE_MAP.remove(nodeEnum);
+        if(ObjectUtil.isEmpty(stage)) return;
+        stage.getScene().setRoot(null);
+    }
+    public static void closeAndDeleteStage(NodeEnum nodeEnum) {
+        Stage stage = STAGE_MAP.get(nodeEnum);
+        if(stage != null) stage.close();
+        deleteStage(nodeEnum);
+    }
 
-    public static Stage removeStage(StageTypeEnum stageTypeEnum) {
-        return STAGE_MAP.remove(stageTypeEnum);
+    public static ResourceBundle getResourceBundle(){
+        return ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, Locale.getDefault());
     }
 }

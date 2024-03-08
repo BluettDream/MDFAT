@@ -3,10 +3,7 @@ package org.bluett.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import lombok.RequiredArgsConstructor;
-import org.bluett.entity.bo.ControllerCache;
-import org.bluett.entity.enums.NodePathEnum;
-import org.bluett.entity.enums.StageTypeEnum;
+import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.util.ViewUtil;
 
@@ -20,11 +17,11 @@ public class TestSuiteDialogController {
     @FXML
     public void initialize() {
         bindVO();
-        getData();
+        initData();
     }
 
-    private void getData() {
-        testSuiteVO = (TestSuiteVO) ControllerCache.getData(NodePathEnum.TEST_SUITE_DIALOG);
+    private void initData() {
+        testSuiteVO = (TestSuiteVO) ViewUtil.getAndRemoveData(NodeEnum.TEST_SUITE_DIALOG);
     }
 
     private void bindVO() {
@@ -38,6 +35,6 @@ public class TestSuiteDialogController {
 
     @FXML
     void closeStage() {
-        ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY).close();
+        ViewUtil.closeAndDeleteStage(NodeEnum.TEST_SUITE_DIALOG);
     }
 }

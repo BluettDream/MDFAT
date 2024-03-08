@@ -13,17 +13,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
-import org.bluett.entity.enums.NodePathEnum;
-import org.bluett.entity.enums.StageTypeEnum;
+import lombok.extern.log4j.Log4j2;
+import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.service.IndexService;
-import org.bluett.util.LogUtil;
 import org.bluett.util.ViewUtil;
 
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
 @Getter
+@Log4j2
 public class IndexController {
     @FXML
     private VBox testSuiteVBox;
@@ -56,7 +56,7 @@ public class IndexController {
             while (c.next()) {
                 if (c.wasAdded()) {
                     c.getAddedSubList().stream()
-                            .map((Function<TestSuiteVO, Node>) testSuiteVO -> ViewUtil.createNodeAndPutData(NodePathEnum.TEST_SUITE, testSuiteVO))
+                            .map((Function<TestSuiteVO, Node>) testSuiteVO -> ViewUtil.createNodeAndPutData(NodeEnum.TEST_SUITE, testSuiteVO))
                             .forEach(testSuiteVBox.getChildren()::add);
                 }
             }
@@ -74,11 +74,12 @@ public class IndexController {
                 contextMenu.hide();
                 break;
             case SECONDARY:
-                contextMenu.show(ViewUtil.getNodeOrCreate(NodePathEnum.MAIN), event.getScreenX(), event.getScreenY());
+                Node node = ViewUtil.createNode(NodeEnum.MAIN);
+                contextMenu.show(node, event.getScreenX(), event.getScreenY());
                 break;
             default:
                 contextMenu.hide();
-                LogUtil.info("Unknown button clicked");
+                log.info("Unknown button clicked");
         }
     }
 
@@ -104,19 +105,15 @@ public class IndexController {
         // 点击菜单项之后弹出创建测试集对话框
         item.setOnAction(event -> {
             TestSuiteVO testSuiteVO = new TestSuiteVO();
-            // 创建或者获取第二个舞台
-            Stage stage = ViewUtil.getStageOrSave(StageTypeEnum.SECONDARY, new Stage());
-            // 创建测试集弹窗节点
-            Parent root = (Parent) ViewUtil.createNodeAndPutData(NodePathEnum.TEST_SUITE_DIALOG, testSuiteVO);
-            if(stage.getScene() != null) stage.getScene().setRoot(root);
-            else stage.setScene(new Scene(root));
+            Stage stage = ViewUtil.createAndSaveStage(NodeEnum.TEST_SUITE_DIALOG);
+            Parent root = ViewUtil.createNodeAndPutData(NodeEnum.TEST_SUITE_DIALOG, testSuiteVO);
+            stage.setScene(new Scene(root));
             stage.setAlwaysOnTop(true);
             // 根据是否点击保存按钮来更新测试集视图
             testSuiteVO.saveProperty().addListener((observable, oldValue, newValue) -> {
                 if(!newValue) return;
                 testSuiteVO.saveProperty().set(false);
                 testSuiteVOList.add(indexService.saveTestSuiteVO(testSuiteVO));
-                // 保存之后关闭舞台,断开对象关联
                 stage.close();
             });
             stage.show();
