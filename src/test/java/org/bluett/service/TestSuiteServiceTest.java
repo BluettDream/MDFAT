@@ -1,16 +1,15 @@
-package org.bluett.service.impl;
+package org.bluett.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bluett.entity.TestResult;
 import org.bluett.entity.TestSuite;
-import org.bluett.service.TestSuiteService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class TestSuiteServiceImplTest {
-    private static final Logger log = LogManager.getLogger(TestSuiteServiceImplTest.class);
+class TestSuiteServiceTest {
+    private static final Logger log = LogManager.getLogger(TestSuiteServiceTest.class);
     private final TestSuiteService service = new TestSuiteService();
 
     @Test

@@ -1,4 +1,4 @@
-package org.bluett.engine;
+package org.bluett.core;
 
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
 import org.bluett.entity.enums.MouseMoveType;
