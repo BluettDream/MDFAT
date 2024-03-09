@@ -1,18 +1,19 @@
 package org.bluett.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bluett.entity.TestImage;
 import org.bluett.mapper.TestImageMapper;
-import org.bluett.util.DatabaseHelper;
+import org.bluett.helper.DatabaseHelper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 public class TestImageService {
-    private static final Logger log = LogManager.getLogger(TestImageService.class);
 
     public List<TestImage> selectTestImageByIds(List<Integer> testImageIds) {
         try(SqlSession session = DatabaseHelper.getSqlSession()){

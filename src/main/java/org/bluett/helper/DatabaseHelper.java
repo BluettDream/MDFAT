@@ -1,21 +1,23 @@
-package org.bluett.util;
+package org.bluett.helper;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bluett.MainApplication;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
+@Log4j2
 public class DatabaseHelper {
-    private static final Logger log = LogManager.getLogger(DatabaseHelper.class);
+    public static final Path DATABASE_PATH = Paths.get(System.getProperty("user.dir")).resolve("cache").resolve("mdfat.db");
     private static final URL MAPPER_URL = MainApplication.class.getResource("/mapper");
-    private static final String DB_URL = "jdbc:sqlite:" + CacheUtil.DATABASE_PATH;
+    private static final String DB_URL = "jdbc:sqlite:" + DATABASE_PATH;
     private static final String MYBATIS_CONFIG = "mybatis-config.xml";
     private static final SqlSessionFactory FACTORY = getSqlSessionFactory();
 

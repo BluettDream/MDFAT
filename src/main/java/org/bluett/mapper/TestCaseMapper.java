@@ -3,7 +3,6 @@ package org.bluett.mapper;
 import cn.hutool.db.Page;
 import org.apache.ibatis.annotations.Param;
 import org.bluett.entity.TestCase;
-import org.bluett.entity.TestSuite;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public interface TestCaseMapper {
 
     Integer insert(TestCase testCase);
 
-    Integer insertBatch(List<TestCase> testCases);
+    Integer insertBatch(List<TestCase> testTestCases);
 
     Integer deleteById(Integer testCaseId);
 

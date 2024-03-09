@@ -1,0 +1,36 @@
+/* 自定义Alert样式 */
+.myDialog {
+    /* 背景颜色和透明度 */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* 边框样式 */
+    border: 1px solid #ccc;
+    /* 圆角 */
+    border-radius: 5px;
+    /* 内边距 */
+    padding: 20px;
+    /* 文本对齐 */
+    text-align: center;
+    /* 字体大小 */
+    font-size: 16px;
+    /* 阴影效果 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /* 动画效果 */
+    transition: all 0.5s ease-in-out;
+}
+
+/* 当Alert显示时的样式 */
+.myDialog.show {
+    /* 使Alert在页面顶部中央位置显示 */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    /* 动画效果 */
+    animation: fadeIn 0.5s;
+}
+
+/* Alert消失时的动画 */
+@keyframes fadeIn {
+    from { top: -50px; opacity: 0; }
+    to { top: 0; opacity: 1; }
+}

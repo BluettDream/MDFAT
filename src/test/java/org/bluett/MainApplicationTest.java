@@ -10,20 +10,4 @@ import org.junit.jupiter.api.Test;
 import java.sql.DriverManager;
 
 class MainApplicationTest {
-
-    private final static Logger log = LogManager.getLogger(MainApplicationTest.class);
-
-    @Test
-    void test1() throws InterruptedException {
-        DefaultMouseMotionNature mouseMotionNature = new DefaultMouseMotionNature();
-        mouseMotionNature.setReactionTimeBaseMs(3000);
-        MouseMotionFactory mouseMotionFactory = FactoryTemplates.createFastGamerMotionFactory(mouseMotionNature);
-        mouseMotionFactory.move(50, 50);
-    }
-
-    @Test
-    void test2() throws InterruptedException {
-
-    }
-
 }

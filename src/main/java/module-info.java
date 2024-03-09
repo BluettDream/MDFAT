@@ -15,5 +15,5 @@ open module org.bluett {
     exports org.bluett.entity;
     exports org.bluett.entity.vo;
     exports org.bluett.entity.enums;
-    exports org.bluett.util;
+    exports org.bluett.helper;
 }

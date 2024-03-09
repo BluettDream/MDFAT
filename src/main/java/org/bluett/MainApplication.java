@@ -5,15 +5,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.bluett.entity.enums.NodeEnum;
-import org.bluett.util.ViewUtil;
+import org.bluett.helper.UIHelper;
 
 public class MainApplication extends Application {
     @Override
-    public void start(Stage primaryStage) {
-        Parent root = (Parent) ViewUtil.createAndSaveNode(NodeEnum.MAIN);
-        primaryStage.setTitle(ViewUtil.getResourceBundle().getString("title"));
-        primaryStage.setScene(new Scene(root, 1000, 600));
-        primaryStage.show();
+    public void start(Stage stage) {
+        Parent root = (Parent) UIHelper.createAndSaveNode(NodeEnum.MAIN);
+        stage.setTitle(UIHelper.getI18nStr("title"));
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     public static void main(String[] args) {
