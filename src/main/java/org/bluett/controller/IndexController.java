@@ -74,8 +74,7 @@ public class IndexController {
                 contextMenu.hide();
                 break;
             case SECONDARY:
-                Node node = ViewUtil.createNode(NodeEnum.MAIN);
-                contextMenu.show(node, event.getScreenX(), event.getScreenY());
+                contextMenu.show(ViewUtil.getNode(NodeEnum.MAIN), event.getScreenX(), event.getScreenY());
                 break;
             default:
                 contextMenu.hide();
@@ -105,7 +104,7 @@ public class IndexController {
         // 点击菜单项之后弹出创建测试集对话框
         item.setOnAction(event -> {
             TestSuiteVO testSuiteVO = new TestSuiteVO();
-            Stage stage = ViewUtil.createAndSaveStage(NodeEnum.TEST_SUITE_DIALOG);
+            Stage stage = new Stage();
             Parent root = ViewUtil.createNodeAndPutData(NodeEnum.TEST_SUITE_DIALOG, testSuiteVO);
             stage.setScene(new Scene(root));
             stage.setAlwaysOnTop(true);

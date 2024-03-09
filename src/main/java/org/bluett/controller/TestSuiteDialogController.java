@@ -1,5 +1,6 @@
 package org.bluett.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -17,20 +18,19 @@ public class TestSuiteDialogController {
     @FXML
     public void initialize() {
         bindVO();
-        initData();
-    }
-
-    private void initData() {
-        testSuiteVO = (TestSuiteVO) ViewUtil.getAndRemoveData(NodeEnum.TEST_SUITE_DIALOG);
     }
 
     private void bindVO() {
-        testSuiteVO.nameProperty().bindBidirectional(lName.textProperty());
-        testSuiteVO.descriptionProperty().bindBidirectional(lDescribe.textProperty());
+        testSuiteVO = (TestSuiteVO) ViewUtil.getAndRemoveData(NodeEnum.TEST_SUITE_DIALOG);
+        if(ObjectUtil.isEmpty(testSuiteVO)) return;
+        lName.textProperty().bindBidirectional(testSuiteVO.nameProperty());
+        lDescribe.textProperty().bindBidirectional(testSuiteVO.descriptionProperty());
     }
 
     @FXML
     void saveTestSuite() {
+        if(ObjectUtil.isEmpty(testSuiteVO)) return;
+        testSuiteVO.setSave(true);
     }
 
     @FXML

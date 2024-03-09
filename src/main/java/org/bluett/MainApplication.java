@@ -10,7 +10,7 @@ import org.bluett.util.ViewUtil;
 public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
-        Parent root = ViewUtil.createNode(NodeEnum.MAIN);
+        Parent root = (Parent) ViewUtil.createAndSaveNode(NodeEnum.MAIN);
         primaryStage.setTitle(ViewUtil.getResourceBundle().getString("title"));
         primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.show();

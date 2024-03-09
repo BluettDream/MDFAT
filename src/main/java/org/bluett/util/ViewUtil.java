@@ -3,6 +3,7 @@ package org.bluett.util;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
 import org.bluett.MainApplication;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
 public class ViewUtil {
     private static final Map<NodeEnum, Stage> STAGE_MAP = new HashMap<>();
     private static final Map<NodeEnum, Object> DATA_MAP = new HashMap<>();
+    private static final Map<NodeEnum, Node> NODE_MAP = new HashMap<>();
     private static final String RESOURCE_BUNDLE_NAME = "i18n";
 
     public static Object getAndRemoveData(NodeEnum nodeEnum){
@@ -26,7 +28,21 @@ public class ViewUtil {
         DATA_MAP.remove(nodeEnum);
         return value;
     }
+    public static void clearData(){
+        DATA_MAP.clear();
+    }
 
+    public static Node createAndSaveNode(NodeEnum nodeEnum){
+        Node node = createNode(nodeEnum);
+        NODE_MAP.put(nodeEnum, node);
+        return node;
+    }
+    public static Node getNode(NodeEnum nodeEnum){
+        return NODE_MAP.get(nodeEnum);
+    }
+    public static void deleteNode(NodeEnum nodeEnum){
+        NODE_MAP.remove(nodeEnum);
+    }
     public static <T> T createNode(NodeEnum nodeEnum){
         return createNodeAndPutData(nodeEnum, null);
     }
@@ -41,6 +57,9 @@ public class ViewUtil {
             DATA_MAP.remove(nodeEnum); // 加载失败,删除数据
         }
         return value;
+    }
+    public static void clearNode(){
+        NODE_MAP.clear();
     }
 
     public static Stage createAndSaveStage(NodeEnum nodeEnum){
@@ -64,6 +83,15 @@ public class ViewUtil {
         Stage stage = STAGE_MAP.get(nodeEnum);
         if(stage != null) stage.close();
         deleteStage(nodeEnum);
+    }
+    public static void clearStage(){
+        STAGE_MAP.clear();
+    }
+
+    public static void clearAll(){
+        clearData();
+        clearNode();
+        clearStage();
     }
 
     public static ResourceBundle getResourceBundle(){
