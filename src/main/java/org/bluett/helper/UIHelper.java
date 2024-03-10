@@ -14,14 +14,14 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import lombok.extern.log4j.Log4j2;
 import org.bluett.MainApplication;
+import org.bluett.controller.IndexController;
+import org.bluett.controller.RootController;
 import org.bluett.entity.enums.NodeEnum;
+import org.bluett.entity.vo.TestCaseVO;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @Log4j2
 public class UIHelper {
@@ -29,6 +29,12 @@ public class UIHelper {
     private static final Map<NodeEnum, Object> DATA_MAP = new HashMap<>();
     private static final Map<NodeEnum, Node> NODE_MAP = new HashMap<>();
     private static final String RESOURCE_BUNDLE_NAME = "i18n";
+
+    public static Optional<FXMLLoader> getFXMLLoader(NodeEnum nodeEnum){
+        URL url = MainApplication.class.getResource(nodeEnum.getFxmlPath());
+        if(url == null) return Optional.empty();
+        return Optional.of(new FXMLLoader(url, getResourceBundle()));
+    }
 
     public static Object getAndRemoveData(NodeEnum nodeEnum){
         Object value = DATA_MAP.get(nodeEnum);
@@ -58,7 +64,9 @@ public class UIHelper {
         try {
             URL url = MainApplication.class.getResource(nodeEnum.getFxmlPath());
             if(!ObjectUtil.isEmpty(data)) DATA_MAP.put(nodeEnum, data); // 初始化节点会获取数据,此条语句必须在加载节点之前
-            value = new FXMLLoader(url, ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, Locale.getDefault())).load();
+            FXMLLoader loader = new FXMLLoader(url, ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, Locale.getDefault()));
+            IndexController indexController = loader.getController();
+            value = loader.load();
         } catch (IOException e) {
             log.error("节点{}加载失败:", nodeEnum.getFxmlPath(), ExceptionUtil.getRootCause(e));
             DATA_MAP.remove(nodeEnum); // 加载失败,删除数据
@@ -135,6 +143,10 @@ public class UIHelper {
     }
 
     public static String getI18nStr(String key){
-        return ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, Locale.getDefault()).getString(key);
+        return getResourceBundle().getString(key);
+    }
+
+    public static ResourceBundle getResourceBundle(){
+        return ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, Locale.getDefault());
     }
 }
