@@ -3,38 +3,38 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestCaseMapper">
-    <select id="selectTestCaseById" resultType="testTestCase">
+    <select id="selectTestCaseById" resultType="testCase">
         select * from test_case where id=#{id}
     </select>
 
-    <select id="selectTestCaseByIds" resultType="testTestCase">
+    <select id="selectTestCaseByIds" resultType="testCase">
         select * from test_case where id in 
         <foreach collection="list" item="testCaseId" open="(" separator="," close=")">
             #{testCaseId}
         </foreach>
     </select>
 
-    <select id="selectTestCaseList" resultType="testTestCase">
+    <select id="selectTestCaseList" resultType="testCase">
         select * from test_suite
         <where>
-            <if test="testTestCase.id != null">id=#{testTestCase.id}</if>
-            <if test="testTestCase.name != null">name=#{testTestCase.name}</if>
-            <if test="testTestCase.description != null">description=#{testTestCase.description}</if>
-            <if test="testTestCase.status != null">status=#{testTestCase.status}</if>
-            <if test="testTestCase.suiteId != null">suite_id=#{testTestCase.suiteId}</if>
+            <if test="testCase.id != null">id=#{testCase.id}</if>
+            <if test="testCase.name != null">name=#{testCase.name}</if>
+            <if test="testCase.description != null">description=#{testCase.description}</if>
+            <if test="testCase.status != null">status=#{testCase.status}</if>
+            <if test="testCase.suiteId != null">suite_id=#{testCase.suiteId}</if>
         </where>
         <if test="page != null">
             limit #{page.startIndex}, #{page.pageSize}
         </if>
     </select>
-    <select id="selectTestCaseBySuiteIds" resultType="testTestCase">
+    <select id="selectTestCaseBySuiteIds" resultType="testCase">
         select * from test_case where suite_id in
         <foreach collection="list" item="suiteId" open="(" separator="," close=")">
             #{suiteId}
         </foreach>
     </select>
 
-    <update id="updateById" parameterType="testTestCase">
+    <update id="updateById" parameterType="testCase">
         update test_case
         <set>
             <if test="name != null">name=#{name},</if>
@@ -46,7 +46,7 @@
         where id=#{id}
     </update>
 
-    <insert id="insert" parameterType="testTestCase">
+    <insert id="insert" parameterType="testCase">
         insert into test_case(name, description, priority, status, create_time, update_time)
         values(#{name}, #{description}, #{priority}, #{status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
@@ -54,8 +54,8 @@
     <insert id="insertBatch">
         insert into test_case(name, description, priority, status, create_time, update_time)
         values
-        <foreach collection="list" item="testTestCase" separator=",">
-            (#{testTestCase.name}, #{testTestCase.description}, #{testTestCase.priority}, #{testTestCase.status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+        <foreach collection="list" item="testCase" separator=",">
+            (#{testCase.name}, #{testCase.description}, #{testCase.priority}, #{testCase.status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
         </foreach>
     </insert>
 
