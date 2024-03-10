@@ -38,7 +38,7 @@
         where id=#{id}
     </update>
 
-    <insert id="insert" parameterType="testSuite">
+    <insert id="insert" parameterType="testSuite" useGeneratedKeys="true" keyProperty="id">
         insert into test_suite(name, description, status, create_time, update_time)
         values(#{name}, #{description}, #{status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>

@@ -25,4 +25,6 @@ public interface TestCaseMapper {
     Integer deleteByIds(List<Integer> testCaseIds);
 
     List<TestCase> selectTestCaseBySuiteIds(List<Integer> suiteIds);
+
+    List<TestCase> selectTestCaseListBySuiteId(@Param("suiteId") int suiteId, @Param("page") Page page);
 }

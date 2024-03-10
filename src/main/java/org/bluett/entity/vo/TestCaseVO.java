@@ -6,7 +6,7 @@ import org.bluett.entity.TestResult;
 
 public class TestCaseVO {
     private final IntegerProperty id = new SimpleIntegerProperty();
-    private final StringProperty name = new SimpleStringProperty("Test Case");
+    private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
@@ -95,5 +95,18 @@ public class TestCaseVO {
 
     public void setExpectedImage(TestImage expectedImage) {
         this.expectedImage.set(expectedImage);
+    }
+
+    @Override
+    public String toString() {
+        return "TestCaseVO{" +
+                "id=" + id.get() +
+                ", name=" + name.get() +
+                ", description=" + description.get() +
+                ", priority=" + priority.get() +
+                ", status=" + status.get() +
+                ", expectedImage=" + expectedImage.get() +
+                ", suiteId=" + suiteId.get() +
+                '}';
     }
 }

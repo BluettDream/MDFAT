@@ -1,36 +1,49 @@
 package org.bluett.ui;
 
+import cn.hutool.core.util.ObjectUtil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import org.bluett.entity.vo.TestSuiteVO;
+import javafx.util.StringConverter;
+import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.helper.UIHelper;
 
-
-public class TestSuiteDialog extends Dialog<TestSuiteVO> {
+public class TestCaseDialog extends Dialog<TestCaseVO> {
     private TextField nameTextField;
     private TextArea descriptionTextArea;
-    private final TestSuiteVO suiteVO;
+    private TextField priorityTextField;
+    private final TestCaseVO caseVO;
 
-    public TestSuiteDialog(String operateType) {
+    public TestCaseDialog(String operateType) {
         this(operateType, null);
     }
 
-    public TestSuiteDialog(String operateType, TestSuiteVO testSuiteVO) {
-        this.suiteVO = testSuiteVO == null ? new TestSuiteVO() : testSuiteVO;
-        setTitle(UIHelper.getI18nStr("test.suite." + operateType));
+    public TestCaseDialog(String operateType, TestCaseVO testCaseVO) {
+        this.caseVO = testCaseVO == null ? new TestCaseVO() : testCaseVO;
+        setTitle(UIHelper.getI18nStr("test.case." + operateType));
         setLayout();
         setData();
     }
 
     private void setData() {
-        nameTextField.textProperty().bindBidirectional(this.suiteVO.nameProperty());
-        descriptionTextArea.textProperty().bindBidirectional(this.suiteVO.descriptionProperty());
-        getDialogPane().lookupButton(ButtonType.APPLY).setOnMouseClicked(event -> setResult(this.suiteVO));
-        setResultConverter(param -> param == ButtonType.APPLY ? this.suiteVO : null); // 如果不设置这条语句最后会返回ButtonType
+        nameTextField.textProperty().bindBidirectional(this.caseVO.nameProperty());
+        descriptionTextArea.textProperty().bindBidirectional(this.caseVO.descriptionProperty());
+        priorityTextField.textProperty().bindBidirectional(this.caseVO.priorityProperty(), new StringConverter<>() {
+            @Override
+            public String toString(Number object) {
+                return ObjectUtil.isEmpty(object) ? "" : object.toString();
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return Integer.parseInt(ObjectUtil.isEmpty(string) ? "0" : string);
+            }
+        });
+        getDialogPane().lookupButton(ButtonType.APPLY).setOnMouseClicked(event -> setResult(this.caseVO));
+        setResultConverter(param -> param == ButtonType.APPLY ? this.caseVO : null); // 如果不设置这条语句最后会返回ButtonType
     }
 
     private void setLayout() {
@@ -48,8 +61,24 @@ public class TestSuiteDialog extends Dialog<TestSuiteVO> {
         rootVBox.setAlignment(Pos.TOP_CENTER);
         VBox nameVBox = createNameVBox();
         VBox descriptionVBox = createDescriptionVBox();
-        rootVBox.getChildren().addAll(nameVBox, descriptionVBox);
+        VBox priorityVBox = createPriorityVBox();
+        rootVBox.getChildren().addAll(nameVBox, descriptionVBox, priorityVBox);
         return rootVBox;
+    }
+
+    private VBox createPriorityVBox() {
+        VBox priorityVBox = createCommonVBox();
+        // create label
+        Label priorityLabel = new Label(UIHelper.getI18nStr("priority")+":");
+        priorityLabel.setFont(new Font(15));
+        VBox.setVgrow(priorityLabel, Priority.ALWAYS);
+        // create text field
+        priorityTextField = new TextField();
+        priorityTextField.setFont(new Font(13));
+        VBox.setVgrow(priorityTextField, Priority.ALWAYS);
+        // add to vbox
+        priorityVBox.getChildren().addAll(priorityLabel, priorityTextField);
+        return priorityVBox;
     }
 
     /**

@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.layout.BorderPane;
 import lombok.extern.log4j.Log4j2;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
@@ -15,20 +16,19 @@ import org.bluett.helper.UIHelper;
 import org.bluett.service.IndexService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
+import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
-
-import java.util.Collections;
-import java.util.function.Consumer;
 
 @Log4j2
 public class IndexController {
     @FXML
     private ListView<TestCaseVO> caseListView;
-
     @FXML
     private ListView<TestSuiteVO> suiteListView;
+    @FXML
+    private BorderPane caseButtonsPane;
 
     private final IndexService indexService = new IndexService();
     private final TestSuiteService suiteService = new TestSuiteService();
@@ -40,13 +40,28 @@ public class IndexController {
         caseListView.setCellFactory(param -> new TestCaseListCell());
         suiteListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         caseListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        ObservableList<TestSuiteVO> suiteVOObservableList = indexService.selectTestSuiteVOList(null, null);
+        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, null);
         suiteListView.setItems(suiteVOObservableList);
+        suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (ObjectUtil.isEmpty(newValue)) return;
+            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectTestCaseVOListBySuiteId(newValue.getId(), null);
+            caseListView.setItems(caseVOObservableList);
+        });
+        suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> caseButtonsPane.setDisable(ObjectUtil.isEmpty(newValue)));
     }
 
     @FXML
     void addCaseButtonClick() {
-
+        new TestCaseDialog("new").showAndWait().ifPresent(testCaseVO -> {
+            testCaseVO.setSuiteId(suiteListView.getSelectionModel().getSelectedItem().getId());
+            boolean ret = caseService.save(testCaseVO);
+            if (!ret) {
+                log.error("保存测试用例失败:{}", testCaseVO);
+                return;
+            }
+            caseListView.getItems().add(testCaseVO);
+            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "保存测试用例成功", 1.5);
+        });
     }
 
     @FXML
@@ -63,7 +78,15 @@ public class IndexController {
 
     @FXML
     void deleteCaseButtonClick() {
-
+        ObservableList<TestCaseVO> selectedItems = caseListView.getSelectionModel().getSelectedItems();
+        if (CollectionUtil.isEmpty(selectedItems)) return;
+        boolean ret = caseService.deleteBatchByIds(selectedItems.stream().map(TestCaseVO::getId).toList());
+        if (!ret) {
+            log.error("删除测试用例失败:{}", selectedItems);
+            return;
+        }
+        caseListView.getItems().removeAll(selectedItems);
+        UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "删除测试用例成功", 1.5);
     }
 
     @FXML
@@ -80,7 +103,15 @@ public class IndexController {
 
     @FXML
     void updateCaseButtonClick() {
-
+        new TestCaseDialog("update", caseListView.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testCaseVO -> {
+            boolean ret = caseService.update(testCaseVO);
+            if (!ret) {
+                log.error("更新测试用例失败:{}", testCaseVO);
+                return;
+            }
+            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试用例成功", 1.5);
+            caseListView.getItems().set(caseListView.getSelectionModel().getSelectedIndex(), testCaseVO);
+        });
     }
 
     @FXML
@@ -91,7 +122,7 @@ public class IndexController {
                 log.error("更新测试集失败:{}", testSuiteVO);
                 return;
             }
-            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试集成功", 2);
+            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试集成功", 1.5);
             suiteListView.getItems().set(suiteListView.getSelectionModel().getSelectedIndex(), testSuiteVO);
         });
     }

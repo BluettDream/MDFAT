@@ -1,15 +1,14 @@
 package org.bluett.ui;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.text.Font;
-import org.bluett.entity.enums.NodeEnum;
+import javafx.scene.text.Text;
 import org.bluett.entity.vo.TestCaseVO;
-import org.bluett.helper.UIHelper;
 
 public class TestCaseListCell extends ListCell<TestCaseVO> {
     public TestCaseListCell() {
         super();
-        this.setFont(new Font(16));
     }
 
     @Override
@@ -21,6 +20,9 @@ public class TestCaseListCell extends ListCell<TestCaseVO> {
             return;
         }
         setItem(testCaseVO);
-        setText(testCaseVO.getName());
+        Text text = new Text(testCaseVO.getName());
+        text.setFont(new Font(16));
+        setGraphic(text);
+        setAlignment(Pos.CENTER_RIGHT);
     }
 }

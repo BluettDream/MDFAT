@@ -1,7 +1,11 @@
 package org.bluett.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.db.Page;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.TestSuite;
@@ -9,9 +13,8 @@ import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.helper.DatabaseHelper;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class TestSuiteService {
@@ -35,13 +38,30 @@ public class TestSuiteService {
         return testSuite;
     }
 
+    public ObservableList<TestSuiteVO> selectTestSuiteVOList(TestSuite testSuite, Page page) {
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
+            // 获取testSuiteVO列表
+            TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
+            List<TestSuite> suiteList = testSuiteMapper.selectTestSuiteList(testSuite, page);
+            if(CollectionUtil.isEmpty(suiteList)) return FXCollections.observableArrayList();
+            return suiteList.stream()
+                    .map(TestSuiteService::convertToTestSuiteVO)
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }catch (Exception e){
+            log.error("获取TestSuiteVO ObservableList失败:", e);
+        }
+        return FXCollections.observableArrayList();
+    }
 
     public boolean save(TestSuiteVO testSuiteVO) {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
-            Integer cnt = mapper.insert(convertToTestSuite(testSuiteVO));
-            if(cnt > 0) session.commit();
-            return cnt > 0;
+            TestSuite testSuite = convertToTestSuite(testSuiteVO);
+            Integer cnt = mapper.insert(testSuite);
+            if(cnt == 0) return false;
+            session.commit();
+            testSuiteVO.setId(testSuite.getId());
+            return true;
         } catch (Exception e) {
             log.error("保存测试集失败", ExceptionUtil.getRootCause(e));
         }

@@ -33,6 +33,13 @@
             #{suiteId}
         </foreach>
     </select>
+    <select id="selectTestCaseListBySuiteId" resultType="testCase">
+        select * from test_case
+        where suite_id=#{suiteId}
+        <if test="page != null">
+            limit #{page.startIndex}, #{page.pageSize}
+        </if>
+    </select>
 
     <update id="updateById" parameterType="testCase">
         update test_case
@@ -46,9 +53,9 @@
         where id=#{id}
     </update>
 
-    <insert id="insert" parameterType="testCase">
-        insert into test_case(name, description, priority, status, create_time, update_time)
-        values(#{name}, #{description}, #{priority}, #{status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+    <insert id="insert" parameterType="testCase" keyProperty="id" useGeneratedKeys="true">
+        insert into test_case(name, description, priority, status, suite_id, create_time, update_time)
+        values(#{name}, #{description}, #{priority}, #{status}, #{suiteId}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
 
     <insert id="insertBatch">

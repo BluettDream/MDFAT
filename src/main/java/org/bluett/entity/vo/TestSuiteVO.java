@@ -5,10 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
 
-import java.util.Objects;
-
 public class TestSuiteVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
@@ -88,15 +86,14 @@ public class TestSuiteVO {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        TestSuiteVO suiteVO = (TestSuiteVO) object;
-        return Objects.equals(id, suiteVO.id) && Objects.equals(name, suiteVO.name) && Objects.equals(description, suiteVO.description) && Objects.equals(status, suiteVO.status) && Objects.equals(testCaseList, suiteVO.testCaseList) && Objects.equals(save, suiteVO.save);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, status, testCaseList, save);
+    public String toString() {
+        return "TestSuiteVO{" +
+                "id=" + id.get() +
+                ", name=" + name.get() +
+                ", description=" + description.get() +
+                ", status=" + status.get() +
+                ", testCaseList=" + testCaseList.get() +
+                ", save=" + save.get() +
+                '}';
     }
 }
