@@ -27,8 +27,6 @@ public class IndexController {
     private ListView<TestCaseVO> caseListView;
     @FXML
     private ListView<TestSuiteVO> suiteListView;
-    @FXML
-    private BorderPane caseButtonsPane;
 
     private final IndexService indexService = new IndexService();
     private final TestSuiteService suiteService = new TestSuiteService();
@@ -47,7 +45,6 @@ public class IndexController {
             ObservableList<TestCaseVO> caseVOObservableList = caseService.selectTestCaseVOListBySuiteId(newValue.getId(), null);
             caseListView.setItems(caseVOObservableList);
         });
-        suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> caseButtonsPane.setDisable(ObjectUtil.isEmpty(newValue)));
     }
 
     @FXML
