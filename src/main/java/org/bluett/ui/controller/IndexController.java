@@ -1,22 +1,15 @@
 package org.bluett.ui.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
-import org.bluett.MainApplication;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
-import org.bluett.service.IndexService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
@@ -25,27 +18,22 @@ import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 @Log4j2
 public class IndexController {
     @FXML
     private ListView<TestCaseVO> caseListView;
     @FXML
     private ListView<TestSuiteVO> suiteListView;
-
-    private final IndexService indexService = new IndexService();
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
 
     @FXML
     void initialize() {
-        suiteListView.setCellFactory(param -> new TestSuiteListCell());
-        caseListView.setCellFactory(param -> new TestCaseListCell());
-        suiteListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        caseListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        setLayout();
+        bindVO();
+    }
+
+    private void bindVO() {
         ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, null);
         suiteListView.setItems(suiteVOObservableList);
         suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,6 +41,13 @@ public class IndexController {
             ObservableList<TestCaseVO> caseVOObservableList = caseService.selectTestCaseVOListBySuiteId(newValue.getId(), null);
             caseListView.setItems(caseVOObservableList);
         });
+    }
+
+    private void setLayout() {
+        suiteListView.setCellFactory(param -> new TestSuiteListCell());
+        caseListView.setCellFactory(param -> new TestCaseListCell());
+        suiteListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        caseListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML

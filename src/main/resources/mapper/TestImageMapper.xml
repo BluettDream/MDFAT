@@ -25,16 +25,16 @@
         where id=#{id}
     </update>
 
-    <insert id="insert" parameterType="testImage">
-        insert into test_image(path, similarity, confidence, create_time, update_time)
-        values(#{path}, #{similarity}, #{confidence}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+    <insert id="insert" parameterType="testImage" useGeneratedKeys="true" keyProperty="id">
+        insert into test_image(path, similarity, confidence, case_id, create_time, update_time)
+        values(#{path}, #{similarity}, #{confidence}, #{caseId}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
 
     <insert id="insertBatch">
-        insert into test_image(path, similarity, confidence, create_time, update_time)
+        insert into test_image(path, similarity, confidence, case_id, create_time, update_time)
         values
         <foreach collection="list" item="testImage" separator=",">
-            (#{testImage.path}, #{testImage.similarity}, #{testImage.confidence}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+            (#{testImage.path}, #{testImage.similarity}, #{testImage.confidence}, #{testImage.caseId}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
         </foreach>
     </insert>
 

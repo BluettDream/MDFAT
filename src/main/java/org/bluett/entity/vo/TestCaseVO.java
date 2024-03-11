@@ -1,17 +1,29 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
-import org.bluett.entity.TestImage;
 import org.bluett.entity.TestResult;
 
 public class TestCaseVO {
-    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty suiteId = new SimpleIntegerProperty(-1);
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final ObjectProperty<TestImage> expectedImage = new SimpleObjectProperty<>();
-    private final IntegerProperty suiteId = new SimpleIntegerProperty();
+    private final ObjectProperty<TestImageVO> image = new SimpleObjectProperty<>(new TestImageVO());
+    private final ObjectProperty<TestTextVO> text = new SimpleObjectProperty<>(new TestTextVO());
+
+    public TestTextVO getText() {
+        return text.get();
+    }
+
+    public ObjectProperty<TestTextVO> textProperty() {
+        return text;
+    }
+
+    public void setText(TestTextVO text) {
+        this.text.set(text);
+    }
 
     public int getId() {
         return id.get();
@@ -85,28 +97,15 @@ public class TestCaseVO {
         this.status.set(status);
     }
 
-    public TestImage getExpectedImage() {
-        return expectedImage.get();
+    public TestImageVO getImage() {
+        return image.get();
     }
 
-    public ObjectProperty<TestImage> expectedImageProperty() {
-        return expectedImage;
+    public ObjectProperty<TestImageVO> imageProperty() {
+        return image;
     }
 
-    public void setExpectedImage(TestImage expectedImage) {
-        this.expectedImage.set(expectedImage);
-    }
-
-    @Override
-    public String toString() {
-        return "TestCaseVO{" +
-                "id=" + id.get() +
-                ", name=" + name.get() +
-                ", description=" + description.get() +
-                ", priority=" + priority.get() +
-                ", status=" + status.get() +
-                ", expectedImage=" + expectedImage.get() +
-                ", suiteId=" + suiteId.get() +
-                '}';
+    public void setImage(TestImageVO image) {
+        this.image.set(image);
     }
 }

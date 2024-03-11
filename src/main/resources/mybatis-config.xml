@@ -29,5 +29,6 @@
         <mapper url="${mapperUrl}/TestSuiteMapper.xml"/>
         <mapper url="${mapperUrl}/TestCaseMapper.xml"/>
         <mapper url="${mapperUrl}/TestImageMapper.xml"/>
+        <mapper url="${mapperUrl}/TestTextMapper.xml"/>
     </mappers>
 </configuration>

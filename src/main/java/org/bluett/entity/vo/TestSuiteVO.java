@@ -6,12 +6,11 @@ import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
 
 public class TestSuiteVO {
-    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final BooleanProperty save = new SimpleBooleanProperty(false);
 
     public int getId() {
         return id.get();
@@ -71,29 +70,5 @@ public class TestSuiteVO {
 
     public void setTestCaseList(ObservableList<TestCaseVO> testCaseList) {
         this.testCaseList.set(testCaseList);
-    }
-
-    public boolean isSave() {
-        return save.get();
-    }
-
-    public BooleanProperty saveProperty() {
-        return save;
-    }
-
-    public void setSave(boolean save) {
-        this.save.set(save);
-    }
-
-    @Override
-    public String toString() {
-        return "TestSuiteVO{" +
-                "id=" + id.get() +
-                ", name=" + name.get() +
-                ", description=" + description.get() +
-                ", status=" + status.get() +
-                ", testCaseList=" + testCaseList.get() +
-                ", save=" + save.get() +
-                '}';
     }
 }
