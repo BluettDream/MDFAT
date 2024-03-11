@@ -35,27 +35,57 @@ public class UIHelper {
         return Optional.of(new FXMLLoader(url, getResourceBundle()));
     }
 
-    private static <V> void setData(V data, FXMLLoader fxmlLoader) {
+    /**
+     * set data to controller
+     * @param data data
+     * @param fxmlLoader fxmlLoader
+     * @param <T> data type
+     */
+    private static <T> void setData(T data, FXMLLoader fxmlLoader) {
         switch (fxmlLoader.getController()){
             case TestCaseDialogContentController controller -> controller.setTestCaseVO((TestCaseVO) data);
             default -> log.error("unknown controller");
         }
     }
 
+    /**
+     * create and save node
+     * @param nodeEnum nodeEnum
+     * @return node
+     * @param <T> node type
+     */
     public static <T> T createAndSaveNode(NodeEnum nodeEnum){
         T node = createNode(nodeEnum);
         NODE_MAP.put(nodeEnum, (Node) node);
         return node;
     }
+
     public static Node getNode(NodeEnum nodeEnum){
         return NODE_MAP.get(nodeEnum);
     }
+
     public static void deleteNode(NodeEnum nodeEnum){
         NODE_MAP.remove(nodeEnum);
     }
+
+    /**
+     * create node and not save data
+     * @param nodeEnum nodeEnum
+     * @return node
+     * @param <T> node type
+     */
     public static <T> T createNode(NodeEnum nodeEnum){
         return createNodeAndSetData(nodeEnum, null);
     }
+
+    /**
+     * create node and set data
+     * @param nodeEnum nodeEnum
+     * @param data data
+     * @return node
+     * @param <T> node type
+     * @param <V> data type
+     */
     public static <T, V> T createNodeAndSetData(NodeEnum nodeEnum, V data){
         AtomicReference<T> node = new AtomicReference<>();
         getFXMLLoader(nodeEnum).ifPresentOrElse(fxmlLoader -> {
@@ -77,6 +107,11 @@ public class UIHelper {
         NODE_MAP.clear();
     }
 
+    /**
+     * Obtain the value of the corresponding key from the internationalization file
+     * @param key key
+     * @return value
+     */
     public static String getI18nStr(String key){
         return getResourceBundle().getString(key);
     }
