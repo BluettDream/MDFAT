@@ -1,4 +1,4 @@
-package org.bluett.controller;
+package org.bluett.ui.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
@@ -23,6 +23,7 @@ import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
+import org.bluett.ui.builder.UIBuilder;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -64,7 +65,7 @@ public class IndexController {
                 return;
             }
             caseListView.getItems().add(testCaseVO);
-            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "保存测试用例成功", 1.5);
+            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "保存测试用例成功", 1.5);
         });
     }
 
@@ -90,7 +91,7 @@ public class IndexController {
             return;
         }
         caseListView.getItems().removeAll(selectedItems);
-        UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "删除测试用例成功", 1.5);
+        UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "删除测试用例成功", 1.5);
     }
 
     @FXML
@@ -113,7 +114,7 @@ public class IndexController {
                 log.error("更新测试用例失败:{}", testCaseVO);
                 return;
             }
-            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试用例成功", 1.5);
+            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试用例成功", 1.5);
             caseListView.getItems().set(caseListView.getSelectionModel().getSelectedIndex(), testCaseVO);
         });
     }
@@ -126,7 +127,7 @@ public class IndexController {
                 log.error("更新测试集失败:{}", testSuiteVO);
                 return;
             }
-            UIHelper.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试集成功", 1.5);
+            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试集成功", 1.5);
             suiteListView.getItems().set(suiteListView.getSelectionModel().getSelectedIndex(), testSuiteVO);
         });
     }

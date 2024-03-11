@@ -10,7 +10,7 @@ import org.bluett.helper.UIHelper;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) {
-        Parent root = (Parent) UIHelper.createAndSaveNode(NodeEnum.MAIN);
+        Parent root = UIHelper.createAndSaveNode(NodeEnum.MAIN);
         stage.setTitle(UIHelper.getI18nStr("title"));
         stage.setScene(new Scene(root));
         stage.show();

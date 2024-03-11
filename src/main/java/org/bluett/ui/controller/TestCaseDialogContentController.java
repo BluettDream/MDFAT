@@ -1,4 +1,4 @@
-package org.bluett.controller;
+package org.bluett.ui.controller;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

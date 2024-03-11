@@ -1,4 +1,4 @@
-package org.bluett.controller;
+package org.bluett.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;

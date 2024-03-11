@@ -1,15 +1,11 @@
 package org.bluett.ui;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import lombok.extern.log4j.Log4j2;
-import org.bluett.controller.TestCaseDialogContentController;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.helper.UIHelper;
-
-import java.io.IOException;
 
 @Log4j2
 public class TestCaseDialog extends Dialog<TestCaseVO> {
@@ -27,16 +23,19 @@ public class TestCaseDialog extends Dialog<TestCaseVO> {
     }
 
     private void setLayout() {
-        UIHelper.getFXMLLoader(NodeEnum.TEST_CASE_DIALOG).ifPresentOrElse(fxmlLoader -> {
-            try {
-                GridPane gridPane = fxmlLoader.load();
-                ((TestCaseDialogContentController) fxmlLoader.getController()).setTestCaseVO(this.caseVO);
-                getDialogPane().setContent(gridPane);
-                getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
-            } catch (IOException e) {
-                log.error("加载节点{}失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath(), ExceptionUtil.getRootCause(e));
-            }
-        }, () -> log.error("加载节点{}的fxmlLoader失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath()));
+        GridPane gridPane = UIHelper.createNodeAndSetData(NodeEnum.TEST_CASE_DIALOG, this.caseVO);
+        getDialogPane().setContent(gridPane);
+        getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+//        UIHelper.getFXMLLoader(NodeEnum.TEST_CASE_DIALOG).ifPresentOrElse(fxmlLoader -> {
+//            try {
+//                GridPane gridPane = fxmlLoader.load();
+//                ((TestCaseDialogContentController) fxmlLoader.getController()).setTestCaseVO(this.caseVO);
+//                getDialogPane().setContent(gridPane);
+//                getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+//            } catch (IOException e) {
+//                log.error("加载节点{}失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath(), ExceptionUtil.getRootCause(e));
+//            }
+//        }, () -> log.error("加载节点{}的fxmlLoader失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath()));
     }
 
     private void setData() {
