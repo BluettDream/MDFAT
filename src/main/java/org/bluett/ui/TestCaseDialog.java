@@ -26,16 +26,6 @@ public class TestCaseDialog extends Dialog<TestCaseVO> {
         GridPane gridPane = UIHelper.createNodeAndSetData(NodeEnum.TEST_CASE_DIALOG, this.caseVO);
         getDialogPane().setContent(gridPane);
         getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
-//        UIHelper.getFXMLLoader(NodeEnum.TEST_CASE_DIALOG).ifPresentOrElse(fxmlLoader -> {
-//            try {
-//                GridPane gridPane = fxmlLoader.load();
-//                ((TestCaseDialogContentController) fxmlLoader.getController()).setTestCaseVO(this.caseVO);
-//                getDialogPane().setContent(gridPane);
-//                getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
-//            } catch (IOException e) {
-//                log.error("加载节点{}失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath(), ExceptionUtil.getRootCause(e));
-//            }
-//        }, () -> log.error("加载节点{}的fxmlLoader失败", NodeEnum.TEST_CASE_DIALOG.getFxmlPath()));
     }
 
     private void setData() {

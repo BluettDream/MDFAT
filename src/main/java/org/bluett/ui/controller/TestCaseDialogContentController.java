@@ -6,9 +6,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
+import lombok.extern.log4j.Log4j2;
 import org.bluett.entity.vo.TestCaseVO;
 
+import java.io.File;
+
+@Log4j2
 public class TestCaseDialogContentController {
     @FXML
     private TextArea descriptionTA;
@@ -25,6 +30,13 @@ public class TestCaseDialogContentController {
 
     @FXML
     void initialize() {
+        imageBtn.setOnMouseClicked(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("选择图片");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("图片", "*.jpg", "*.png", "*.jpeg"));
+            File selectedFile = fileChooser.showOpenDialog(imageBtn.getScene().getWindow());
+            log.info("selected file: {}", selectedFile.getAbsolutePath());
+        });
         testCaseVO.addListener((observable, oldValue, newValue) -> {
             if (newValue == null) return;
             nameTF.textProperty().bindBidirectional(newValue.nameProperty());
