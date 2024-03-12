@@ -91,8 +91,9 @@ public class UIHelper {
         getFXMLLoader(nodeEnum).ifPresentOrElse(fxmlLoader -> {
             try {
                 node.set(fxmlLoader.load());
+                if(ObjectUtil.isEmpty(data)) return ;
                 if(ObjectUtil.isEmpty(fxmlLoader.getController())) {
-                    log.error("controller is null, cannot put data to node");
+                    log.error("{}:controller is null, cannot put data to node", nodeEnum.getFxmlPath());
                     return;
                 }
                 setData(data, fxmlLoader);

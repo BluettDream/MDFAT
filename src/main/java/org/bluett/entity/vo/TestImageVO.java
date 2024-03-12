@@ -1,6 +1,7 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
+import org.bluett.entity.TestImage;
 
 public class TestImageVO {
     private final IntegerProperty id = new SimpleIntegerProperty();
@@ -8,6 +9,17 @@ public class TestImageVO {
     private final StringProperty path = new SimpleStringProperty();
     private final DoubleProperty similarity = new SimpleDoubleProperty();
     private final DoubleProperty confidence = new SimpleDoubleProperty();
+
+    public TestImageVO() {
+    }
+
+    public TestImageVO(TestImage image) {
+        this.id.set(image.getId());
+        this.testCaseId.set(image.getCaseId());
+        this.path.set(image.getPath());
+        this.similarity.set(image.getSimilarity());
+        this.confidence.set(image.getConfidence());
+    }
 
     public int getId() {
         return id.get();

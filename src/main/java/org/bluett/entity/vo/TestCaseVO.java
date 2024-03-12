@@ -1,7 +1,10 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
+import org.bluett.entity.TestCase;
+import org.bluett.entity.TestImage;
 import org.bluett.entity.TestResult;
+import org.bluett.entity.TestText;
 
 public class TestCaseVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
@@ -10,19 +13,21 @@ public class TestCaseVO {
     private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final ObjectProperty<TestImageVO> image = new SimpleObjectProperty<>(new TestImageVO());
-    private final ObjectProperty<TestTextVO> text = new SimpleObjectProperty<>(new TestTextVO());
+    private final TestImageVO imageVO = new TestImageVO();
+    private final TestTextVO textVO = new TestTextVO();
 
-    public TestTextVO getText() {
-        return text.get();
+    public TestCaseVO() {
     }
 
-    public ObjectProperty<TestTextVO> textProperty() {
-        return text;
-    }
-
-    public void setText(TestTextVO text) {
-        this.text.set(text);
+    public TestCaseVO(TestCase testCase, TestImage image, TestText text) {
+        this.id.set(testCase.getId());
+        this.suiteId.set(testCase.getSuiteId());
+        this.name.set(testCase.getName());
+        this.description.set(testCase.getDescription());
+        this.priority.set(testCase.getPriority());
+        this.status.set(testCase.getStatus());
+        this.imageVO = new TestImageVO(image);
+        this.textVO = new TestTextVO(text);
     }
 
     public int getId() {
@@ -97,15 +102,11 @@ public class TestCaseVO {
         this.status.set(status);
     }
 
-    public TestImageVO getImage() {
-        return image.get();
+    public TestImageVO getImageVO() {
+        return imageVO;
     }
 
-    public ObjectProperty<TestImageVO> imageProperty() {
-        return image;
-    }
-
-    public void setImage(TestImageVO image) {
-        this.image.set(image);
+    public TestTextVO getTextVO() {
+        return textVO;
     }
 }

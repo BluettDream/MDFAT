@@ -9,9 +9,12 @@ import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.TestCase;
+import org.bluett.entity.TestImage;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.mapper.TestCaseMapper;
 import org.bluett.helper.DatabaseHelper;
+import org.bluett.mapper.TestImageMapper;
+import org.bluett.mapper.TestTextMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,9 +47,12 @@ public class TestCaseService {
 
     public boolean save(TestCaseVO testCaseVO) {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
-            TestCaseMapper mapper = session.getMapper(TestCaseMapper.class);
+            TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
+            TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
+            TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
+
             TestCase testCase = convertToTestCase(testCaseVO);
-            Integer cnt = mapper.insert(testCase);
+            Integer cnt = caseMapper.insert(testCase);
             if(cnt == 0) return false;
             session.commit();
             testCaseVO.setId(testCase.getId());

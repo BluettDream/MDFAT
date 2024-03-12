@@ -11,7 +11,9 @@ import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.TestCaseService;
+import org.bluett.service.TestImageService;
 import org.bluett.service.TestSuiteService;
+import org.bluett.service.TestTextService;
 import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
@@ -26,6 +28,8 @@ public class IndexController {
     private ListView<TestSuiteVO> suiteListView;
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
+    private final TestImageService imageService = new TestImageService();
+    private final TestTextService textService = new TestTextService();
 
     @FXML
     void initialize() {
