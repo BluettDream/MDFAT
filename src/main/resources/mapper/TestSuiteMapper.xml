@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestSuiteMapper">
+
+    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
+
     <select id="selectTestSuiteById" resultType="testSuite">
         select * from test_suite where id=#{id}
     </select>

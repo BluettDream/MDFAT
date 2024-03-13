@@ -7,12 +7,9 @@ import org.bluett.entity.TestCase;
 import java.util.List;
 
 public interface TestCaseMapper {
-
-    List<TestCase> selectTestCaseList(@Param("testCase") TestCase testCase, @Param("page") Page page);
+    List<TestCase> selectTestCaseListDynamic(@Param("testCase") TestCase testCase, @Param("page") Page page);
 
     List<TestCase> selectTestCaseByIds(List<Integer> testCaseIds);
-
-    TestCase selectTestCaseById(Integer testCaseId);
 
     Integer updateById(TestCase testCase);
 

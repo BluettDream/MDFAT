@@ -1,5 +1,7 @@
 package org.bluett.mapper;
 
+import cn.hutool.db.Page;
+import org.apache.ibatis.annotations.Param;
 import org.bluett.entity.TestText;
 
 import java.util.List;
@@ -25,4 +27,7 @@ public interface TestTextMapper {
 
     Integer deleteByIds(List<Integer> testTextIds);
 
+    List<TestText> selectTestTextByCaseIds(List<Integer> caseIdList);
+
+    List<TestText> selectTestTextDynamic(@Param("text") TestText testText, @Param("page") Page page);
 }

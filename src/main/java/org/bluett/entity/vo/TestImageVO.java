@@ -1,24 +1,31 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.bluett.entity.TestImage;
 
+import java.util.Objects;
+
 public class TestImageVO {
-    private final IntegerProperty id = new SimpleIntegerProperty();
-    private final IntegerProperty testCaseId = new SimpleIntegerProperty();
-    private final StringProperty path = new SimpleStringProperty();
-    private final DoubleProperty similarity = new SimpleDoubleProperty();
-    private final DoubleProperty confidence = new SimpleDoubleProperty();
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty testCaseId = new SimpleIntegerProperty(-1);
+    private final StringProperty path = new SimpleStringProperty("");
+    private final DoubleProperty similarity = new SimpleDoubleProperty(-1);
+    private final DoubleProperty confidence = new SimpleDoubleProperty(-1);
 
-    public TestImageVO() {
-    }
-
-    public TestImageVO(TestImage image) {
-        this.id.set(image.getId());
-        this.testCaseId.set(image.getCaseId());
-        this.path.set(image.getPath());
-        this.similarity.set(image.getSimilarity());
-        this.confidence.set(image.getConfidence());
+    public static TestImageVO convertToTestImageVO(TestImage image) {
+        if(Objects.isNull(image)) return null;
+        TestImageVO testImageVO = new TestImageVO();
+        testImageVO.setId(image.getId());
+        testImageVO.setTestCaseId(image.getCaseId());
+        testImageVO.setPath(image.getPath());
+        testImageVO.setSimilarity(image.getSimilarity());
+        testImageVO.setConfidence(image.getConfidence());
+        return testImageVO;
     }
 
     public int getId() {

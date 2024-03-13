@@ -23,12 +23,14 @@ public class TestCase implements Serializable {
     private TestResult status;
     private Integer suiteId;
 
-    public TestCase(TestCaseVO caseVO) {
-        this.id = caseVO.getId();
-        this.name = caseVO.getName();
-        this.description = caseVO.getDescription();
-        this.priority = caseVO.getPriority();
-        this.status = caseVO.getStatus();
-        this.suiteId = caseVO.getSuiteId();
+    public static TestCase convertToTestCase(TestCaseVO caseVO) {
+        return TestCase.builder()
+                .id(caseVO.getId())
+                .name(caseVO.getName())
+                .description(caseVO.getDescription())
+                .priority(caseVO.getPriority())
+                .status(caseVO.getStatus())
+                .suiteId(caseVO.getSuiteId())
+                .build();
     }
 }

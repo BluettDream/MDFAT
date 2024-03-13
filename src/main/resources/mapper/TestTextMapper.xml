@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestTextMapper">
+
+    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
+
     <select id="selectTestTextById" resultType="testText">
         select * from test_text where id=#{id}
     </select>
@@ -14,10 +17,25 @@
         </foreach>
     </select>
 
+    <select id="selectTestTextByCaseIds" resultType="testText">
+        select * from test_text where case_id in
+        <foreach collection="list" item="caseId" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </select>
+    <select id="selectTestTextDynamic" resultType="testText">
+        select * from test_text
+        <where>
+            <if test="textId != null">and id=#{textId}</if>
+            <if test="text != null">and text like '%'||#{text}||'%' </if>
+            <if test="caseId != null">and case_id=#{caseId}</if>
+        </where>
+    </select>
+
     <update id="updateById" parameterType="testText">
         update test_text
         <set>
-            <if test="path != null">path=#{path},</if>
+            <if test="text != null">text=#{text},</if>
             <if test="similarity != null">similarity=#{similarity},</if>
             <if test="confidence != null">confidence=#{confidence},</if>
             update_time=datetime('now', '+8 hour')

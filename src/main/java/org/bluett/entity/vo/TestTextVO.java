@@ -1,13 +1,27 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
+import org.bluett.entity.TestText;
+
+import java.util.Objects;
 
 public class TestTextVO {
-    private final IntegerProperty id = new SimpleIntegerProperty();
-    private final IntegerProperty testCaseId = new SimpleIntegerProperty();
-    private final StringProperty text = new SimpleStringProperty();
-    private final DoubleProperty similarity = new SimpleDoubleProperty();
-    private final DoubleProperty confidence = new SimpleDoubleProperty();
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty testCaseId = new SimpleIntegerProperty(-1);
+    private final StringProperty text = new SimpleStringProperty("");
+    private final DoubleProperty similarity = new SimpleDoubleProperty(-1);
+    private final DoubleProperty confidence = new SimpleDoubleProperty(-1);
+
+    public static TestTextVO convertToTestTextVO(TestText text) {
+        if(Objects.isNull(text)) return null;
+        TestTextVO testTextVO = new TestTextVO();
+        testTextVO.setId(text.getId());
+        testTextVO.setTestCaseId(text.getCaseId());
+        testTextVO.setText(text.getText());
+        testTextVO.setSimilarity(text.getSimilarity());
+        testTextVO.setConfidence(text.getConfidence());
+        return testTextVO;
+    }
 
     public int getId() {
         return id.get();

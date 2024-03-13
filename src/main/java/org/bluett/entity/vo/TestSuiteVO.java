@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
+import org.bluett.entity.TestSuite;
 
 public class TestSuiteVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
@@ -11,6 +12,15 @@ public class TestSuiteVO {
     private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
     private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
+        TestSuiteVO testSuiteVO = new TestSuiteVO();
+        testSuiteVO.setId(testSuite.getId());
+        testSuiteVO.setName(testSuite.getName());
+        testSuiteVO.setDescription(testSuite.getDescription());
+        testSuiteVO.setStatus(testSuite.getStatus());
+        return testSuiteVO;
+    }
 
     public int getId() {
         return id.get();

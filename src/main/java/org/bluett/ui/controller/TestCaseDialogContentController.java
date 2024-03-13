@@ -17,6 +17,7 @@ import org.bluett.ui.builder.UIBuilder;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Optional;
 
 @Log4j2
 public class TestCaseDialogContentController {
@@ -46,9 +47,10 @@ public class TestCaseDialogContentController {
     @FXML
     void initialize() {
         testCaseVO.addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) return;
-            bindVO(newValue);
-            setLayout();
+            Optional.ofNullable(newValue).ifPresentOrElse(caseVO -> {
+                bindVO(caseVO);
+                setLayout();
+            }, () -> {});
         });
     }
 

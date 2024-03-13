@@ -11,9 +11,7 @@ import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.TestCaseService;
-import org.bluett.service.TestImageService;
 import org.bluett.service.TestSuiteService;
-import org.bluett.service.TestTextService;
 import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
@@ -28,8 +26,6 @@ public class IndexController {
     private ListView<TestSuiteVO> suiteListView;
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final TestImageService imageService = new TestImageService();
-    private final TestTextService textService = new TestTextService();
 
     @FXML
     void initialize() {
@@ -42,7 +38,7 @@ public class IndexController {
         suiteListView.setItems(suiteVOObservableList);
         suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (ObjectUtil.isEmpty(newValue)) return;
-            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectTestCaseVOListBySuiteId(newValue.getId(), null);
+            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), null);
             caseListView.setItems(caseVOObservableList);
         });
     }
@@ -84,7 +80,7 @@ public class IndexController {
     void deleteCaseButtonClick() {
         ObservableList<TestCaseVO> selectedItems = caseListView.getSelectionModel().getSelectedItems();
         if (CollectionUtil.isEmpty(selectedItems)) return;
-        boolean ret = caseService.deleteBatchByIds(selectedItems.stream().map(TestCaseVO::getId).toList());
+        boolean ret = caseService.delete(selectedItems);
         if (!ret) {
             log.error("删除测试用例失败:{}", selectedItems);
             return;
@@ -111,6 +107,13 @@ public class IndexController {
             boolean ret = caseService.update(testCaseVO);
             if (!ret) {
                 log.error("更新测试用例失败:{}", testCaseVO);
+                for (TestCaseVO caseVO : caseService.selectBySuiteId(testCaseVO.getSuiteId(), null)) {
+                    if (caseVO.getId() == testCaseVO.getId()) {
+                        testCaseVO = caseVO;
+                        break;
+                    }
+                }
+                caseListView.getItems().set(caseListView.getSelectionModel().getSelectedIndex(), testCaseVO);
                 return;
             }
             UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试用例成功", 1.5);

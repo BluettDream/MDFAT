@@ -6,6 +6,8 @@ import org.bluett.entity.TestImage;
 import org.bluett.entity.TestResult;
 import org.bluett.entity.TestText;
 
+import java.util.Objects;
+
 public class TestCaseVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final IntegerProperty suiteId = new SimpleIntegerProperty(-1);
@@ -13,21 +15,27 @@ public class TestCaseVO {
     private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final TestImageVO imageVO = new TestImageVO();
-    private final TestTextVO textVO = new TestTextVO();
+    private final ObjectProperty<TestImageVO> imageVO = new SimpleObjectProperty<>(new TestImageVO());
+    private final ObjectProperty<TestTextVO> textVO = new SimpleObjectProperty<>(new TestTextVO());
 
-    public TestCaseVO() {
+    public static TestCaseVO convertToTestCaseVO(TestCase testCase) {
+        if(Objects.isNull(testCase)) return null;
+        TestCaseVO testCaseVO = new TestCaseVO();
+        testCaseVO.setId(testCase.getId());
+        testCaseVO.setSuiteId(testCase.getSuiteId());
+        testCaseVO.setName(testCase.getName());
+        testCaseVO.setDescription(testCase.getDescription());
+        testCaseVO.setPriority(testCase.getPriority());
+        testCaseVO.setStatus(testCase.getStatus());
+        return testCaseVO;
     }
 
-    public TestCaseVO(TestCase testCase, TestImage image, TestText text) {
-        this.id.set(testCase.getId());
-        this.suiteId.set(testCase.getSuiteId());
-        this.name.set(testCase.getName());
-        this.description.set(testCase.getDescription());
-        this.priority.set(testCase.getPriority());
-        this.status.set(testCase.getStatus());
-        this.imageVO = new TestImageVO(image);
-        this.textVO = new TestTextVO(text);
+    public static TestCaseVO convertToTestCaseVO(TestCase testCase, TestImage testImage, TestText testText) {
+        TestCaseVO testCaseVO = convertToTestCaseVO(testCase);
+        if(Objects.isNull(testCaseVO) || Objects.isNull(testImage) || Objects.isNull(testText)) return null;
+        testCaseVO.setImageVO(TestImageVO.convertToTestImageVO(testImage));
+        testCaseVO.setTextVO(TestTextVO.convertToTestTextVO(testText));
+        return testCaseVO;
     }
 
     public int getId() {
@@ -103,10 +111,26 @@ public class TestCaseVO {
     }
 
     public TestImageVO getImageVO() {
+        return imageVO.get();
+    }
+
+    public ObjectProperty<TestImageVO> imageVOProperty() {
         return imageVO;
     }
 
+    public void setImageVO(TestImageVO imageVO) {
+        this.imageVO.set(imageVO);
+    }
+
     public TestTextVO getTextVO() {
+        return textVO.get();
+    }
+
+    public ObjectProperty<TestTextVO> textVOProperty() {
         return textVO;
+    }
+
+    public void setTextVO(TestTextVO textVO) {
+        this.textVO.set(textVO);
     }
 }

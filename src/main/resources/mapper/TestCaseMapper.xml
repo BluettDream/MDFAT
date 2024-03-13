@@ -3,9 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestCaseMapper">
-    <select id="selectTestCaseById" resultType="testCase">
-        select * from test_case where id=#{id}
-    </select>
+
+    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
 
     <select id="selectTestCaseByIds" resultType="testCase">
         select * from test_case where id in 
@@ -14,25 +13,27 @@
         </foreach>
     </select>
 
-    <select id="selectTestCaseList" resultType="testCase">
+    <select id="selectTestCaseListDynamic" resultType="testCase">
         select * from test_suite
         <where>
-            <if test="testCase.id != null">id=#{testCase.id}</if>
-            <if test="testCase.name != null">name=#{testCase.name}</if>
-            <if test="testCase.description != null">description=#{testCase.description}</if>
-            <if test="testCase.status != null">status=#{testCase.status}</if>
-            <if test="testCase.suiteId != null">suite_id=#{testCase.suiteId}</if>
+            <if test="testCase.id != null">and id=#{testCase.id}</if>
+            <if test="testCase.name != null">and name=#{testCase.name}</if>
+            <if test="testCase.description != null">and description=#{testCase.description}</if>
+            <if test="testCase.status != null">and status=#{testCase.status}</if>
+            <if test="testCase.suiteId != null">and suite_id=#{testCase.suiteId}</if>
         </where>
         <if test="page != null">
             limit #{page.startIndex}, #{page.pageSize}
         </if>
     </select>
+
     <select id="selectTestCaseBySuiteIds" resultType="testCase">
         select * from test_case where suite_id in
         <foreach collection="list" item="suiteId" open="(" separator="," close=")">
             #{suiteId}
         </foreach>
     </select>
+
     <select id="selectTestCaseListBySuiteId" resultType="testCase">
         select * from test_case
         where suite_id=#{suiteId}
