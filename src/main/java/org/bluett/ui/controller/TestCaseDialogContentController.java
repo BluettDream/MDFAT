@@ -1,11 +1,10 @@
 package org.bluett.ui.controller;
 
-import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -30,7 +29,7 @@ public class TestCaseDialogContentController {
     @FXML
     private HBox imageHB;
     @FXML
-    private Label imageL;
+    private TextField imageTF;
     @FXML
     private TextField nameTF;
     @FXML
@@ -46,22 +45,25 @@ public class TestCaseDialogContentController {
 
     @FXML
     void initialize() {
-        testCaseVO.addListener((observable, oldValue, newValue) -> {
-            Optional.ofNullable(newValue).ifPresentOrElse(caseVO -> {
-                bindVO(caseVO);
-                setLayout();
-            }, () -> {});
-        });
+        testCaseVO.addListener((observable, oldValue, newValue) ->
+                Optional.ofNullable(newValue).ifPresentOrElse(caseVO -> {
+            setLayout();
+            bindVO(caseVO);
+        }, () -> {}));
     }
 
     private void setLayout() {
-        textTF.textProperty().addListener((o, ov, nv) -> textHB.setDisable(CharSequenceUtil.hasBlank(nv)));
-        imageL.textProperty().addListener((o, ov, nv) -> imageHB.setDisable(CharSequenceUtil.hasBlank(nv)));
-        imageBtn.setOnMouseClicked(event -> {
+        // 当文本框为空时，禁用HBox
+        textTF.textProperty().addListener((o, ov, nv) -> textHB.setDisable(StrUtil.isBlank(nv)));
+        imageTF.textProperty().addListener((o, ov, nv) -> imageHB.setDisable(StrUtil.isBlank(nv)));
+        imageBtn.setOnMouseClicked(event -> { // 选择图片, 并将图片路径填入文本框
             File selectedFile = UIBuilder.buildFileChooser(FileTypeEnum.IMAGE).showOpenDialog(imageBtn.getScene().getWindow());
             if (Objects.isNull(selectedFile)) return;
-            imageL.setText(selectedFile.getAbsolutePath());
+            imageTF.setText(selectedFile.getAbsolutePath());
         });
+        // 当文本框被禁用时，将文本置为0.0
+        textHB.disabledProperty().addListener((o, ov, nv) -> textConfidenceTF.setText(nv ? "0.0" : textConfidenceTF.getText()));
+        imageHB.disabledProperty().addListener((o, ov, nv) -> imageConfidenceTF.setText(nv ? "0.0" : imageConfidenceTF.getText()));
     }
 
     private void bindVO(TestCaseVO caseVO) {
@@ -79,7 +81,7 @@ public class TestCaseDialogContentController {
             }
         });
         textTF.textProperty().bindBidirectional(caseVO.getTextVO().textProperty());
-        imageL.textProperty().bindBidirectional(caseVO.getImageVO().pathProperty());
+        imageTF.textProperty().bindBidirectional(caseVO.getImageVO().pathProperty());
         imageConfidenceTF.textProperty().bindBidirectional(caseVO.getImageVO().confidenceProperty(), new StringConverter<>() {
             @Override
             public String toString(Number object) {

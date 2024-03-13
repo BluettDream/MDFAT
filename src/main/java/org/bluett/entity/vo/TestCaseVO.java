@@ -1,10 +1,13 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.bluett.entity.TestCase;
-import org.bluett.entity.TestImage;
 import org.bluett.entity.TestResult;
-import org.bluett.entity.TestText;
 
 import java.util.Objects;
 
@@ -27,14 +30,8 @@ public class TestCaseVO {
         testCaseVO.setDescription(testCase.getDescription());
         testCaseVO.setPriority(testCase.getPriority());
         testCaseVO.setStatus(testCase.getStatus());
-        return testCaseVO;
-    }
-
-    public static TestCaseVO convertToTestCaseVO(TestCase testCase, TestImage testImage, TestText testText) {
-        TestCaseVO testCaseVO = convertToTestCaseVO(testCase);
-        if(Objects.isNull(testCaseVO) || Objects.isNull(testImage) || Objects.isNull(testText)) return null;
-        testCaseVO.setImageVO(TestImageVO.convertToTestImageVO(testImage));
-        testCaseVO.setTextVO(TestTextVO.convertToTestTextVO(testText));
+        testCaseVO.setImageVO(new TestImageVO());
+        testCaseVO.setTextVO(new TestTextVO());
         return testCaseVO;
     }
 

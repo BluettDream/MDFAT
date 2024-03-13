@@ -40,7 +40,7 @@ public class TestImage implements Serializable{
                 .path(imageVO.getPath())
                 .similarity(imageVO.getSimilarity())
                 .confidence(imageVO.getConfidence())
-                .caseId(imageVO.getTestCaseId())
+                .caseId(imageVO.getCaseId())
                 .build();
     }
 }

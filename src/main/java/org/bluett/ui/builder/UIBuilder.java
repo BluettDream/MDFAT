@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import lombok.extern.log4j.Log4j2;
 import org.bluett.MainApplication;
 import org.bluett.entity.enums.FileTypeEnum;
+import org.bluett.entity.enums.NodeEnum;
 import org.bluett.helper.UIHelper;
 
 import java.net.URL;
@@ -20,8 +21,16 @@ import java.net.URL;
 public class UIBuilder {
     private UIBuilder() {}
 
-    public static void showAlert(Window owner, Alert.AlertType alertType, String content, double seconds) {
-        Alert alert = new Alert(alertType);
+    public static void showInfoAlert(String content, double seconds) {
+        showAlert(Alert.AlertType.INFORMATION, UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), content, seconds);
+    }
+
+    public static void showErrAlert(String content, double seconds) {
+        showAlert(Alert.AlertType.ERROR, UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), content, seconds);
+    }
+
+    public static void showAlert(Alert.AlertType type, Window owner, String content, double seconds) {
+        Alert alert = new Alert(type);
         alert.initOwner(owner);
         alert.setTitle(null);
         alert.setHeaderText(null);

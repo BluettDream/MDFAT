@@ -1,15 +1,14 @@
 package org.bluett.ui.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.db.Page;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
-import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
-import org.bluett.helper.UIHelper;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
@@ -17,6 +16,8 @@ import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
+
+import java.util.Objects;
 
 @Log4j2
 public class IndexController {
@@ -34,12 +35,12 @@ public class IndexController {
     }
 
     private void bindVO() {
-        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, null);
-        suiteListView.setItems(suiteVOObservableList);
+        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, Page.of(0, 200));
+        suiteListView.getItems().setAll(suiteVOObservableList);
         suiteListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (ObjectUtil.isEmpty(newValue)) return;
-            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), null);
-            caseListView.setItems(caseVOObservableList);
+            if (Objects.isNull(newValue)) return;
+            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), Page.of(0, 200));
+            caseListView.getItems().setAll(caseVOObservableList);
         });
     }
 
@@ -60,7 +61,7 @@ public class IndexController {
                 return;
             }
             caseListView.getItems().add(testCaseVO);
-            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "保存测试用例成功", 1.5);
+            UIBuilder.showInfoAlert("保存测试用例成功", 0.5);
         });
     }
 
@@ -86,7 +87,7 @@ public class IndexController {
             return;
         }
         caseListView.getItems().removeAll(selectedItems);
-        UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "删除测试用例成功", 1.5);
+        UIBuilder.showInfoAlert("删除测试用例成功", 0.5);
     }
 
     @FXML
@@ -107,16 +108,12 @@ public class IndexController {
             boolean ret = caseService.update(testCaseVO);
             if (!ret) {
                 log.error("更新测试用例失败:{}", testCaseVO);
-                for (TestCaseVO caseVO : caseService.selectBySuiteId(testCaseVO.getSuiteId(), null)) {
-                    if (caseVO.getId() == testCaseVO.getId()) {
-                        testCaseVO = caseVO;
-                        break;
-                    }
-                }
+                TestCaseVO caseVO = caseService.selectById(testCaseVO.getId());
+                if(Objects.isNull(caseVO)) return;
                 caseListView.getItems().set(caseListView.getSelectionModel().getSelectedIndex(), testCaseVO);
                 return;
             }
-            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试用例成功", 1.5);
+            UIBuilder.showInfoAlert("更新测试用例成功", 0.5);
             caseListView.getItems().set(caseListView.getSelectionModel().getSelectedIndex(), testCaseVO);
         });
     }
@@ -129,7 +126,7 @@ public class IndexController {
                 log.error("更新测试集失败:{}", testSuiteVO);
                 return;
             }
-            UIBuilder.showAlert(UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), Alert.AlertType.INFORMATION, "更新测试集成功", 1.5);
+            UIBuilder.showInfoAlert("更新测试集成功", 0.5);
             suiteListView.getItems().set(suiteListView.getSelectionModel().getSelectedIndex(), testSuiteVO);
         });
     }

@@ -12,7 +12,6 @@ import java.util.List;
 * @Entity org.bluett.entity.TestText
 */
 public interface TestTextMapper {
-
     List<TestText> selectTestTextByIds(List<Integer> testTextIds);
 
     TestText selectTestTextById(Integer testTextId);

@@ -12,16 +12,16 @@ import java.util.Objects;
 
 public class TestImageVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
-    private final IntegerProperty testCaseId = new SimpleIntegerProperty(-1);
+    private final IntegerProperty caseId = new SimpleIntegerProperty(-1);
     private final StringProperty path = new SimpleStringProperty("");
     private final DoubleProperty similarity = new SimpleDoubleProperty(-1);
-    private final DoubleProperty confidence = new SimpleDoubleProperty(-1);
+    private final DoubleProperty confidence = new SimpleDoubleProperty(0.0);
 
     public static TestImageVO convertToTestImageVO(TestImage image) {
         if(Objects.isNull(image)) return null;
         TestImageVO testImageVO = new TestImageVO();
         testImageVO.setId(image.getId());
-        testImageVO.setTestCaseId(image.getCaseId());
+        testImageVO.setCaseId(image.getCaseId());
         testImageVO.setPath(image.getPath());
         testImageVO.setSimilarity(image.getSimilarity());
         testImageVO.setConfidence(image.getConfidence());
@@ -40,16 +40,16 @@ public class TestImageVO {
         this.id.set(id);
     }
 
-    public int getTestCaseId() {
-        return testCaseId.get();
+    public int getCaseId() {
+        return caseId.get();
     }
 
-    public IntegerProperty testCaseIdProperty() {
-        return testCaseId;
+    public IntegerProperty caseIdProperty() {
+        return caseId;
     }
 
-    public void setTestCaseId(int testCaseId) {
-        this.testCaseId.set(testCaseId);
+    public void setCaseId(int caseId) {
+        this.caseId.set(caseId);
     }
 
     public String getPath() {

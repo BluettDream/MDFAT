@@ -1,13 +1,13 @@
 package org.bluett.entity;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bluett.entity.vo.TestTextVO;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * @TableName test_text
@@ -43,7 +43,7 @@ public class TestText implements Serializable {
                 .text(textVO.getText())
                 .confidence(textVO.getConfidence())
                 .similarity(textVO.getSimilarity())
-                .caseId(textVO.getTestCaseId())
+                .caseId(textVO.getCaseId())
                 .build();
     }
 }

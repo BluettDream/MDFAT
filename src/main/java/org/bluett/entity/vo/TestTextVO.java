@@ -7,16 +7,16 @@ import java.util.Objects;
 
 public class TestTextVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
-    private final IntegerProperty testCaseId = new SimpleIntegerProperty(-1);
+    private final IntegerProperty caseId = new SimpleIntegerProperty(-1);
     private final StringProperty text = new SimpleStringProperty("");
     private final DoubleProperty similarity = new SimpleDoubleProperty(-1);
-    private final DoubleProperty confidence = new SimpleDoubleProperty(-1);
+    private final DoubleProperty confidence = new SimpleDoubleProperty(0.0);
 
     public static TestTextVO convertToTestTextVO(TestText text) {
         if(Objects.isNull(text)) return null;
         TestTextVO testTextVO = new TestTextVO();
         testTextVO.setId(text.getId());
-        testTextVO.setTestCaseId(text.getCaseId());
+        testTextVO.setCaseId(text.getCaseId());
         testTextVO.setText(text.getText());
         testTextVO.setSimilarity(text.getSimilarity());
         testTextVO.setConfidence(text.getConfidence());
@@ -35,16 +35,16 @@ public class TestTextVO {
         this.id.set(id);
     }
 
-    public int getTestCaseId() {
-        return testCaseId.get();
+    public int getCaseId() {
+        return caseId.get();
     }
 
-    public IntegerProperty testCaseIdProperty() {
-        return testCaseId;
+    public IntegerProperty caseIdProperty() {
+        return caseId;
     }
 
-    public void setTestCaseId(int testCaseId) {
-        this.testCaseId.set(testCaseId);
+    public void setCaseId(int caseId) {
+        this.caseId.set(caseId);
     }
 
     public String getText() {
