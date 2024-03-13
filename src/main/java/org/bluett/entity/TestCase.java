@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bluett.entity.vo.TestCaseVO;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,4 +21,16 @@ public class TestCase implements Serializable {
     private String description;
     private int priority;
     private TestResult status;
+    private Integer suiteId;
+
+    public static TestCase convertToTestCase(TestCaseVO caseVO) {
+        return TestCase.builder()
+                .id(caseVO.getId())
+                .name(caseVO.getName())
+                .description(caseVO.getDescription())
+                .priority(caseVO.getPriority())
+                .status(caseVO.getStatus())
+                .suiteId(caseVO.getSuiteId())
+                .build();
+    }
 }

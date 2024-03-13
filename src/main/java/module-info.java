@@ -11,8 +11,9 @@ open module org.bluett {
     requires org.xerial.sqlitejdbc;
 
     exports org.bluett;
-    exports org.bluett.controller;
-    exports org.bluett.entity to cn.hutool, org.mybatis;
-    exports org.bluett.entity.enums to cn.hutool, org.mybatis;
-    exports org.bluett.util to cn.hutool, org.mybatis;
+    exports org.bluett.ui.controller;
+    exports org.bluett.entity;
+    exports org.bluett.entity.vo;
+    exports org.bluett.entity.enums;
+    exports org.bluett.helper;
 }

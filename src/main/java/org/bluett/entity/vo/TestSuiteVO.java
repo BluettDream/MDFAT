@@ -2,27 +2,36 @@ package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
-import lombok.RequiredArgsConstructor;
-import org.bluett.entity.TestCase;
+import javafx.collections.ObservableList;
 import org.bluett.entity.TestResult;
+import org.bluett.entity.TestSuite;
 
-import java.util.TreeSet;
-
-@RequiredArgsConstructor
 public class TestSuiteVO {
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final StringProperty name = new SimpleStringProperty("");
-    private final StringProperty describe = new SimpleStringProperty("");
+    private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
-    private final SimpleSetProperty<TestCase> testCases = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
-    private final BooleanProperty save = new SimpleBooleanProperty(false);
+    private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public StringProperty describeProperty() {
-        return describe;
+    public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
+        TestSuiteVO testSuiteVO = new TestSuiteVO();
+        testSuiteVO.setId(testSuite.getId());
+        testSuiteVO.setName(testSuite.getName());
+        testSuiteVO.setDescription(testSuite.getDescription());
+        testSuiteVO.setStatus(testSuite.getStatus());
+        return testSuiteVO;
     }
 
-    public void setDescribe(String describe) {
-        this.describe.set(describe);
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getName() {
@@ -37,6 +46,18 @@ public class TestSuiteVO {
         this.name.set(name);
     }
 
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
     public TestResult getStatus() {
         return status.get();
     }
@@ -49,27 +70,15 @@ public class TestSuiteVO {
         this.status.set(status);
     }
 
-    public ObservableSet<TestCase> getTestCases() {
-        return testCases.get();
+    public ObservableList<TestCaseVO> getTestCaseList() {
+        return testCaseList.get();
     }
 
-    public SimpleSetProperty<TestCase> testCasesProperty() {
-        return testCases;
+    public SimpleListProperty<TestCaseVO> testCaseListProperty() {
+        return testCaseList;
     }
 
-    public void setTestCases(ObservableSet<TestCase> testCases) {
-        this.testCases.set(testCases);
-    }
-
-    public boolean isSave() {
-        return save.get();
-    }
-
-    public BooleanProperty saveProperty() {
-        return save;
-    }
-
-    public void setSave(boolean save) {
-        this.save.set(save);
+    public void setTestCaseList(ObservableList<TestCaseVO> testCaseList) {
+        this.testCaseList.set(testCaseList);
     }
 }

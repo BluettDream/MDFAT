@@ -4,19 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum NodeEnum {
-    MAIN("main"),
-    INDEX("index"),
-    SETTING("setting"),
-    HEADER("header"),
-    TEST_SUITE("components/test_suite"),
-    TEST_CASE("components/test_case"),
-    TEST_SUITE_DIALOG("components/test_suite_dialog"),
-    TEST_CASE_DIALOG("components/test_case_dialog"),
-    TEST_CASE_LIST_CELL("components/test_case_list_cell");
+    MAIN("/ui/view/main.fxml"),
+    INDEX("/ui/view/index.fxml"),
+    SETTING("/ui/view/setting.fxml"),
+    HEADER("/ui/view/header.fxml"),
+    TEST_CASE_DIALOG("/ui/view/component/testCaseDialogContent.fxml"),;
 
-    private final String fxmlName;
+    private final String fxmlPath;
 
-    NodeEnum(String fxmlName) {
-        this.fxmlName = fxmlName;
+    NodeEnum(String fxmlPath) {
+        this.fxmlPath = fxmlPath;
     }
 }
