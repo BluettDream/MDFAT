@@ -1,7 +1,5 @@
 package org.bluett.core.impl;
 
-import org.bluett.core.PCAutomaticOperation;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;

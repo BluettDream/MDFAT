@@ -135,7 +135,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button fx:id="pauseTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#pauseTestSuiteBtnClick">
+                              <Button fx:id="stopTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#stopTestSuiteBtnClick">
                                  <font>
                                     <Font size="1.0" />
                                  </font>

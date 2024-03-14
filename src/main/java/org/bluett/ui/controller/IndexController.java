@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
+import org.bluett.core.TestSuiteExecutor;
+import org.bluett.core.impl.TestSuiteExecutorImpl;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
@@ -30,7 +32,7 @@ public class IndexController {
     @FXML
     private Button deleteSuiteBtn;
     @FXML
-    private Button pauseTestSuiteBtn;
+    private Button stopTestSuiteBtn;
     @FXML
     private Button runTestSuiteBtn;
     @FXML
@@ -44,6 +46,7 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
+    private final TestSuiteExecutor testSuiteExecutor = new TestSuiteExecutorImpl();
 
     @FXML
     void initialize() {
@@ -52,13 +55,14 @@ public class IndexController {
     }
 
     @FXML
-    void pauseTestSuiteBtnClick() {
-        UIHelper.switchNodeVisible(runTestSuiteBtn, pauseTestSuiteBtn);
+    void stopTestSuiteBtnClick() {
+        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
-        UIHelper.switchNodeVisible(pauseTestSuiteBtn, runTestSuiteBtn);
+        UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
+        testSuiteExecutor.setTestCaseVOList(testCaseVOLV.getItems()).run();
     }
 
     @FXML
@@ -148,7 +152,10 @@ public class IndexController {
         ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, Page.of(0, 200));
         testSuiteVOLV.getItems().setAll(suiteVOObservableList);
         testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.isNull(newValue)) return;
+            if (Objects.isNull(newValue)) {
+                testCaseVOLV.getItems().clear();
+                return;
+            }
             ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), Page.of(0, 200));
             testCaseVOLV.getItems().setAll(caseVOObservableList);
         });
