@@ -6,8 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.bluett.entity.TestCase;
-import org.bluett.entity.TestResult;
+import org.bluett.entity.enums.TestResultEnum;
 
 import java.util.Objects;
 
@@ -17,7 +16,7 @@ public class TestCaseVO {
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
     private final IntegerProperty priority = new SimpleIntegerProperty(50);
-    private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
+    private final ObjectProperty<TestResultEnum> status = new SimpleObjectProperty<>(TestResultEnum.READY);
     private final ObjectProperty<TestImageVO> imageVO = new SimpleObjectProperty<>(new TestImageVO());
     private final ObjectProperty<TestTextVO> textVO = new SimpleObjectProperty<>(new TestTextVO());
 
@@ -95,15 +94,15 @@ public class TestCaseVO {
         this.priority.set(priority);
     }
 
-    public TestResult getStatus() {
+    public TestResultEnum getStatus() {
         return status.get();
     }
 
-    public ObjectProperty<TestResult> statusProperty() {
+    public ObjectProperty<TestResultEnum> statusProperty() {
         return status;
     }
 
-    public void setStatus(TestResult status) {
+    public void setStatus(TestResultEnum status) {
         this.status.set(status);
     }
 

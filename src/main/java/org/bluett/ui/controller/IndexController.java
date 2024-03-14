@@ -57,6 +57,7 @@ public class IndexController {
     @FXML
     void stopTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+        testSuiteExecutor.stop(false);
     }
 
     @FXML

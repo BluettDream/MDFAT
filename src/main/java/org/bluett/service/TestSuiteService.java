@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
-import org.bluett.entity.TestSuite;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.helper.DatabaseHelper;

@@ -1,25 +1,25 @@
 package org.bluett.mapper;
 
-import cn.hutool.db.Page;
-import org.apache.ibatis.annotations.Param;
 import org.bluett.entity.TestImage;
 
-import java.util.List;
-
+/**
+* @author BluettDream
+* @description 针对表【test_image】的数据库操作Mapper
+* @createDate 2024-03-14 23:28:29
+* @Entity org.bluett.entity.TestImage
+*/
 public interface TestImageMapper {
-    List<TestImage> selectTestImageByImageIds(List<Integer> testImageIds);
 
-    Integer updateById(TestImage testImage);
+    int deleteByPrimaryKey(Long id);
 
-    Integer insert(TestImage testImage);
+    int insert(TestImage record);
 
-    Integer insertBatch(List<TestImage> testImages);
+    int insertSelective(TestImage record);
 
-    Integer deleteById(Integer testImageId);
+    TestImage selectByPrimaryKey(Long id);
 
-    Integer deleteByIds(List<Integer> testImageIds);
+    int updateByPrimaryKeySelective(TestImage record);
 
-    List<TestImage> selectTestImageByCaseIds(List<Integer> caseIdList);
+    int updateByPrimaryKey(TestImage record);
 
-    List<TestImage> selectTestImageListDynamic(@Param("image") TestImage image,@Param("page") Page page);
 }

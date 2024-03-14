@@ -1,30 +1,25 @@
 package org.bluett.mapper;
 
-import cn.hutool.db.Page;
-import javafx.print.PageRange;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.io.ResolverUtil;
 import org.bluett.entity.TestSuite;
 
-import javax.print.attribute.standard.PageRanges;
-import java.util.List;
-
+/**
+* @author BluettDream
+* @description 针对表【test_suite】的数据库操作Mapper
+* @createDate 2024-03-14 23:28:29
+* @Entity org.bluett.entity.TestSuite
+*/
 public interface TestSuiteMapper {
 
-    List<TestSuite> selectTestSuiteList(@Param("testSuite") TestSuite testSuite, @Param("page") Page page);
+    int deleteByPrimaryKey(Long id);
 
-    List<TestSuite> selectTestSuiteByIds(List<Integer> testSuiteIds);
+    int insert(TestSuite record);
 
-    TestSuite selectTestSuiteById(Integer testSuiteId);
+    int insertSelective(TestSuite record);
 
-    Integer updateById(TestSuite testSuite);
+    TestSuite selectByPrimaryKey(Long id);
 
-    Integer insert(TestSuite testSuite);
+    int updateByPrimaryKeySelective(TestSuite record);
 
-    Integer insertBatch(List<TestSuite> testSuites);
+    int updateByPrimaryKey(TestSuite record);
 
-    Integer deleteById(Integer testSuiteId);
-
-    Integer deleteByIds(List<Integer> testSuiteIds);
 }

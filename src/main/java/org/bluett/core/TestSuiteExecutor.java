@@ -7,7 +7,7 @@ import java.util.List;
 public interface TestSuiteExecutor {
     void run();
 
-    void pause(boolean force);
+    void stop(boolean force);
 
     TestSuiteExecutor setTestCaseVOList(List<TestCaseVO> testCaseVOList);
 }

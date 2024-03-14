@@ -1,7 +1,6 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.*;
-import org.bluett.entity.TestText;
 
 import java.util.Objects;
 

@@ -29,7 +29,7 @@ public class TestSuiteExecutorImpl implements TestSuiteExecutor {
     }
 
     @Override
-    public void pause(boolean force) {
+    public void stop(boolean force) {
 
     }
 

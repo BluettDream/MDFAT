@@ -1,72 +1,123 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestImageMapper">
 
-    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
+    <resultMap id="BaseResultMap" type="org.bluett.entity.TestImage">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="caseId" column="case_id" jdbcType="INTEGER"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="confidence" column="confidence" jdbcType="REAL"/>
+            <result property="pointX" column="point_x" jdbcType="VARCHAR"/>
+            <result property="pointY" column="point_y" jdbcType="VARCHAR"/>
+            <result property="width" column="width" jdbcType="INTEGER"/>
+            <result property="height" column="height" jdbcType="INTEGER"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
 
-    <select id="selectTestImageByImageIds" resultType="testImage">
-        select * from test_image where id in
-        <foreach collection="list" item="testImageId" open="(" separator="," close=")">
-            #{testImageId}
-        </foreach>
+    <sql id="Base_Column_List">
+        id,case_id,path,
+        confidence,point_x,point_y,
+        width,height,update_time,
+        create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from test_image
+        where  id = #{id,jdbcType=INTEGER} 
     </select>
 
-    <select id="selectTestImageByCaseIds" resultType="testImage">
-        select * from test_image where case_id in
-        <foreach collection="list" item="caseId" open="(" separator="," close=")">
-            #{caseId}
-        </foreach>
-    </select>
-
-    <select id="selectTestImageListDynamic" resultType="testImage">
-        select * from test_image
-        <where>
-            <if test="testImage.id != null">and id=#{testImage.id}</if>
-            <if test="testImage.path != null">and path like '%'||#{testImage.path}||'%'</if>
-            <if test="testImage.similarity != null">and similarity=#{testImage.similarity}</if>
-            <if test="testImage.confidence != null">and confidence=#{testImage.confidence}</if>
-            <if test="testImage.caseId != null">and case_id=#{testImage.caseId}</if>
-        </where>
-        <if test="page != null">
-            limit #{page.startIndex}, #{page.pageSize}
-        </if>
-    </select>
-
-    <update id="updateById" parameterType="testImage">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from test_image
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
+        insert into test_image
+        ( id,case_id,path
+        ,confidence,point_x,point_y
+        ,width,height,update_time
+        ,create_time)
+        values (#{id,jdbcType=INTEGER},#{caseId,jdbcType=INTEGER},#{path,jdbcType=VARCHAR}
+        ,#{confidence,jdbcType=REAL},#{pointX,jdbcType=VARCHAR},#{pointY,jdbcType=VARCHAR}
+        ,#{width,jdbcType=INTEGER},#{height,jdbcType=INTEGER},#{updateTime,jdbcType=TIMESTAMP}
+        ,#{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
+        insert into test_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="caseId != null">case_id,</if>
+                <if test="path != null">path,</if>
+                <if test="confidence != null">confidence,</if>
+                <if test="pointX != null">point_x,</if>
+                <if test="pointY != null">point_y,</if>
+                <if test="width != null">width,</if>
+                <if test="height != null">height,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="caseId != null">#{caseId,jdbcType=INTEGER},</if>
+                <if test="path != null">#{path,jdbcType=VARCHAR},</if>
+                <if test="confidence != null">#{confidence,jdbcType=REAL},</if>
+                <if test="pointX != null">#{pointX,jdbcType=VARCHAR},</if>
+                <if test="pointY != null">#{pointY,jdbcType=VARCHAR},</if>
+                <if test="width != null">#{width,jdbcType=INTEGER},</if>
+                <if test="height != null">#{height,jdbcType=INTEGER},</if>
+                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestImage">
         update test_image
         <set>
-            <if test="path != null">path=#{path},</if>
-            <if test="similarity != null">similarity=#{similarity},</if>
-            <if test="confidence != null">confidence=#{confidence},</if>
-            update_time=datetime('now', '+8 hour')
+                <if test="caseId != null">
+                    case_id = #{caseId,jdbcType=INTEGER},
+                </if>
+                <if test="path != null">
+                    path = #{path,jdbcType=VARCHAR},
+                </if>
+                <if test="confidence != null">
+                    confidence = #{confidence,jdbcType=REAL},
+                </if>
+                <if test="pointX != null">
+                    point_x = #{pointX,jdbcType=VARCHAR},
+                </if>
+                <if test="pointY != null">
+                    point_y = #{pointY,jdbcType=VARCHAR},
+                </if>
+                <if test="width != null">
+                    width = #{width,jdbcType=INTEGER},
+                </if>
+                <if test="height != null">
+                    height = #{height,jdbcType=INTEGER},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
         </set>
-        where id=#{id}
+        where   id = #{id,jdbcType=INTEGER} 
     </update>
-
-    <insert id="insert" parameterType="testImage" useGeneratedKeys="true" keyProperty="id">
-        insert into test_image(path, similarity, confidence, case_id, create_time, update_time)
-        values(#{path}, #{similarity}, #{confidence}, #{caseId}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
-    </insert>
-
-    <insert id="insertBatch">
-        insert into test_image(path, similarity, confidence, case_id, create_time, update_time)
-        values
-        <foreach collection="list" item="testImage" separator=",">
-            (#{testImage.path}, #{testImage.similarity}, #{testImage.confidence}, #{testImage.caseId}, datetime('now',
-            '+8 hour'), datetime('now', '+8 hour'))
-        </foreach>
-    </insert>
-
-    <delete id="deleteById">
-        delete from test_image where id=#{id}
-    </delete>
-
-    <delete id="deleteByIds">
-        delete from test_image where id in
-        <foreach collection="list" item="testImageId" open="(" separator="," close=")">
-            #{testImageId}
-        </foreach>
-    </delete>
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestImage">
+        update test_image
+        set 
+            case_id =  #{caseId,jdbcType=INTEGER},
+            path =  #{path,jdbcType=VARCHAR},
+            confidence =  #{confidence,jdbcType=REAL},
+            point_x =  #{pointX,jdbcType=VARCHAR},
+            point_y =  #{pointY,jdbcType=VARCHAR},
+            width =  #{width,jdbcType=INTEGER},
+            height =  #{height,jdbcType=INTEGER},
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            create_time =  #{createTime,jdbcType=TIMESTAMP}
+        where   id = #{id,jdbcType=INTEGER} 
+    </update>
 </mapper>

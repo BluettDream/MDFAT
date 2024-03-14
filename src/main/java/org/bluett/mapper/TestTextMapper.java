@@ -1,32 +1,25 @@
 package org.bluett.mapper;
 
-import cn.hutool.db.Page;
-import org.apache.ibatis.annotations.Param;
 import org.bluett.entity.TestText;
-
-import java.util.List;
 
 /**
 * @author BluettDream
 * @description 针对表【test_text】的数据库操作Mapper
+* @createDate 2024-03-14 23:28:29
 * @Entity org.bluett.entity.TestText
 */
 public interface TestTextMapper {
-    List<TestText> selectTestTextByIds(List<Integer> testTextIds);
 
-    TestText selectTestTextById(Integer testTextId);
+    int deleteByPrimaryKey(Long id);
 
-    Integer updateById(TestText testText);
+    int insert(TestText record);
 
-    Integer insert(TestText testText);
+    int insertSelective(TestText record);
 
-    Integer insertBatch(List<TestText> testTexts);
+    TestText selectByPrimaryKey(Long id);
 
-    Integer deleteById(Integer testTextId);
+    int updateByPrimaryKeySelective(TestText record);
 
-    Integer deleteByIds(List<Integer> testTextIds);
+    int updateByPrimaryKey(TestText record);
 
-    List<TestText> selectTestTextByCaseIds(List<Integer> caseIdList);
-
-    List<TestText> selectTestTextDynamic(@Param("text") TestText testText, @Param("page") Page page);
 }

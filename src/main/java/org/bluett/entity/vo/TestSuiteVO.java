@@ -3,14 +3,13 @@ package org.bluett.entity.vo;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.bluett.entity.TestResult;
-import org.bluett.entity.TestSuite;
+import org.bluett.entity.enums.TestResultEnum;
 
 public class TestSuiteVO {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final StringProperty name = new SimpleStringProperty("");
     private final StringProperty description = new SimpleStringProperty("");
-    private final ObjectProperty<TestResult> status = new SimpleObjectProperty<>(TestResult.READY);
+    private final ObjectProperty<TestResultEnum> status = new SimpleObjectProperty<>(TestResultEnum.READY);
     private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
@@ -58,15 +57,15 @@ public class TestSuiteVO {
         this.description.set(description);
     }
 
-    public TestResult getStatus() {
+    public TestResultEnum getStatus() {
         return status.get();
     }
 
-    public ObjectProperty<TestResult> statusProperty() {
+    public ObjectProperty<TestResultEnum> statusProperty() {
         return status;
     }
 
-    public void setStatus(TestResult status) {
+    public void setStatus(TestResultEnum status) {
         this.status.set(status);
     }
 

@@ -10,30 +10,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @TableName test_case
+ * @TableName settings
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestCase implements Serializable {
+public class Settings implements Serializable {
+
     @Serial
-    private static final long serialVersionUID = 3480924273725052650L;
+    private static final long serialVersionUID = 4530583019344136969L;
     private Integer id;
 
-    private Integer suiteId;
+    private String key;
 
-    private String name;
-
-    private Integer priority;
-
-    private Integer operation;
-
-    private Integer runTime;
-
-    private Integer timeout;
-
-    private Integer status;
+    private String value;
 
     private String description;
 
