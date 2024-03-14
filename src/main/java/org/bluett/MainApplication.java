@@ -8,6 +8,17 @@ import org.bluett.entity.enums.NodeEnum;
 import org.bluett.helper.UIHelper;
 
 public class MainApplication extends Application {
+
+    @Override
+    public void init() throws Exception {
+        super.init();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
+
     @Override
     public void start(Stage stage) {
         Parent root = UIHelper.createAndSaveNode(NodeEnum.MAIN);
