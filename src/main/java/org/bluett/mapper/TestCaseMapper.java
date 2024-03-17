@@ -1,11 +1,14 @@
 package org.bluett.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.bluett.entity.Page;
 import org.bluett.entity.TestCase;
+
+import java.util.List;
 
 /**
 * @author BluettDream
 * @description 针对表【test_case】的数据库操作Mapper
-* @createDate 2024-03-14 23:28:29
 * @Entity org.bluett.entity.TestCase
 */
 public interface TestCaseMapper {
@@ -22,4 +25,7 @@ public interface TestCaseMapper {
 
     int updateByPrimaryKey(TestCase record);
 
+    Integer deleteByIds(List<Integer> caseIdList);
+
+    List<TestCase> selectListSelective(@Param("testCase") TestCase testCase, @Param("page") Page page);
 }

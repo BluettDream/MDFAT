@@ -2,10 +2,11 @@ package org.bluett.mapper;
 
 import org.bluett.entity.TestImage;
 
+import java.util.List;
+
 /**
 * @author BluettDream
 * @description 针对表【test_image】的数据库操作Mapper
-* @createDate 2024-03-14 23:28:29
 * @Entity org.bluett.entity.TestImage
 */
 public interface TestImageMapper {
@@ -22,4 +23,7 @@ public interface TestImageMapper {
 
     int updateByPrimaryKey(TestImage record);
 
+    List<TestImage> selectTestImageByCaseIds(List<Integer> caseIdList);
+
+    Integer deleteByIds(List<Integer> imageIdList);
 }

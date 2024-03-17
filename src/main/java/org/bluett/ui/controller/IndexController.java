@@ -1,23 +1,23 @@
 package org.bluett.ui.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.db.Page;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
 import org.bluett.core.TestSuiteExecutor;
 import org.bluett.core.impl.TestSuiteExecutorImpl;
+import org.bluett.entity.Page;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
-import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
+import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
 
@@ -52,6 +52,44 @@ public class IndexController {
     void initialize() {
         setLayout();
         bindVO();
+    }
+
+    private void bindVO() {
+        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, new Page(0, 200));
+        testSuiteVOLV.getItems().setAll(suiteVOObservableList);
+        testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.isNull(newValue)) {
+                testCaseVOLV.getItems().clear();
+                return;
+            }
+            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), new Page(0, 200));
+            testCaseVOLV.getItems().setAll(caseVOObservableList);
+            testCaseVOLV.requestFocus();
+            testCaseVOLV.getSelectionModel().selectFirst();
+        });
+        testCaseVOLV.requestFocus();
+        testCaseVOLV.getSelectionModel().selectFirst();
+    }
+
+    private void setLayout() {
+        testSuiteVOLV.setCellFactory(param -> new TestSuiteListCell());
+        testCaseVOLV.setCellFactory(param -> new TestCaseListCell());
+        testSuiteVOLV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        testCaseVOLV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        testCaseVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.isNull(newValue)) {
+                UIHelper.setDisable(true, updateCaseBtn, deleteCaseBtn);
+                return;
+            }
+            UIHelper.setDisable(false, updateCaseBtn, deleteCaseBtn);
+        });
+        testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.isNull(newValue)) {
+                UIHelper.setDisable(true, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
+                return;
+            }
+            UIHelper.setDisable(false, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
+        });
     }
 
     @FXML
@@ -96,7 +134,7 @@ public class IndexController {
     @FXML
     void deleteCaseBtnClick() {
         ObservableList<TestCaseVO> selectedItems = testCaseVOLV.getSelectionModel().getSelectedItems();
-        if (CollectionUtil.isEmpty(selectedItems)) return;
+        if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!caseService.delete(selectedItems)) {
             log.error("删除测试用例失败:{}", selectedItems);
             UIBuilder.showErrAlert("删除测试用例失败", 0.8);
@@ -109,7 +147,7 @@ public class IndexController {
     @FXML
     void deleteSuiteBtnClick() {
         ObservableList<TestSuiteVO> selectedItems = testSuiteVOLV.getSelectionModel().getSelectedItems();
-        if (CollectionUtil.isEmpty(selectedItems)) return;
+        if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!suiteService.deleteBatchByIds(selectedItems.stream().map(TestSuiteVO::getId).toList())) {
             log.error("删除测试集失败:{}", selectedItems);
             UIBuilder.showErrAlert("删除测试集失败", 0.8);
@@ -145,41 +183,6 @@ public class IndexController {
             }
             UIBuilder.showInfoAlert("更新测试集成功", 0.8);
             testSuiteVOLV.getItems().set(testSuiteVOLV.getSelectionModel().getSelectedIndex(), testSuiteVO);
-        });
-    }
-
-
-    private void bindVO() {
-        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, Page.of(0, 200));
-        testSuiteVOLV.getItems().setAll(suiteVOObservableList);
-        testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.isNull(newValue)) {
-                testCaseVOLV.getItems().clear();
-                return;
-            }
-            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), Page.of(0, 200));
-            testCaseVOLV.getItems().setAll(caseVOObservableList);
-        });
-    }
-
-    private void setLayout() {
-        testSuiteVOLV.setCellFactory(param -> new TestSuiteListCell());
-        testCaseVOLV.setCellFactory(param -> new TestCaseListCell());
-        testSuiteVOLV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        testCaseVOLV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        testCaseVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.isNull(newValue)) {
-                UIHelper.setDisable(true, updateCaseBtn, deleteCaseBtn);
-                return;
-            }
-            UIHelper.setDisable(false, updateCaseBtn, deleteCaseBtn);
-        });
-        testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.isNull(newValue)) {
-                UIHelper.setDisable(true, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
-                return;
-            }
-            UIHelper.setDisable(false, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
         });
     }
 }

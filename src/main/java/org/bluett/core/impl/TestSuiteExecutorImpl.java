@@ -1,8 +1,8 @@
 package org.bluett.core.impl;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.thread.NamedThreadFactory;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.core.TestSuiteExecutor;
 import org.bluett.entity.vo.TestCaseVO;
 
@@ -20,7 +20,12 @@ public class TestSuiteExecutorImpl implements TestSuiteExecutor {
             100,
             60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(100),
-            new NamedThreadFactory("TestSuiteThreadPool-", new ThreadGroup("TestCaseGroup"), true, (t, e) -> log.error("TestSuiteThreadPool-线程池异常", ExceptionUtil.getRootCause(e))),
+            new BasicThreadFactory.Builder()
+                    .daemon(true)
+                    .namingPattern("TestSuiteThread-%d")
+                    .priority(Thread.MAX_PRIORITY)
+                    .uncaughtExceptionHandler((t, e) -> log.error("Uncaught exception in thread {}", t.getName(), ExceptionUtils.getRootCause(e)))
+                    .build(),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
     @Override

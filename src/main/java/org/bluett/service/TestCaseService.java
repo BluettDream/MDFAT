@@ -1,13 +1,16 @@
 package org.bluett.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.bluett.entity.Page;
+import org.bluett.entity.TestCase;
+import org.bluett.entity.TestImage;
+import org.bluett.entity.TestText;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestImageVO;
 import org.bluett.entity.vo.TestTextVO;
@@ -33,16 +36,16 @@ public class TestCaseService {
             if(cnt == 0) return false;
             testCaseVO.setId(testCase.getId()); // 设置插入后的ID
             // 插入测试图片和测试文本(必须所有的都执行成功才算成功)
-            if(StrUtil.isNotBlank(testCaseVO.getImageVO().getPath())){
+            if(StringUtils.isNotBlank(testCaseVO.getImageVO().getPath())){
                 cnt = insertOrUpdateTestImage(testCaseVO, session);
             }
-            if(StrUtil.isNotBlank(testCaseVO.getTextVO().getText())){
+            if(StringUtils.isNotBlank(testCaseVO.getTextVO().getText())){
                 cnt = insertOrUpdateTestText(testCaseVO, session);
             }
             if(cnt > 0) session.commit();
             return cnt > 0;
         }catch (Exception e){
-            log.error(ExceptionUtil.getRootCause(e));
+            log.error(ExceptionUtils.getRootCause(e));
         }
         return false;
     }
@@ -59,7 +62,7 @@ public class TestCaseService {
             if (cnt > 0) session.commit();
             return cnt > 0;
         }catch (Exception e){
-            log.error(ExceptionUtil.getRootCause(e));
+            log.error(ExceptionUtils.getRootCause(e));
         }
         return false;
     }
@@ -75,9 +78,9 @@ public class TestCaseService {
         List<Integer> textIdList = caseVOList.stream()
                 .map(TestCaseVO::getTextVO)
                 .map(TestTextVO::getId)
-                .filter(id -> id != -1)
+                .filter(id -> id != 0)
                 .toList();
-        if (CollectionUtil.isNotEmpty(textIdList)) {
+        if (CollectionUtils.isNotEmpty(textIdList)) {
             TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
             cnt = textMapper.deleteByIds(textIdList);
         }
@@ -95,9 +98,9 @@ public class TestCaseService {
         List<Integer> imageIdList = caseVOList.stream()
                 .map(TestCaseVO::getImageVO)
                 .map(TestImageVO::getId)
-                .filter(id -> id != -1)
+                .filter(id -> id != 0)
                 .toList();
-        if (CollectionUtil.isNotEmpty(imageIdList)) {
+        if (CollectionUtils.isNotEmpty(imageIdList)) {
             TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
             cnt = imageMapper.deleteByIds(imageIdList);
         }
@@ -113,58 +116,58 @@ public class TestCaseService {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             // 更新测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            Integer cnt = caseMapper.updateById(TestCase.convertToTestCase(testCaseVO));
+            Integer cnt = caseMapper.updateByPrimaryKeySelective(TestCase.convertToTestCase(testCaseVO));
             if (cnt == 0) return false;
             // 更新或插入测试图片和测试文本(必须所有的都执行成功才算成功)
-            if (StrUtil.isNotBlank(testCaseVO.getImageVO().getPath())) {
+            if (StringUtils.isNotBlank(testCaseVO.getImageVO().getPath())) {
                 cnt = insertOrUpdateTestImage(testCaseVO, session);
             }
-            if (StrUtil.isNotBlank(testCaseVO.getTextVO().getText())) {
+            if (StringUtils.isNotBlank(testCaseVO.getTextVO().getText())) {
                 cnt = insertOrUpdateTestText(testCaseVO, session);
             }
             if (cnt > 0) session.commit();
             return cnt > 0;
         } catch (Exception e) {
-            log.error(ExceptionUtil.getRootCause(e));
+            log.error(ExceptionUtils.getRootCause(e));
         }
         return false;
     }
 
     /**
-     * 插入或更新测试文本(根据ID是否为默认-1判断是插入还是更新)
+     * 插入或更新测试文本(根据ID是否为默认0判断是插入还是更新)
      * @param testCaseVO 测试用例
      * @param session SqlSession
      * @return 影响行数
      */
     private static Integer insertOrUpdateTestText(TestCaseVO testCaseVO, SqlSession session) {
-        Integer cnt;
+        int cnt;
         TestTextVO testTextVO = testCaseVO.getTextVO();
-        if(testTextVO.getCaseId() == -1) testTextVO.setCaseId(testCaseVO.getId());
+        if(testTextVO.getCaseId() == 0) testTextVO.setCaseId(testCaseVO.getId());
         TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
         TestText testText = TestText.convertToTestText(testTextVO);
-        if(testText.getId() == -1) {
+        if(testText.getId() == 0) {
             cnt = textMapper.insert(testText);
             testTextVO.setId(testText.getId());
-        } else cnt = textMapper.updateById(TestText.convertToTestText(testTextVO));
+        } else cnt = textMapper.updateByPrimaryKeySelective(TestText.convertToTestText(testTextVO));
         return cnt;
     }
 
     /**
-     * 插入或更新测试图片(根据ID是否为默认-1判断是插入还是更新)
+     * 插入或更新测试图片(根据ID是否为默认0判断是插入还是更新)
      * @param testCaseVO 测试用例
      * @param session SqlSession
      * @return 影响行数
      */
     private static Integer insertOrUpdateTestImage(TestCaseVO testCaseVO, SqlSession session) {
-        Integer cnt;
+        int cnt;
         TestImageVO testImageVO = testCaseVO.getImageVO();
-        if(testImageVO.getCaseId() == -1) testImageVO.setCaseId(testCaseVO.getId());
+        if(testImageVO.getCaseId() == 0) testImageVO.setCaseId(testCaseVO.getId());
         TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
         TestImage testImage = TestImage.convertToTestImage(testImageVO);
-        if(testImage.getId() == -1) {
+        if(testImage.getId() == 0) {
             cnt = imageMapper.insert(testImage);
             testImageVO.setId(testImage.getId());
-        } else cnt = imageMapper.updateById(testImage);
+        } else cnt = imageMapper.updateByPrimaryKeySelective(testImage);
         return cnt;
     }
 
@@ -172,8 +175,8 @@ public class TestCaseService {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             // 查询测试用例列表
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            List<TestCase> testCaseList = caseMapper.selectTestCaseListDynamic(TestCase.builder().suiteId(suiteId).build(), page);
-            if(CollectionUtil.isEmpty(testCaseList)) return FXCollections.emptyObservableList();
+            List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().suiteId(suiteId).build(), page);
+            if(CollectionUtils.isEmpty(testCaseList)) return FXCollections.emptyObservableList();
             List<TestCaseVO> results = testCaseList.stream().map(TestCaseVO::convertToTestCaseVO).toList();
             List<Integer> caseIdList = results.stream().map(TestCaseVO::getId).toList();
             // 查询测试用例的图片并填充
@@ -182,7 +185,7 @@ public class TestCaseService {
             fillTestTextVO(session, caseIdList, results);
             return FXCollections.observableArrayList(results);
         } catch (Exception e) {
-            log.error("根据suiteID={}查询case列表失败", suiteId, ExceptionUtil.getRootCause(e));
+            log.error("根据suiteID={}查询case列表失败", suiteId, ExceptionUtils.getRootCause(e));
         }
         return FXCollections.emptyObservableList();
     }
@@ -195,8 +198,8 @@ public class TestCaseService {
      */
     private static void fillTestTextVO(SqlSession session, List<Integer> caseIdList, List<TestCaseVO> results) {
         TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
-        List<TestText> textList = textMapper.selectTestTextByCaseIds(caseIdList);
-        if(CollectionUtil.isEmpty(textList)) return ;
+        List<TestText> textList = textMapper.selectByCaseIds(caseIdList);
+        if(CollectionUtils.isEmpty(textList)) return ;
         Map<Integer, TestTextVO> textVOMap = textList.stream()
                 .map(TestTextVO::convertToTestTextVO)
                 .collect(Collectors.toMap(TestTextVO::getCaseId, Function.identity()));
@@ -212,7 +215,7 @@ public class TestCaseService {
     private static void fillTestImageVO(SqlSession session, List<Integer> caseIdList, List<TestCaseVO> results) {
         TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
         List<TestImage> imageList = imageMapper.selectTestImageByCaseIds(caseIdList);
-        if(CollectionUtil.isEmpty(imageList)) return ;
+        if(CollectionUtils.isEmpty(imageList)) return ;
         Map<Integer, TestImageVO> imageVOMap = imageList.stream()
                 .map(TestImageVO::convertToTestImageVO)
                 .collect(Collectors.toMap(TestImageVO::getCaseId, Function.identity()));
@@ -223,8 +226,8 @@ public class TestCaseService {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             // 查询测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            List<TestCase> testCaseList = caseMapper.selectTestCaseListDynamic(TestCase.builder().id(caseId).build(), Page.of(0, 1));
-            if (CollectionUtil.isEmpty(testCaseList)) return null;
+            List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().id(caseId).build(), new Page(0, 1));
+            if (CollectionUtils.isEmpty(testCaseList)) return null;
             TestCase testCase = testCaseList.stream().findFirst().orElse(null);
             TestCaseVO testCaseVO = TestCaseVO.convertToTestCaseVO(testCase);
             // 查询测试用例的图片
@@ -234,7 +237,7 @@ public class TestCaseService {
             fillTestTextVO(session, List.of(caseId), caseVOList);
             return caseVOList.stream().findFirst().orElse(null);
         } catch (Exception e) {
-            log.error("通过testCaseId={}查询TestCaseVO失败", caseId, ExceptionUtil.getRootCause(e));
+            log.error("通过testCaseId={}查询TestCaseVO失败", caseId, ExceptionUtils.getRootCause(e));
         }
         return null;
     }

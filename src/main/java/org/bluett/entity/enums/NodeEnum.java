@@ -8,7 +8,8 @@ public enum NodeEnum {
     INDEX("/ui/view/index.fxml"),
     SETTING("/ui/view/setting.fxml"),
     HEADER("/ui/view/header.fxml"),
-    TEST_CASE_DIALOG("/ui/view/component/testCaseDialogContent.fxml"),;
+    TEST_CASE_DIALOG_CONTENT("/ui/view/component/testCaseDialogContent.fxml"),
+    TEST_SUITE_DIALOG_CONTENT("/ui/view/component/testSuiteDialogContent.fxml");
 
     private final String fxmlPath;
 

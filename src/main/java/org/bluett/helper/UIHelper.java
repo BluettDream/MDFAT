@@ -1,16 +1,18 @@
 package org.bluett.helper;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.ObjectUtil;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.MainApplication;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
+import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.ui.controller.TestCaseDialogContentController;
+import org.bluett.ui.controller.TestSuiteDialogContentController;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,20 +46,6 @@ public class UIHelper {
         URL url = MainApplication.class.getResource(nodeEnum.getFxmlPath());
         if (url == null) return Optional.empty();
         return Optional.of(new FXMLLoader(url, getResourceBundle()));
-    }
-
-    /**
-     * set data to controller
-     *
-     * @param data       data
-     * @param fxmlLoader fxmlLoader
-     * @param <T>        data type
-     */
-    private static <T> void setData(T data, FXMLLoader fxmlLoader) {
-        switch (fxmlLoader.getController()) {
-            case TestCaseDialogContentController controller -> controller.setTestCaseVO((TestCaseVO) data);
-            default -> log.error("unknown controller");
-        }
     }
 
     /**
@@ -105,18 +93,32 @@ public class UIHelper {
         AtomicReference<T> node = new AtomicReference<>();
         getFXMLLoader(nodeEnum).ifPresentOrElse(fxmlLoader -> {
             try {
+                fxmlLoader.setControllerFactory(param -> getController(nodeEnum, data, param));
                 node.set(fxmlLoader.load());
-                if (ObjectUtil.isEmpty(data)) return;
-                if (ObjectUtil.isEmpty(fxmlLoader.getController())) {
-                    log.error("{}:controller is null, cannot put data to node", nodeEnum.getFxmlPath());
-                    return;
-                }
-                setData(data, fxmlLoader);
             } catch (IOException e) {
-                log.error(ExceptionUtil.getRootCause(e));
+                log.error("fxml load fail{}", nodeEnum.getFxmlPath(), ExceptionUtils.getRootCause(e));
             }
         }, () -> log.error("fxml file not found"));
         return node.get();
+    }
+
+    private static <V> Object getController(NodeEnum nodeEnum, V data, Class<?> param) {
+        switch (nodeEnum){
+            case TEST_CASE_DIALOG_CONTENT -> {
+                return new TestCaseDialogContentController((TestCaseVO) data);
+            }
+            case TEST_SUITE_DIALOG_CONTENT -> {
+                return new TestSuiteDialogContentController((TestSuiteVO) data);
+            }
+            default -> {
+                try {
+                    return param.getDeclaredConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public static void clearNode() {

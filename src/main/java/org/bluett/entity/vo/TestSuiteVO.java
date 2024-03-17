@@ -1,24 +1,59 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bluett.entity.TestSuite;
 import org.bluett.entity.enums.TestResultEnum;
 
 public class TestSuiteVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty id = new SimpleIntegerProperty(0);
     private final StringProperty name = new SimpleStringProperty("");
-    private final StringProperty description = new SimpleStringProperty("");
+    private final IntegerProperty runTime = new SimpleIntegerProperty(0);
+    private final IntegerProperty timeout = new SimpleIntegerProperty(0);
     private final ObjectProperty<TestResultEnum> status = new SimpleObjectProperty<>(TestResultEnum.READY);
+    private final StringProperty description = new SimpleStringProperty("");
     private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
         TestSuiteVO testSuiteVO = new TestSuiteVO();
         testSuiteVO.setId(testSuite.getId());
         testSuiteVO.setName(testSuite.getName());
-        testSuiteVO.setDescription(testSuite.getDescription());
+        testSuiteVO.setRunTime(testSuite.getRunTime());
+        testSuiteVO.setTimeout(testSuite.getTimeout());
         testSuiteVO.setStatus(testSuite.getStatus());
+        testSuiteVO.setDescription(testSuite.getDescription());
         return testSuiteVO;
+    }
+
+    public int getRunTime() {
+        return runTime.get();
+    }
+
+    public IntegerProperty runTimeProperty() {
+        return runTime;
+    }
+
+    public void setRunTime(int runTime) {
+        this.runTime.set(runTime);
+    }
+
+    public int getTimeout() {
+        return timeout.get();
+    }
+
+    public IntegerProperty timeoutProperty() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout.set(timeout);
     }
 
     public int getId() {
