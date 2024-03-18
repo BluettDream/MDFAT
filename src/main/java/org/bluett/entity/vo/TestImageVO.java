@@ -1,31 +1,84 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.bluett.entity.TestImage;
 
-import java.util.Objects;
-
 public class TestImageVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(-1);
-    private final IntegerProperty testCaseId = new SimpleIntegerProperty(-1);
+    private final IntegerProperty id = new SimpleIntegerProperty(0);
+    private final IntegerProperty caseId = new SimpleIntegerProperty(0);
     private final StringProperty path = new SimpleStringProperty("");
-    private final DoubleProperty similarity = new SimpleDoubleProperty(-1);
-    private final DoubleProperty confidence = new SimpleDoubleProperty(-1);
+    private final FloatProperty similarity = new SimpleFloatProperty(0.0f);
+    private final FloatProperty confidence = new SimpleFloatProperty(0.0f);
+    private final IntegerProperty pointX = new SimpleIntegerProperty(0);
+    private final IntegerProperty pointY = new SimpleIntegerProperty(0);
+    private final IntegerProperty width = new SimpleIntegerProperty(0);
+    private final IntegerProperty height = new SimpleIntegerProperty(0);
 
     public static TestImageVO convertToTestImageVO(TestImage image) {
-        if(Objects.isNull(image)) return null;
-        TestImageVO testImageVO = new TestImageVO();
-        testImageVO.setId(image.getId());
-        testImageVO.setTestCaseId(image.getCaseId());
-        testImageVO.setPath(image.getPath());
-        testImageVO.setSimilarity(image.getSimilarity());
-        testImageVO.setConfidence(image.getConfidence());
-        return testImageVO;
+        TestImageVO imageVO = new TestImageVO();
+        imageVO.setId(image.getId());
+        imageVO.setCaseId(image.getCaseId());
+        imageVO.setPath(image.getPath());
+        imageVO.setSimilarity(image.getConfidence());
+        imageVO.setConfidence(image.getConfidence());
+        imageVO.setPointX(image.getPointX());
+        imageVO.setPointY(image.getPointY());
+        imageVO.setWidth(image.getWidth());
+        imageVO.setHeight(image.getHeight());
+        return imageVO;
+    }
+
+    public int getPointX() {
+        return pointX.get();
+    }
+
+    public IntegerProperty pointXProperty() {
+        return pointX;
+    }
+
+    public void setPointX(int pointX) {
+        this.pointX.set(pointX);
+    }
+
+    public int getPointY() {
+        return pointY.get();
+    }
+
+    public IntegerProperty pointYProperty() {
+        return pointY;
+    }
+
+    public void setPointY(int pointY) {
+        this.pointY.set(pointY);
+    }
+
+    public int getWidth() {
+        return width.get();
+    }
+
+    public IntegerProperty widthProperty() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width.set(width);
+    }
+
+    public int getHeight() {
+        return height.get();
+    }
+
+    public IntegerProperty heightProperty() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height.set(height);
     }
 
     public int getId() {
@@ -40,16 +93,16 @@ public class TestImageVO {
         this.id.set(id);
     }
 
-    public int getTestCaseId() {
-        return testCaseId.get();
+    public int getCaseId() {
+        return caseId.get();
     }
 
-    public IntegerProperty testCaseIdProperty() {
-        return testCaseId;
+    public IntegerProperty caseIdProperty() {
+        return caseId;
     }
 
-    public void setTestCaseId(int testCaseId) {
-        this.testCaseId.set(testCaseId);
+    public void setCaseId(int caseId) {
+        this.caseId.set(caseId);
     }
 
     public String getPath() {
@@ -64,27 +117,27 @@ public class TestImageVO {
         this.path.set(path);
     }
 
-    public double getSimilarity() {
+    public float getSimilarity() {
         return similarity.get();
     }
 
-    public DoubleProperty similarityProperty() {
+    public FloatProperty similarityProperty() {
         return similarity;
     }
 
-    public void setSimilarity(double similarity) {
+    public void setSimilarity(float similarity) {
         this.similarity.set(similarity);
     }
 
-    public double getConfidence() {
+    public float getConfidence() {
         return confidence.get();
     }
 
-    public DoubleProperty confidenceProperty() {
+    public FloatProperty confidenceProperty() {
         return confidence;
     }
 
-    public void setConfidence(double confidence) {
+    public void setConfidence(float confidence) {
         this.confidence.set(confidence);
     }
 }

@@ -1,6 +1,4 @@
-package org.bluett.core.impl;
-
-import org.bluett.core.PCAutomaticOperation;
+package org.bluett.core.operation.impl;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

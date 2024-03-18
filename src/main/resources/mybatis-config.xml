@@ -8,6 +8,7 @@
         <setting name="cacheEnabled" value="true"/>
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="useGeneratedKeys" value="true"/>
         <setting name="defaultEnumTypeHandler" value="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     </settings>
 
@@ -30,5 +31,6 @@
         <mapper url="${mapperUrl}/TestCaseMapper.xml"/>
         <mapper url="${mapperUrl}/TestImageMapper.xml"/>
         <mapper url="${mapperUrl}/TestTextMapper.xml"/>
+        <mapper url="${mapperUrl}/SettingsMapper.xml"/>
     </mappers>
 </configuration>

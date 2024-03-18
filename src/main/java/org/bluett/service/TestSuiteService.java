@@ -1,16 +1,16 @@
 package org.bluett.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.db.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.bluett.entity.Page;
 import org.bluett.entity.TestSuite;
 import org.bluett.entity.vo.TestSuiteVO;
-import org.bluett.mapper.TestSuiteMapper;
 import org.bluett.helper.DatabaseHelper;
+import org.bluett.mapper.TestSuiteMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ public class TestSuiteService {
             // 获取testSuiteVO列表
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
             List<TestSuite> suiteList = testSuiteMapper.selectTestSuiteList(testSuite, page);
-            if(CollectionUtil.isEmpty(suiteList)) return FXCollections.observableArrayList();
+            if(CollectionUtils.isEmpty(suiteList)) return FXCollections.observableArrayList();
             return suiteList.stream()
                     .map(TestSuiteVO::convertToTestSuiteVO)
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
@@ -36,13 +36,13 @@ public class TestSuiteService {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
             TestSuite testSuite = TestSuite.convertToTestSuite(testSuiteVO);
-            Integer cnt = mapper.insert(testSuite);
+            int cnt = mapper.insert(testSuite);
             if(cnt == 0) return false;
             session.commit();
             testSuiteVO.setId(testSuite.getId());
             return true;
         } catch (Exception e) {
-            log.error("保存测试集失败", ExceptionUtil.getRootCause(e));
+            log.error("保存测试集失败", ExceptionUtils.getRootCause(e));
         }
         return false;
     }
@@ -54,7 +54,7 @@ public class TestSuiteService {
             if(cnt == idList.size()) session.commit();
             return cnt == idList.size();
         } catch (Exception e) {
-            log.error("批量删除测试集失败", ExceptionUtil.getRootCause(e));
+            log.error("批量删除测试集失败", ExceptionUtils.getRootCause(e));
         }
         return false;
     }
@@ -62,11 +62,11 @@ public class TestSuiteService {
     public boolean update(TestSuiteVO testSuiteVO) {
         try (SqlSession session = DatabaseHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
-            Integer cnt = mapper.updateById(TestSuite.convertToTestSuite(testSuiteVO));
+            int cnt = mapper.updateByPrimaryKey(TestSuite.convertToTestSuite(testSuiteVO));
             if(cnt > 0) session.commit();
             return cnt > 0;
         } catch (Exception e) {
-            log.error("更新测试集失败", ExceptionUtil.getRootCause(e));
+            log.error("更新测试集失败", ExceptionUtils.getRootCause(e));
         }
         return false;
     }

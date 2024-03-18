@@ -4,39 +4,40 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bluett.entity.enums.TestResultEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.TreeSet;
+import java.util.Date;
 
+/**
+ * @TableName test_suite
+ */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TestSuite implements Serializable {
     @Serial
-    private static final long serialVersionUID = -7015566039515718297L;
+    private static final long serialVersionUID = -8273915465376885304L;
     private Integer id;
-    /**
-     * 测试套件名称
-     */
     private String name;
-    /**
-     * 测试套件描述
-     */
+    private Integer runTime;
+    private Integer timeout;
+    private TestResultEnum status;
     private String description;
-    /**
-     * 测试套件总的测试结果
-     */
-    private TestResult status;
+    private Date updateTime;
+    private Date createTime;
 
-    public static TestSuite convertToTestSuite(TestSuiteVO suiteVO) {
+    public static TestSuite convertToTestSuite(TestSuiteVO testSuiteVO) {
         return TestSuite.builder()
-                .id(suiteVO.getId())
-                .name(suiteVO.getName())
-                .description(suiteVO.getDescription())
-                .status(suiteVO.getStatus())
+                .id(testSuiteVO.getId())
+                .name(testSuiteVO.getName())
+                .runTime(testSuiteVO.getRunTime())
+                .timeout(testSuiteVO.getTimeout())
+                .status(testSuiteVO.getStatus())
+                .description(testSuiteVO.getDescription())
                 .build();
     }
 }

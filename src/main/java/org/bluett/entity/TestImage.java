@@ -8,39 +8,39 @@ import org.bluett.entity.vo.TestImageVO;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 
+/**
+ * @TableName test_image
+ */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class TestImage implements Serializable{
+@NoArgsConstructor
+@AllArgsConstructor
+public class TestImage implements Serializable {
     @Serial
-    private static final long serialVersionUID = 545599542964493604L;
+    private static final long serialVersionUID = -5118586449662427554L;
     private Integer id;
-    /**
-     * 图像路径
-     */
-    private String path;
-    /**
-     * 相似度
-     */
-    private double similarity;
-    /**
-     * 置信度
-     */
-    private double confidence;
-    /**
-     * 用例id
-     */
     private Integer caseId;
+    private String path;
+    private Float confidence;
+    private Integer pointX;
+    private Integer pointY;
+    private Integer width;
+    private Integer height;
+    private Date updateTime;
+    private Date createTime;
 
-    public static TestImage convertToTestImage(TestImageVO imageVO) {
+    public static TestImage convertToTestImage(TestImageVO testImageVO) {
         return TestImage.builder()
-                .id(imageVO.getId())
-                .path(imageVO.getPath())
-                .similarity(imageVO.getSimilarity())
-                .confidence(imageVO.getConfidence())
-                .caseId(imageVO.getTestCaseId())
+                .id(testImageVO.getId())
+                .caseId(testImageVO.getCaseId())
+                .path(testImageVO.getPath())
+                .confidence(testImageVO.getConfidence())
+                .pointX(testImageVO.getPointX())
+                .pointY(testImageVO.getPointY())
+                .width(testImageVO.getWidth())
+                .height(testImageVO.getHeight())
                 .build();
     }
 }

@@ -7,6 +7,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -16,12 +18,12 @@
          <children>
             <BorderPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
                <center>
-                  <Button mnemonicParsing="false" onMouseClicked="#deleteSuiteButtonClick" BorderPane.alignment="CENTER">
+                  <Button fx:id="deleteSuiteBtn" mnemonicParsing="false" onMouseClicked="#deleteSuiteBtnClick" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="1.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../asset/img/subtract.png" />
                            </image>
@@ -30,7 +32,7 @@
                   </Button>
                </center>
                <left>
-                  <Button mnemonicParsing="false" onMouseClicked="#addSuiteButtonClick" BorderPane.alignment="CENTER">
+                  <Button mnemonicParsing="false" onMouseClicked="#addSuiteBtnClick" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="1.0" />
                      </font>
@@ -44,12 +46,12 @@
                   </Button>
                </left>
                <right>
-                  <Button mnemonicParsing="false" onMouseClicked="#updateSuiteButtonClick" BorderPane.alignment="CENTER">
+                  <Button fx:id="updateSuiteBtn" mnemonicParsing="false" onMouseClicked="#updateSuiteBtnClick" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="1.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../asset/img/setting.png" />
                            </image>
@@ -61,7 +63,7 @@
                   <Insets />
                </VBox.margin>
             </BorderPane>
-            <ListView fx:id="suiteListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <ListView fx:id="testSuiteVOLV" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -71,53 +73,87 @@
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" AnchorPane.leftAnchor="200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
          <children>
             <BorderPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
-               <center>
-                  <Button mnemonicParsing="false" onMouseClicked="#deleteCaseButtonClick" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="1.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../asset/img/subtract.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </center>
                <left>
-                  <Button mnemonicParsing="false" onMouseClicked="#addCaseButtonClick" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="1.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../asset/img/add.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="40.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="addCaseBtn" mnemonicParsing="false" onMouseClicked="#addCaseBtnClick">
+                           <font>
+                              <Font size="1.0" />
+                           </font>
+                           <graphic>
+                              <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../asset/img/add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="deleteCaseBtn" mnemonicParsing="false" onMouseClicked="#deleteCaseBtnClick">
+                           <font>
+                              <Font size="1.0" />
+                           </font>
+                           <graphic>
+                              <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../asset/img/subtract.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="updateCaseBtn" mnemonicParsing="false" onMouseClicked="#updateCaseBtnClick">
+                           <font>
+                              <Font size="1.0" />
+                           </font>
+                           <graphic>
+                              <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../asset/img/setting.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
                </left>
-               <right>
-                  <Button mnemonicParsing="false" onMouseClicked="#updateCaseButtonClick" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="1.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../asset/img/setting.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </right>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
+               <right>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="30.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="runTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#runTestSuiteBtnClick">
+                                 <font>
+                                    <Font size="1.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../asset/img/pause.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="stopTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#stopTestSuiteBtnClick">
+                                 <font>
+                                    <Font size="1.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../asset/img/run.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+               </right>
             </BorderPane>
-            <ListView fx:id="caseListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <ListView fx:id="testCaseVOLV" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin></ListView>

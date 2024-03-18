@@ -1,7 +1,5 @@
 package org.bluett.mapper;
 
-import cn.hutool.db.Page;
-import org.apache.ibatis.annotations.Param;
 import org.bluett.entity.TestText;
 
 import java.util.List;
@@ -13,21 +11,19 @@ import java.util.List;
 */
 public interface TestTextMapper {
 
-    List<TestText> selectTestTextByIds(List<Integer> testTextIds);
+    int deleteByPrimaryKey(Long id);
 
-    TestText selectTestTextById(Integer testTextId);
+    int insert(TestText record);
 
-    Integer updateById(TestText testText);
+    int insertSelective(TestText record);
 
-    Integer insert(TestText testText);
+    TestText selectByPrimaryKey(Long id);
 
-    Integer insertBatch(List<TestText> testTexts);
+    int updateByPrimaryKeySelective(TestText record);
 
-    Integer deleteById(Integer testTextId);
+    int updateByPrimaryKey(TestText record);
 
-    Integer deleteByIds(List<Integer> testTextIds);
+    Integer deleteByIds(List<Integer> textIdList);
 
-    List<TestText> selectTestTextByCaseIds(List<Integer> caseIdList);
-
-    List<TestText> selectTestTextDynamic(@Param("text") TestText testText, @Param("page") Page page);
+    List<TestText> selectByCaseIds(List<Integer> caseIdList);
 }

@@ -4,7 +4,7 @@
 
   <groupId>org.bluett</groupId>
   <artifactId>MDFAT</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.5</version>
   <packaging>jar</packaging>
 
   <name>MDFAT</name>
@@ -20,14 +20,41 @@
     <junit.version>5.9.3</junit.version>
     <jfx.version>21.0.2</jfx.version>
     <log4j2.version>2.21.1</log4j2.version>
-    <hutool.version>5.8.25</hutool.version>
     <lombok.version>1.18.30</lombok.version>
     <naturalmouse.version>2.0.4</naturalmouse.version>
     <sqlite.version>3.45.1.0</sqlite.version>
     <mybatis.version>3.5.15</mybatis.version>
+    <commons.io.version>2.15.1</commons.io.version>
+    <commons.lang3.version>3.14.0</commons.lang3.version>
+    <commons.collection4.version>4.4</commons.collection4.version>
+    <commons.codec.version>1.16.1</commons.codec.version>
   </properties>
 
   <dependencies>
+    <!-- commons-codec -->
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>${commons.codec.version}</version>
+    </dependency>
+    <!-- commons-collections4 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>${commons.collection4.version}</version>
+    </dependency>
+    <!-- commons-io -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons.io.version}</version>
+    </dependency>
+    <!-- commons-lang3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons.lang3.version}</version>
+    </dependency>
     <!-- mybatis -->
     <dependency>
       <groupId>org.mybatis</groupId>
@@ -53,12 +80,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
-    </dependency>
-    <!--hutool-->
-    <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-all</artifactId>
-      <version>${hutool.version}</version>
     </dependency>
     <!--日志-->
     <dependency>

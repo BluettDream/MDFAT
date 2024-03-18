@@ -23,7 +23,7 @@ public class TestCaseDialog extends Dialog<TestCaseVO> {
     }
 
     private void setLayout() {
-        GridPane gridPane = UIHelper.createNodeAndSetData(NodeEnum.TEST_CASE_DIALOG, this.caseVO);
+        GridPane gridPane = UIHelper.createNodeAndSetData(NodeEnum.TEST_CASE_DIALOG_CONTENT, this.caseVO);
         getDialogPane().setContent(gridPane);
         getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
     }

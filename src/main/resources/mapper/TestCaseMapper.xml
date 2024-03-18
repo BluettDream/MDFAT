@@ -1,80 +1,163 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestCaseMapper">
 
     <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
 
-    <select id="selectTestCaseByIds" resultType="testCase">
-        select * from test_case where id in 
-        <foreach collection="list" item="testCaseId" open="(" separator="," close=")">
-            #{testCaseId}
-        </foreach>
-    </select>
+    <resultMap id="BaseResultMap" type="org.bluett.entity.TestCase">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="suiteId" column="suite_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="priority" column="priority" jdbcType="INTEGER"/>
+            <result property="operation" column="operation" jdbcType="INTEGER"/>
+            <result property="runTime" column="run_time" jdbcType="INTEGER"/>
+            <result property="timeout" column="timeout" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
 
-    <select id="selectTestCaseListDynamic" resultType="testCase">
-        select * from test_suite
+    <sql id="Base_Column_List">
+        id,suite_id,name,
+        priority,operation,run_time,
+        timeout,status,description,
+        update_time,create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from test_case
+        where  id = #{id,jdbcType=INTEGER} 
+    </select>
+    <select id="selectListSelective" resultType="org.bluett.entity.TestCase">
+        select
+        <include refid="Base_Column_List" />
+        from test_case
         <where>
-            <if test="testCase.id != null">and id=#{testCase.id}</if>
-            <if test="testCase.name != null">and name=#{testCase.name}</if>
-            <if test="testCase.description != null">and description=#{testCase.description}</if>
-            <if test="testCase.status != null">and status=#{testCase.status}</if>
-            <if test="testCase.suiteId != null">and suite_id=#{testCase.suiteId}</if>
+            <if test="testCase.suiteId != null">
+                and suite_id = #{testCase.suiteId,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.name != null">
+                and name = #{testCase.name,jdbcType=VARCHAR}
+            </if>
+            <if test="testCase.priority != null">
+                and priority = #{testCase.priority,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.operation != null">
+                and operation = #{testCase.operation,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.runTime != null">
+                and run_time = #{testCase.runTime,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.timeout != null">
+                and timeout = #{testCase.timeout,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.status != null">
+                and status = #{testCase.status,jdbcType=INTEGER}
+            </if>
+            <if test="testCase.description != null">
+                and description = #{testCase.description,jdbcType=VARCHAR}
+            </if>
         </where>
         <if test="page != null">
-            limit #{page.startIndex}, #{page.pageSize}
+            limit #{page.pageNum},#{page.pageSize}
         </if>
     </select>
 
-    <select id="selectTestCaseBySuiteIds" resultType="testCase">
-        select * from test_case where suite_id in
-        <foreach collection="list" item="suiteId" open="(" separator="," close=")">
-            #{suiteId}
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from test_case
+        where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <delete id="deleteByIds">
+        delete from test_case
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
         </foreach>
-    </select>
-
-    <select id="selectTestCaseListBySuiteId" resultType="testCase">
-        select * from test_case
-        where suite_id=#{suiteId}
-        <if test="page != null">
-            limit #{page.startIndex}, #{page.pageSize}
-        </if>
-    </select>
-
-    <update id="updateById" parameterType="testCase">
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestCase" useGeneratedKeys="true">
+        insert into test_case
+        ( suite_id,name
+        ,priority,operation,run_time
+        ,timeout,status,description
+        ,update_time,create_time)
+        values (#{suiteId,jdbcType=INTEGER},#{name,jdbcType=VARCHAR}
+        ,#{priority,jdbcType=INTEGER},#{operation,jdbcType=INTEGER},#{runTime,jdbcType=INTEGER}
+        ,#{timeout,jdbcType=INTEGER},#{status,jdbcType=INTEGER},#{description,jdbcType=VARCHAR}
+        ,datetime('now', '+8 hour'),datetime('now', '+8 hour'))
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestCase" useGeneratedKeys="true">
+        insert into test_case
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="suiteId != null">suite_id,</if>
+                <if test="name != null">name,</if>
+                <if test="priority != null">priority,</if>
+                <if test="operation != null">operation,</if>
+                <if test="runTime != null">run_time,</if>
+                <if test="timeout != null">timeout,</if>
+                <if test="status != null">status,</if>
+                <if test="description != null">description,</if>
+                update_time,create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="suiteId != null">#{suiteId,jdbcType=INTEGER},</if>
+                <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+                <if test="priority != null">#{priority,jdbcType=INTEGER},</if>
+                <if test="operation != null">#{operation,jdbcType=INTEGER},</if>
+                <if test="runTime != null">#{runTime,jdbcType=INTEGER},</if>
+                <if test="timeout != null">#{timeout,jdbcType=INTEGER},</if>
+                <if test="status != null">#{status,jdbcType=INTEGER},</if>
+                <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+            datetime('now', '+8 hour'),datetime('now', '+8 hour')
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestCase">
         update test_case
         <set>
-            <if test="name != null">name=#{name},</if>
-            <if test="description != null">description=#{description},</if>
-            <if test="priority != null">priority=#{priority},</if>
-            <if test="status != null">status=#{status},</if>
-            update_time=datetime('now', '+8 hour')
+                <if test="suiteId != null">
+                    suite_id = #{suiteId,jdbcType=INTEGER},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="priority != null">
+                    priority = #{priority,jdbcType=INTEGER},
+                </if>
+                <if test="operation != null">
+                    operation = #{operation,jdbcType=INTEGER},
+                </if>
+                <if test="runTime != null">
+                    run_time = #{runTime,jdbcType=INTEGER},
+                </if>
+                <if test="timeout != null">
+                    timeout = #{timeout,jdbcType=INTEGER},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=INTEGER},
+                </if>
+                <if test="description != null">
+                    description = #{description,jdbcType=VARCHAR},
+                </if>
+            update_time = datetime('now', '+8 hour'),
         </set>
-        where id=#{id}
+        where   id = #{id,jdbcType=INTEGER} 
     </update>
-
-    <insert id="insert" parameterType="testCase" keyProperty="id" useGeneratedKeys="true">
-        insert into test_case(name, description, priority, status, suite_id, create_time, update_time)
-        values(#{name}, #{description}, #{priority}, #{status}, #{suiteId}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
-    </insert>
-
-    <insert id="insertBatch">
-        insert into test_case(name, description, priority, status, create_time, update_time)
-        values
-        <foreach collection="list" item="testCase" separator=",">
-            (#{testCase.name}, #{testCase.description}, #{testCase.priority}, #{testCase.status}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
-        </foreach>
-    </insert>
-
-    <delete id="deleteById">
-        delete from test_case where id=#{id}
-    </delete>
-
-    <delete id="deleteByIds">
-        delete from test_case where id in
-        <foreach collection="list" item="testCaseId" open="(" separator="," close=")">
-            #{testCaseId}
-        </foreach>
-    </delete>
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestCase">
+        update test_case
+        set 
+            suite_id =  #{suiteId,jdbcType=INTEGER},
+            name =  #{name,jdbcType=VARCHAR},
+            priority =  #{priority,jdbcType=INTEGER},
+            operation =  #{operation,jdbcType=INTEGER},
+            run_time =  #{runTime,jdbcType=INTEGER},
+            timeout =  #{timeout,jdbcType=INTEGER},
+            status =  #{status,jdbcType=INTEGER},
+            description =  #{description,jdbcType=VARCHAR},
+            update_time =  datetime('now', '+8 hour')
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

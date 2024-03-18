@@ -1,27 +1,31 @@
 package org.bluett.mapper;
 
-import cn.hutool.db.Page;
 import org.apache.ibatis.annotations.Param;
+import org.bluett.entity.Page;
 import org.bluett.entity.TestCase;
 
 import java.util.List;
 
+/**
+* @author BluettDream
+* @description 针对表【test_case】的数据库操作Mapper
+* @Entity org.bluett.entity.TestCase
+*/
 public interface TestCaseMapper {
-    List<TestCase> selectTestCaseListDynamic(@Param("testCase") TestCase testCase, @Param("page") Page page);
 
-    List<TestCase> selectTestCaseByIds(List<Integer> testCaseIds);
+    int deleteByPrimaryKey(Long id);
 
-    Integer updateById(TestCase testCase);
+    int insert(TestCase record);
 
-    Integer insert(TestCase testCase);
+    int insertSelective(TestCase record);
 
-    Integer insertBatch(List<TestCase> testTestCases);
+    TestCase selectByPrimaryKey(Long id);
 
-    Integer deleteById(Integer testCaseId);
+    int updateByPrimaryKeySelective(TestCase record);
 
-    Integer deleteByIds(List<Integer> testCaseIds);
+    int updateByPrimaryKey(TestCase record);
 
-    List<TestCase> selectTestCaseBySuiteIds(List<Integer> suiteIds);
+    Integer deleteByIds(List<Integer> caseIdList);
 
-    List<TestCase> selectTestCaseListBySuiteId(@Param("suiteId") int suiteId, @Param("page") Page page);
+    List<TestCase> selectListSelective(@Param("testCase") TestCase testCase, @Param("page") Page page);
 }
