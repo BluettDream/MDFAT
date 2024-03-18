@@ -12,6 +12,10 @@ open module org.bluett {
     requires org.apache.commons.io;
     requires org.apache.commons.collections4;
     requires org.apache.commons.codec;
+    requires forest.core;
+    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
 
     exports org.bluett;
     exports org.bluett.ui.controller;

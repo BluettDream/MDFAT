@@ -7,21 +7,23 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
-import org.bluett.core.thread.TestSuiteExecutor;
-import org.bluett.core.thread.impl.TestSuiteExecutorImpl;
+import org.bluett.core.thread.TestCaseCallable;
 import org.bluett.entity.Page;
+import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
+import org.bluett.service.BackendService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
-import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestCaseListCell;
+import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 @Log4j2
 public class IndexController {
@@ -46,7 +48,7 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final TestSuiteExecutor testSuiteExecutor = new TestSuiteExecutorImpl();
+    private final ExecutorService executorService = ExecutorServiceCache.getTestCaseThreadPool();
 
     @FXML
     void initialize() {
@@ -95,13 +97,12 @@ public class IndexController {
     @FXML
     void stopTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-        testSuiteExecutor.stop(false);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
-        testSuiteExecutor.setTestCaseVOList(testCaseVOLV.getItems()).run();
+        executorService.submit(new TestCaseCallable(null, new BackendService()));
     }
 
     @FXML

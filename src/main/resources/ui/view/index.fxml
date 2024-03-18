@@ -123,24 +123,24 @@
                      <children>
                         <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                            <children>
-                              <Button fx:id="runTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#runTestSuiteBtnClick">
-                                 <font>
-                                    <Font size="1.0" />
-                                 </font>
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../asset/img/pause.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
                               <Button fx:id="stopTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#stopTestSuiteBtnClick">
                                  <font>
                                     <Font size="1.0" />
                                  </font>
                                  <graphic>
                                     <ImageView disable="true" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../asset/img/pause.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="runTestSuiteBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#runTestSuiteBtnClick">
+                                 <font>
+                                    <Font size="1.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../asset/img/run.png" />
                                        </image>
