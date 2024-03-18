@@ -1,4 +1,4 @@
-package org.bluett.core.impl;
+package org.bluett.core.operation.impl;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

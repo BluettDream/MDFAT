@@ -1,4 +1,4 @@
-package org.bluett.core;
+package org.bluett.core.operation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

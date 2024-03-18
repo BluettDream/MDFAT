@@ -3,7 +3,7 @@ package org.bluett.ui.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import org.bluett.core.impl.PCAutomaticOperation;
+import org.bluett.core.operation.impl.PCAutomaticOperation;
 import org.bluett.entity.enums.MouseMoveTypeEnum;
 
 import java.util.Arrays;

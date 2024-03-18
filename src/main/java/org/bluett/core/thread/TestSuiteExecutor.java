@@ -1,4 +1,4 @@
-package org.bluett.core;
+package org.bluett.core.thread;
 
 import org.bluett.entity.vo.TestCaseVO;
 
