@@ -1,6 +1,7 @@
 package org.bluett.ui.controller;
 
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -11,7 +12,6 @@ import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.service.SettingsService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -24,7 +24,7 @@ public class SettingController {
     private TextField textOperateUrlTF;
 
     private final SettingsService settingsService = new SettingsService();
-    private final MapProperty<SettingsEnum, Settings>
+    private final MapProperty<SettingsEnum, Settings> settingsMapProperty = new SimpleMapProperty<>();
     private final Map<SettingsEnum, Settings> map = new HashMap<>();
 
     @FXML
