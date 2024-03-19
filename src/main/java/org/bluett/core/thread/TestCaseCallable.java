@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.entity.vo.TestCaseVO;
-import org.bluett.service.BackendService;
+import org.bluett.service.ImageOperateService;
 
 import java.util.concurrent.Callable;
 
@@ -13,12 +13,12 @@ import java.util.concurrent.Callable;
 public class TestCaseCallable implements Callable<Boolean> {
 
     private final TestCaseVO testCaseVO;
-    private final BackendService backendService;
+    private final ImageOperateService imageOperateService;
 
     @Override
     public Boolean call() {
         try {
-            backendService.hello();
+            imageOperateService.hello();
         }catch (Exception e){
             log.error(ExceptionUtils.getRootCause(e));
         }
