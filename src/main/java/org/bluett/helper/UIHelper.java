@@ -96,7 +96,7 @@ public class UIHelper {
                 fxmlLoader.setControllerFactory(param -> getController(nodeEnum, data, param));
                 node.set(fxmlLoader.load());
             } catch (IOException e) {
-                log.error("fxml load fail{}", nodeEnum.getFxmlPath(), ExceptionUtils.getRootCause(e));
+                log.error("fxml load fail:{}", nodeEnum.getFxmlPath(), ExceptionUtils.getRootCause(e));
             }
         }, () -> log.error("fxml file not found"));
         return node.get();

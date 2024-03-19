@@ -111,7 +111,7 @@ public class IndexController {
             testCaseVO.setSuiteId(testSuiteVOLV.getSelectionModel().getSelectedItem().getId());
             if (!caseService.save(testCaseVO)) {
                 log.error("保存测试用例失败:{}", testCaseVO);
-                UIBuilder.showErrAlert("保存测试用例失败", 0.8);
+                UIBuilder.showErrorAlert("保存测试用例失败", 0.8);
                 return;
             }
             testCaseVOLV.getItems().add(testCaseVO);
@@ -124,7 +124,7 @@ public class IndexController {
         new TestSuiteDialog("new").showAndWait().ifPresent(testSuiteVO -> {
             if (!suiteService.save(testSuiteVO)) {
                 log.error("保存测试集失败:{}", testSuiteVO);
-                UIBuilder.showErrAlert("保存测试集失败", 0.8);
+                UIBuilder.showErrorAlert("保存测试集失败", 0.8);
                 return;
             }
             testSuiteVOLV.getItems().add(testSuiteVO);
@@ -138,7 +138,7 @@ public class IndexController {
         if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!caseService.delete(selectedItems)) {
             log.error("删除测试用例失败:{}", selectedItems);
-            UIBuilder.showErrAlert("删除测试用例失败", 0.8);
+            UIBuilder.showErrorAlert("删除测试用例失败", 0.8);
             return;
         }
         testCaseVOLV.getItems().removeAll(selectedItems);
@@ -151,7 +151,7 @@ public class IndexController {
         if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!suiteService.deleteBatchByIds(selectedItems.stream().map(TestSuiteVO::getId).toList())) {
             log.error("删除测试集失败:{}", selectedItems);
-            UIBuilder.showErrAlert("删除测试集失败", 0.8);
+            UIBuilder.showErrorAlert("删除测试集失败", 0.8);
             return;
         }
         testSuiteVOLV.getItems().removeAll(selectedItems);
@@ -163,7 +163,7 @@ public class IndexController {
         new TestCaseDialog("update", testCaseVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testCaseVO -> {
             if (!caseService.update(testCaseVO)) {
                 log.error("更新测试用例失败:{}", testCaseVO);
-                UIBuilder.showErrAlert("更新测试用例失败", 0.8);
+                UIBuilder.showErrorAlert("更新测试用例失败", 0.8);
                 TestCaseVO caseVO = caseService.selectById(testCaseVO.getId());
                 if (Objects.isNull(caseVO)) return;
                 testCaseVOLV.getItems().set(testCaseVOLV.getSelectionModel().getSelectedIndex(), testCaseVO);
@@ -179,7 +179,7 @@ public class IndexController {
         new TestSuiteDialog("update", testSuiteVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testSuiteVO -> {
             if (!suiteService.update(testSuiteVO)) {
                 log.error("更新测试集失败:{}", testSuiteVO);
-                UIBuilder.showErrAlert("更新测试集失败", 0.8);
+                UIBuilder.showErrorAlert("更新测试集失败", 0.8);
                 return;
             }
             UIBuilder.showInfoAlert("更新测试集成功", 0.8);

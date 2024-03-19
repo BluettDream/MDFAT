@@ -20,7 +20,8 @@ public class SettingsService {
         try(SqlSession session = DatabaseHelper.getSqlSession()){
             SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
             return settingsMapper.selectAll().stream()
-                    .collect(Collectors.toMap(settings -> SettingsEnum.valueOf(settings.getKey()), Function.identity()));
+                    .collect(Collectors.toMap(settings ->
+                            SettingsEnum.valueOf(settings.getKey()), Function.identity()));
         }catch (Exception e){
             log.error("SettingsService static init error", ExceptionUtils.getRootCause(e));
         }
@@ -30,12 +31,25 @@ public class SettingsService {
     public boolean saveSettings(List<Settings> settingsList) {
         try(SqlSession session = DatabaseHelper.getSqlSession()){
             SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
-            settingsMapper.deleteAll();
-            // TODO: 插入全部数据
+            int cnt = settingsMapper.deleteAll();
+            if(cnt != settingsList.size()) return false;
+            cnt = settingsMapper.insertAll(settingsList);
+            if(cnt == settingsList.size()) session.commit();
+            return cnt == settingsList.size();
+        }catch (Exception e){
+            log.error("SettingsService saveSettings error", ExceptionUtils.getRootCause(e));
+        }
+        return false;
+    }
+
+    public boolean updateSettings(List<Settings> settingsList) {
+        try(SqlSession session = DatabaseHelper.getSqlSession()){
+            SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
+            settingsList.forEach(settingsMapper::updateByPrimaryKeySelective);
             session.commit();
             return true;
         }catch (Exception e){
-            log.error("SettingsService saveSettings error", ExceptionUtils.getRootCause(e));
+            log.error("updateSettings error", ExceptionUtils.getRootCause(e));
         }
         return false;
     }

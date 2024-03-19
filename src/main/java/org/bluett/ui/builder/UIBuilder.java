@@ -25,7 +25,7 @@ public class UIBuilder {
         showAlert(Alert.AlertType.INFORMATION, UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), content, seconds);
     }
 
-    public static void showErrAlert(String content, double seconds) {
+    public static void showErrorAlert(String content, double seconds) {
         showAlert(Alert.AlertType.ERROR, UIHelper.getNode(NodeEnum.MAIN).getScene().getWindow(), content, seconds);
     }
 

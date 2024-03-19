@@ -42,31 +42,36 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.Settings" useGeneratedKeys="true">
         insert into settings
-        ( id,key,value
+        ( key,value
         ,description,update_time,create_time
         )
-        values (#{id,jdbcType=INTEGER},#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR}
-        ,#{description,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}
+        values (#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR}
+        ,#{description,jdbcType=VARCHAR},datetime('now', '+8 hour'),datetime('now', '+8 hour')
         )
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.Settings" useGeneratedKeys="true">
         insert into settings
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id != null">id,</if>
                 <if test="key != null">key,</if>
                 <if test="value != null">value,</if>
                 <if test="description != null">description,</if>
-                <if test="updateTime != null">update_time,</if>
-                <if test="createTime != null">create_time,</if>
+            update_time,create_time,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id,jdbcType=INTEGER},</if>
                 <if test="key != null">#{key,jdbcType=VARCHAR},</if>
                 <if test="value != null">#{value,jdbcType=VARCHAR},</if>
                 <if test="description != null">#{description,jdbcType=VARCHAR},</if>
-                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
-                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            datetime('now', '+8 hour'),datetime('now', '+8 hour'),
         </trim>
+    </insert>
+    <insert id="insertAll">
+        insert into settings
+        ( key,value,description,update_time,create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.key,jdbcType=VARCHAR},#{item.value,jdbcType=VARCHAR},#{item.description,jdbcType=VARCHAR},
+            datetime('now', '+8 hour'),datetime('now', '+8 hour'))
+        </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.Settings">
         update settings
@@ -80,12 +85,7 @@
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
                 </if>
-                <if test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
-                </if>
+                    update_time = datetime('now', '+8 hour'),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -95,8 +95,7 @@
             key =  #{key,jdbcType=VARCHAR},
             value =  #{value,jdbcType=VARCHAR},
             description =  #{description,jdbcType=VARCHAR},
-            update_time =  #{updateTime,jdbcType=TIMESTAMP},
-            create_time =  #{createTime,jdbcType=TIMESTAMP}
+            update_time =  datetime('now', '+8 hour')
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

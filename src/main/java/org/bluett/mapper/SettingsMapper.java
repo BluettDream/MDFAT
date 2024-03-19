@@ -28,4 +28,6 @@ public interface SettingsMapper {
     List<Settings> selectAll();
 
     int deleteAll();
+
+    int insertAll(List<Settings> settingsList);
 }
