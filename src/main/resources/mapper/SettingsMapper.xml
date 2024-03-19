@@ -24,10 +24,21 @@
         from settings
         where  id = #{id,jdbcType=INTEGER} 
     </select>
+    <select id="selectSettingsByKey" resultType="java.lang.String">
+        select value from settings where `key` = #{key}
+    </select>
+    <select id="selectAll" resultType="org.bluett.entity.Settings">
+        select
+        <include refid="Base_Column_List" />
+        from settings
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from settings
         where  id = #{id,jdbcType=INTEGER} 
+    </delete>
+    <delete id="deleteAll">
+        delete from settings
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.Settings" useGeneratedKeys="true">
         insert into settings

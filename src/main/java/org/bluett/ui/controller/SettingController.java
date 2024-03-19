@@ -1,25 +1,43 @@
 package org.bluett.ui.controller;
 
+import javafx.beans.property.MapProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import org.bluett.core.operation.impl.PCAutomaticOperation;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import lombok.extern.log4j.Log4j2;
+import org.bluett.entity.Settings;
 import org.bluett.entity.enums.MouseMoveTypeEnum;
+import org.bluett.entity.enums.SettingsEnum;
+import org.bluett.service.SettingsService;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Log4j2
 public class SettingController {
     @FXML
-    private ToggleGroup mouseMoveTypeGroup;
+    private ChoiceBox<MouseMoveTypeEnum> mouseMoveTypeCB;
+    @FXML
+    private TextField imageOperateUrlTF;
+    @FXML
+    private TextField textOperateUrlTF;
 
-    private final Map<String, MouseMoveTypeEnum> mouseMoveTypeMap = Arrays.stream(MouseMoveTypeEnum.values()).collect(HashMap::new, (m, v) -> m.put(v.getName(), v), HashMap::putAll);
+    private final SettingsService settingsService = new SettingsService();
+    private final MapProperty<SettingsEnum, Settings>
+    private final Map<SettingsEnum, Settings> map = new HashMap<>();
 
     @FXML
     public void initialize() {
-        mouseMoveTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            PCAutomaticOperation.MOUSE_MOVE_TYPE = mouseMoveTypeMap.get(((RadioButton) newValue).getText());
-        });
+        map.putAll(settingsService.getSettingsMap());
+        imageOperateUrlTF.setText(map.get(SettingsEnum.IMAGE_OPERATE_URL).getValue());
+        textOperateUrlTF.setText(map.get(SettingsEnum.TEXT_OPERATE_URL).getValue());
+        mouseMoveTypeCB.getItems().addAll(MouseMoveTypeEnum.values());
+        mouseMoveTypeCB.setValue(MouseMoveTypeEnum.valueOf(map.get(SettingsEnum.MOUSE_MOVE_TYPE).getValue()));
+    }
+
+    @FXML
+    void saveSettingsClick() {
+        settingsService.saveSettings(map.values().stream().toList());
     }
 }
