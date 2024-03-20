@@ -15,7 +15,7 @@ import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
-import org.bluett.service.ImageOperateService;
+import org.bluett.service.ImageProcessService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
@@ -52,7 +52,7 @@ public class IndexController {
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
     private final ExecutorService testCaseExecutor = ExecutorServiceCache.getTestCaseThreadPool();
-    private final ImageOperateService imageOperateService = new ImageOperateService();
+    private final ImageProcessService imageProcessService = new ImageProcessService();
 
     @FXML
     void initialize() {
@@ -101,7 +101,7 @@ public class IndexController {
     @FXML
     void stopTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-        testCaseExecutor.shutdownNow();
+        testCaseExecutor.shutdown();
         Platform.runLater(() -> {
             try {
                 if(testCaseExecutor.awaitTermination(10, TimeUnit.SECONDS)){
@@ -117,7 +117,7 @@ public class IndexController {
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
         testCaseVOLV.getItems().forEach(testCaseVO -> {
-            testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageOperateService));
+            testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService));
         });
     }
 

@@ -5,11 +5,13 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.bluett.entity.Settings;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.SettingsService;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MainApplication extends Application {
@@ -18,9 +20,10 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         super.init();
+        Map<SettingsEnum, Settings> settingsMap = settingsService.getSettingsMap();
         Forest.config()
-                .setVariableValue("imageProcessURL", settingsService.getSettingsMap().get(SettingsEnum.IMAGE_OPERATE_URL))
-                .setVariableValue("textProcessURL", settingsService.getSettingsMap().get(SettingsEnum.TEXT_OPERATE_URL))
+                .setVariableValue("imageProcessURL", settingsMap.get(SettingsEnum.IMAGE_OPERATE_URL).getValue())
+                .setVariableValue("textProcessURL", settingsMap.get(SettingsEnum.TEXT_OPERATE_URL).getValue())
                 .setConnectTimeout(3, TimeUnit.SECONDS);
     }
 

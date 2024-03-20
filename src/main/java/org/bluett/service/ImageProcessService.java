@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.bluett.core.http.ImageProcessClient;
 
 @Log4j2
-public class ImageOperateService {
+public class ImageProcessService {
     public void hello() {
         ImageProcessClient client = Forest.client(ImageProcessClient.class);
         String ret = client.helloWorld();
