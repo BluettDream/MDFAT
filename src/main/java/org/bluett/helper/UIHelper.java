@@ -2,6 +2,7 @@ package org.bluett.helper;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.MainApplication;
@@ -103,7 +104,7 @@ public class UIHelper {
     }
 
     private static <V> Object getController(NodeEnum nodeEnum, V data, Class<?> param) {
-        switch (nodeEnum){
+        switch (nodeEnum) {
             case TEST_CASE_DIALOG_CONTENT -> {
                 return new TestCaseDialogContentController((TestCaseVO) data);
             }
@@ -123,6 +124,14 @@ public class UIHelper {
 
     public static void clearNode() {
         NODE_MAP.clear();
+    }
+
+    public static void minimizeMainWindow() {
+        ((Stage) getNode(NodeEnum.MAIN).getScene().getWindow()).setIconified(true);
+    }
+
+    public static void showMainWindow() {
+        ((Stage) getNode(NodeEnum.MAIN).getScene().getWindow()).setIconified(false);
     }
 
     /**

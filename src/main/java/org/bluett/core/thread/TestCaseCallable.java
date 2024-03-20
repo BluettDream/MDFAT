@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.entity.vo.TestCaseVO;
+import org.bluett.helper.TestCaseCallableHelper;
 import org.bluett.service.ImageProcessService;
 
 import java.util.concurrent.Callable;
@@ -17,11 +18,17 @@ public class TestCaseCallable implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
+        TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.getAndIncrement();
         try {
+            log.info("Start to process test case: {}", testCaseVO.getName());
             imageProcessService.hello();
+            Thread.sleep(5000);
+            return true;
         }catch (Exception e){
             log.error(ExceptionUtils.getRootCause(e));
+        } finally {
+            TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.getAndDecrement();
         }
-        return null;
+        return false;
     }
 }

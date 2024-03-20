@@ -14,6 +14,7 @@ import org.bluett.entity.Page;
 import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
+import org.bluett.helper.TestCaseCallableHelper;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.ImageProcessService;
 import org.bluett.service.TestCaseService;
@@ -25,6 +26,7 @@ import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -100,25 +102,45 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
+        CompletableFuture
+                .runAsync(() -> {
+                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
+                    Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
+                }, testCaseExecutor)
+                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
+                    UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
+                    return null;
+                }).join();
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-        testCaseExecutor.shutdown();
-        Platform.runLater(() -> {
-            try {
-                if(testCaseExecutor.awaitTermination(10, TimeUnit.SECONDS)){
-                    UIBuilder.showInfoAlert("测试用例执行完毕", 0.8);
-                }
-            } catch (InterruptedException e) {
-                log.error("等待测试用例执行完毕失败:", ExceptionUtils.getRootCause(e));
-            }
-        });
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
-        testCaseVOLV.getItems().forEach(testCaseVO -> {
-            testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService));
-        });
+        testCaseVOLV.getItems().forEach(testCaseVO -> testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService)));
+        UIHelper.minimizeMainWindow();
+        testCaseExecutor.execute(() -> CompletableFuture
+                .runAsync(() -> {
+                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
+                }).whenComplete((unused, throwable) -> {
+                    Platform.runLater(() -> {
+                        UIBuilder.showInfoAlert("测试集执行完成", 0.8);
+                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+                        UIHelper.showMainWindow();
+                    });
+                }).orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("测试集执行超时:", ExceptionUtils.getRootCause(throwable));
+                    Platform.runLater(() -> {
+                        UIBuilder.showErrorAlert("测试集执行超时,已强制停止", 0.8);
+                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+                        UIHelper.showMainWindow();
+                    });
+                    return null;
+                }).join()
+        );
     }
 
     @FXML
