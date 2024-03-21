@@ -20,9 +20,7 @@ public class TestCaseCallable implements Callable<Boolean> {
     public Boolean call() {
         TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.getAndIncrement();
         try {
-            log.info("Start to process test case: {}", testCaseVO.getName());
             imageProcessService.hello();
-            Thread.sleep(5000);
             return true;
         }catch (Exception e){
             log.error(ExceptionUtils.getRootCause(e));
