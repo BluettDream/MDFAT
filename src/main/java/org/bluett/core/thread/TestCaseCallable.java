@@ -28,7 +28,7 @@ public class TestCaseCallable implements Callable<Boolean> {
         try {
             TestImageVO imageVO = testCaseVO.getImageVO();
             if(Objects.nonNull(imageVO) && StringUtils.isNotBlank(imageVO.getPath())){
-                BufferedImage screenCapture = automaticOperation.screenCapture(null);
+                BufferedImage screenCapture = automaticOperation.screenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
                 Point location = imageProcessService.getMatchLocation(imageVO.getPath(), screenCapture, imageVO.getConfidence());
                 log.info("location: {}", location);
             }

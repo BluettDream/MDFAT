@@ -1,6 +1,7 @@
 package org.bluett;
 
 import com.dtflys.forest.Forest;
+import com.dtflys.forest.converter.json.ForestJacksonConverter;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,7 +25,8 @@ public class MainApplication extends Application {
         Forest.config()
                 .setVariableValue("imageProcessURL", settingsMap.get(SettingsEnum.IMAGE_OPERATE_URL).getValue())
                 .setVariableValue("textProcessURL", settingsMap.get(SettingsEnum.TEXT_OPERATE_URL).getValue())
-                .setConnectTimeout(3, TimeUnit.SECONDS);
+                .setConnectTimeout(3, TimeUnit.SECONDS)
+                .setJsonConverter(new ForestJacksonConverter());
     }
 
     @Override

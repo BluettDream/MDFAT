@@ -8,7 +8,6 @@ import org.bluett.request.ImageProcessClient;
 public class TextProcessService {
     public void hello() {
         ImageProcessClient client = Forest.client(ImageProcessClient.class);
-        String ret = client.helloWorld();
-        log.info(ret);
+//        String ret = client.helloWorld();
     }
 }

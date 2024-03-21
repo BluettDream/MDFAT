@@ -17,7 +17,7 @@ public class RequestGlobalInterceptor implements Interceptor<String> {
     @Override
     public void onSuccess(String data, ForestRequest request, ForestResponse response) {
         Interceptor.super.onSuccess(data, request, response);
-        log.debug("response: status[{}], result[{}]", response.getStatusCode(), response.getContent());
+        log.debug("success: status[{}], result[{}]", response.getStatusCode(), response.getContent());
     }
 
     @Override
