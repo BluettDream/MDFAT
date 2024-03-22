@@ -30,23 +30,15 @@
     <commons.codec.version>1.16.1</commons.codec.version>
     <forest.core.version>1.5.36</forest.core.version>
     <jackson.version>2.16.1</jackson.version>
+    <fastjson.version>2.0.47</fastjson.version>
   </properties>
 
   <dependencies>
+    <!-- fastjson2 -->
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <groupId>com.alibaba.fastjson2</groupId>
+      <artifactId>fastjson2</artifactId>
+      <version>${fastjson.version}</version>
     </dependency>
     <!-- forest-core -->
     <dependency>
