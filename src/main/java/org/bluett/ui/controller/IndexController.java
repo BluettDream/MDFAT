@@ -1,5 +1,6 @@
 package org.bluett.ui.controller;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,21 +8,28 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
-import org.bluett.core.thread.TestSuiteExecutor;
-import org.bluett.core.thread.impl.TestSuiteExecutorImpl;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.bluett.core.operation.impl.WinAutoMaticOperation;
+import org.bluett.core.thread.TestCaseCallable;
 import org.bluett.entity.Page;
+import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
+import org.bluett.helper.TestCaseCallableHelper;
 import org.bluett.helper.UIHelper;
+import org.bluett.service.ImageProcessService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
-import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestCaseListCell;
+import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
 import org.bluett.ui.builder.UIBuilder;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 public class IndexController {
@@ -46,7 +54,8 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final TestSuiteExecutor testSuiteExecutor = new TestSuiteExecutorImpl();
+    private final ExecutorService testCaseExecutor = ExecutorServiceCache.getTestCaseThreadPool();
+    private final ImageProcessService imageProcessService = new ImageProcessService();
 
     @FXML
     void initialize() {
@@ -94,14 +103,45 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
+        CompletableFuture
+                .runAsync(() -> {
+                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
+                    Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
+                }, testCaseExecutor)
+                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
+                    UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
+                    return null;
+                }).join();
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-        testSuiteExecutor.stop(false);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
-        testSuiteExecutor.setTestCaseVOList(testCaseVOLV.getItems()).run();
+        testCaseVOLV.getItems().forEach(testCaseVO -> testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService, new WinAutoMaticOperation())));
+        UIHelper.minimizeMainWindow();
+        testCaseExecutor.execute(() -> CompletableFuture
+                .runAsync(() -> {
+                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
+                }).whenComplete((unused, throwable) -> {
+                    Platform.runLater(() -> {
+                        UIBuilder.showInfoAlert("测试集执行完成", 0.8);
+                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+                        UIHelper.showMainWindow();
+                    });
+                }).orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("测试集执行超时:", ExceptionUtils.getRootCause(throwable));
+                    Platform.runLater(() -> {
+                        UIBuilder.showErrorAlert("测试集执行超时,已强制停止", 0.8);
+                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+                        UIHelper.showMainWindow();
+                    });
+                    return null;
+                }).join()
+        );
     }
 
     @FXML
@@ -110,7 +150,7 @@ public class IndexController {
             testCaseVO.setSuiteId(testSuiteVOLV.getSelectionModel().getSelectedItem().getId());
             if (!caseService.save(testCaseVO)) {
                 log.error("保存测试用例失败:{}", testCaseVO);
-                UIBuilder.showErrAlert("保存测试用例失败", 0.8);
+                UIBuilder.showErrorAlert("保存测试用例失败", 0.8);
                 return;
             }
             testCaseVOLV.getItems().add(testCaseVO);
@@ -123,7 +163,7 @@ public class IndexController {
         new TestSuiteDialog("new").showAndWait().ifPresent(testSuiteVO -> {
             if (!suiteService.save(testSuiteVO)) {
                 log.error("保存测试集失败:{}", testSuiteVO);
-                UIBuilder.showErrAlert("保存测试集失败", 0.8);
+                UIBuilder.showErrorAlert("保存测试集失败", 0.8);
                 return;
             }
             testSuiteVOLV.getItems().add(testSuiteVO);
@@ -137,7 +177,7 @@ public class IndexController {
         if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!caseService.delete(selectedItems)) {
             log.error("删除测试用例失败:{}", selectedItems);
-            UIBuilder.showErrAlert("删除测试用例失败", 0.8);
+            UIBuilder.showErrorAlert("删除测试用例失败", 0.8);
             return;
         }
         testCaseVOLV.getItems().removeAll(selectedItems);
@@ -150,7 +190,7 @@ public class IndexController {
         if (CollectionUtils.isEmpty(selectedItems)) return;
         if (!suiteService.deleteBatchByIds(selectedItems.stream().map(TestSuiteVO::getId).toList())) {
             log.error("删除测试集失败:{}", selectedItems);
-            UIBuilder.showErrAlert("删除测试集失败", 0.8);
+            UIBuilder.showErrorAlert("删除测试集失败", 0.8);
             return;
         }
         testSuiteVOLV.getItems().removeAll(selectedItems);
@@ -162,7 +202,7 @@ public class IndexController {
         new TestCaseDialog("update", testCaseVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testCaseVO -> {
             if (!caseService.update(testCaseVO)) {
                 log.error("更新测试用例失败:{}", testCaseVO);
-                UIBuilder.showErrAlert("更新测试用例失败", 0.8);
+                UIBuilder.showErrorAlert("更新测试用例失败", 0.8);
                 TestCaseVO caseVO = caseService.selectById(testCaseVO.getId());
                 if (Objects.isNull(caseVO)) return;
                 testCaseVOLV.getItems().set(testCaseVOLV.getSelectionModel().getSelectedIndex(), testCaseVO);
@@ -178,7 +218,7 @@ public class IndexController {
         new TestSuiteDialog("update", testSuiteVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testSuiteVO -> {
             if (!suiteService.update(testSuiteVO)) {
                 log.error("更新测试集失败:{}", testSuiteVO);
-                UIBuilder.showErrAlert("更新测试集失败", 0.8);
+                UIBuilder.showErrorAlert("更新测试集失败", 0.8);
                 return;
             }
             UIBuilder.showInfoAlert("更新测试集成功", 0.8);

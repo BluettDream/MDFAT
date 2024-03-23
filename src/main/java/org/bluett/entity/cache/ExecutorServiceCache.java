@@ -10,16 +10,16 @@ import java.util.concurrent.TimeUnit;
 
 
 @Log4j2
-public class ThreadPoolCache {
+public class ExecutorServiceCache {
     private static final int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
     private static final int MAXIMUM_POOL_SIZE = 100;
     private static final long KEEP_ALIVE_TIME = 60;
     private static final int QUEUE_SIZE = 100;
     private static volatile ThreadPoolExecutor testCaseThreadPool;
 
-    public static ThreadPoolExecutor testCaseThreadPool() {
+    public static ThreadPoolExecutor getTestCaseThreadPool() {
         if(testCaseThreadPool == null){
-            synchronized (ThreadPoolCache.class){
+            synchronized (ExecutorServiceCache.class){
                 if(testCaseThreadPool == null){
                     testCaseThreadPool = new ThreadPoolExecutor(
                             CORE_POOL_SIZE,

@@ -28,9 +28,24 @@
     <commons.lang3.version>3.14.0</commons.lang3.version>
     <commons.collection4.version>4.4</commons.collection4.version>
     <commons.codec.version>1.16.1</commons.codec.version>
+    <forest.core.version>1.5.36</forest.core.version>
+    <jackson.version>2.16.1</jackson.version>
+    <fastjson.version>2.0.47</fastjson.version>
   </properties>
 
   <dependencies>
+    <!-- fastjson2 -->
+    <dependency>
+      <groupId>com.alibaba.fastjson2</groupId>
+      <artifactId>fastjson2</artifactId>
+      <version>${fastjson.version}</version>
+    </dependency>
+    <!-- forest-core -->
+    <dependency>
+      <groupId>com.dtflys.forest</groupId>
+      <artifactId>forest-core</artifactId>
+      <version>${forest.core.version}</version>
+    </dependency>
     <!-- commons-codec -->
     <dependency>
       <groupId>commons-codec</groupId>

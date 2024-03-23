@@ -2,6 +2,8 @@ package org.bluett.mapper;
 
 import org.bluett.entity.Settings;
 
+import java.util.List;
+
 /**
 * @author BluettDream
 * @description 针对表【settings】的数据库操作Mapper
@@ -21,4 +23,11 @@ public interface SettingsMapper {
 
     int updateByPrimaryKey(Settings record);
 
+    String selectSettingsByKey(String key);
+
+    List<Settings> selectAll();
+
+    int deleteAll();
+
+    int insertAll(List<Settings> settingsList);
 }

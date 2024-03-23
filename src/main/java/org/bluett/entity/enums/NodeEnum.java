@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum NodeEnum {
     MAIN("/ui/view/main.fxml"),
     INDEX("/ui/view/index.fxml"),
-    SETTING("/ui/view/setting.fxml"),
+    SETTING("/ui/view/settings.fxml"),
     HEADER("/ui/view/header.fxml"),
     TEST_CASE_DIALOG_CONTENT("/ui/view/component/testCaseDialogContent.fxml"),
     TEST_SUITE_DIALOG_CONTENT("/ui/view/component/testSuiteDialogContent.fxml");
