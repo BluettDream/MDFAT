@@ -9,6 +9,20 @@ import java.awt.image.BufferedImage;
 public interface AutomaticOperation {
 
     /**
+     * 点击指定位置
+     * @param point 点击位置
+     * @throws Exception 异常
+     */
+    public void click(Point point) throws Exception;
+
+    /**
+     * 点击指定位置两次
+     * @param point 点击位置
+     * @throws Exception 异常
+     */
+    public void doubleClick(Point point) throws Exception;
+
+    /**
      * 指定位置点击多次
      * @param point 点击位置
      * @param times 点击次数
@@ -39,4 +53,11 @@ public interface AutomaticOperation {
      * @throws Exception 异常
      */
     BufferedImage screenCapture(Rectangle rectangle) throws Exception;
+
+    /**
+     * 移动到指定位置
+     * @param point 移动位置
+     * @throws InterruptedException 异常
+     */
+    public void moveTo(Point point) throws InterruptedException;
 }

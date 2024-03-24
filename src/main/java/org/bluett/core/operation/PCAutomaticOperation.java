@@ -1,7 +1,7 @@
-package org.bluett.core.operation.impl;
+package org.bluett.core.operation;
 
+import com.github.joonasvali.naturalmouse.api.MouseMotionFactory;
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
-import org.bluett.core.operation.AutomaticOperation;
 import org.bluett.entity.enums.MouseMoveTypeEnum;
 
 import java.awt.*;
@@ -31,11 +31,13 @@ public abstract class PCAutomaticOperation implements AutomaticOperation {
     @Override
     public abstract BufferedImage screenCapture(Rectangle rectangle) throws Exception;
 
-    protected void moveTo(Point point) throws InterruptedException {
+    public void moveTo(Point point) throws InterruptedException {
+        MouseMotionFactory mouseMotionFactory;
         switch (MOUSE_MOVE_TYPE) {
-            case PROFESSIONAL -> FactoryTemplates.createFastGamerMotionFactory().move((int) point.getX(), (int) point.getY());
-            case NORMAL -> FactoryTemplates.createAverageComputerUserMotionFactory().move((int) point.getX(), (int) point.getY());
-            case FRESHMAN -> FactoryTemplates.createGrannyMotionFactory().move((int) point.getX(), (int) point.getY());
+            case PROFESSIONAL -> mouseMotionFactory = FactoryTemplates.createFastGamerMotionFactory();
+            case FRESHMAN -> mouseMotionFactory = FactoryTemplates.createGrannyMotionFactory();
+            default -> mouseMotionFactory = FactoryTemplates.createAverageComputerUserMotionFactory();
         }
+        mouseMotionFactory.move((int) point.getX(), (int) point.getY());
     }
 }

@@ -9,7 +9,7 @@ import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bluett.core.operation.impl.WinAutoMaticOperation;
+import org.bluett.core.operation.impl.PCAutoMaticOperationImpl;
 import org.bluett.core.thread.TestCaseCallable;
 import org.bluett.entity.Page;
 import org.bluett.entity.cache.ExecutorServiceCache;
@@ -120,7 +120,7 @@ public class IndexController {
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
-        testCaseVOLV.getItems().forEach(testCaseVO -> testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService, new WinAutoMaticOperation())));
+        testCaseVOLV.getItems().forEach(testCaseVO -> testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService, new PCAutoMaticOperationImpl())));
         UIHelper.minimizeMainWindow();
         testCaseExecutor.execute(() -> CompletableFuture
                 .runAsync(() -> {
