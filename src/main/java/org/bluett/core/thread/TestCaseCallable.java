@@ -18,29 +18,26 @@ import java.util.concurrent.Callable;
 
 @Log4j2
 @RequiredArgsConstructor
-public class TestCaseCallable implements Callable<Boolean> {
+public class TestCaseCallable implements Callable<ImageProcessDTO> {
     private final TestCaseVO testCaseVO;
     private final ImageProcessService imageProcessService;
     private final AutomaticOperation automaticOperation;
 
     @Override
-    public Boolean call() {
+    public ImageProcessDTO call() {
         TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.getAndIncrement();
         try {
             TestImageVO imageVO = testCaseVO.getImageVO();
             if(Objects.nonNull(imageVO) && StringUtils.isNotBlank(imageVO.getPath())){
                 BufferedImage screenCapture = automaticOperation.screenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-                ImageProcessDTO imageProcessDTO = imageProcessService.getMatchLocation(imageVO.getPath(), screenCapture, imageVO.getConfidence());
-                if(Objects.nonNull(imageProcessDTO)){
-                    automaticOperation.moveTo(new Point(imageProcessDTO.getLocation().get(0), imageProcessDTO.getLocation().get(1)));
-                }
+                return imageProcessService.getMatchLocation(imageVO.getPath(), screenCapture, imageVO.getConfidence());
             }
-            return true;
+            return null;
         }catch (Exception e){
             log.error(ExceptionUtils.getRootCause(e));
         } finally {
             TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.getAndDecrement();
         }
-        return false;
+        return null;
     }
 }

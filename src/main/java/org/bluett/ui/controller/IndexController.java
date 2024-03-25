@@ -9,8 +9,7 @@ import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bluett.core.operation.impl.PCAutoMaticOperationImpl;
-import org.bluett.core.thread.TestCaseCallable;
+import org.bluett.core.thread.TestSuiteCallable;
 import org.bluett.entity.Page;
 import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
@@ -54,7 +53,7 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final ExecutorService testCaseExecutor = ExecutorServiceCache.getTestCaseThreadPool();
+    private final ExecutorService testSuiteExecutor = ExecutorServiceCache.getTestSuiteThreadPool();
     private final ImageProcessService imageProcessService = new ImageProcessService();
 
     @FXML
@@ -103,45 +102,32 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
-        CompletableFuture
-                .runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
                     while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
                     Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
-                }, testCaseExecutor)
+                }, testSuiteExecutor)
                 .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
-                .exceptionally(throwable -> {
+                .whenCompleteAsync((unused, throwable) -> {
+                    if (Objects.isNull(throwable)) return;
                     log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
                     UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
-                    return null;
-                }).join();
+                }, Platform::runLater)
+                .join();
         UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
-        testCaseVOLV.getItems().forEach(testCaseVO -> testCaseExecutor.submit(new TestCaseCallable(testCaseVO, imageProcessService, new PCAutoMaticOperationImpl())));
         UIHelper.minimizeMainWindow();
-        testCaseExecutor.execute(() -> CompletableFuture
-                .runAsync(() -> {
-                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
-                }).whenComplete((unused, throwable) -> {
-                    Platform.runLater(() -> {
-                        UIBuilder.showInfoAlert("测试集执行完成", 0.8);
-                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-                        UIHelper.showMainWindow();
-                    });
-                }).orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
-                .exceptionally(throwable -> {
-                    log.error("测试集执行超时:", ExceptionUtils.getRootCause(throwable));
-                    Platform.runLater(() -> {
-                        UIBuilder.showErrorAlert("测试集执行超时,已强制停止", 0.8);
-                        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-                        UIHelper.showMainWindow();
-                    });
-                    return null;
-                }).join()
-        );
+        CompletableFuture.supplyAsync(new TestSuiteCallable(testCaseVOLV.getItems()), testSuiteExecutor)
+                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .whenCompleteAsync((aBoolean, throwable) -> {
+                    if (Objects.isNull(throwable) || aBoolean) return;
+                    log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
+                    UIBuilder.showErrorAlert("测试集执行失败", 0.8);
+                }, Platform::runLater)
+                .join();
     }
 
     @FXML

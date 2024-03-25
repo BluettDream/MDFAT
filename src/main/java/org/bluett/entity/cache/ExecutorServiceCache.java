@@ -16,6 +16,7 @@ public class ExecutorServiceCache {
     private static final long KEEP_ALIVE_TIME = 60;
     private static final int QUEUE_SIZE = 100;
     private static volatile ThreadPoolExecutor testCaseThreadPool;
+    private static volatile ThreadPoolExecutor testSuiteThreadPool;
 
     public static ThreadPoolExecutor getTestCaseThreadPool() {
         if(testCaseThreadPool == null){
@@ -37,5 +38,27 @@ public class ExecutorServiceCache {
             }
         }
         return testCaseThreadPool;
+    }
+
+    public static ThreadPoolExecutor getTestSuiteThreadPool() {
+        if(testSuiteThreadPool == null){
+            synchronized (ExecutorServiceCache.class){
+                if(testSuiteThreadPool == null){
+                    testSuiteThreadPool = new ThreadPoolExecutor(
+                            CORE_POOL_SIZE,
+                            MAXIMUM_POOL_SIZE,
+                            KEEP_ALIVE_TIME, TimeUnit.SECONDS,
+                            new LinkedBlockingQueue<>(QUEUE_SIZE),
+                            new BasicThreadFactory.Builder()
+                                    .daemon(true)
+                                    .namingPattern("TestSuiteThread-%d")
+                                    .priority(Thread.MAX_PRIORITY)
+                                    .uncaughtExceptionHandler((t, e) -> log.error("Uncaught exception in thread {}", t.getName(), ExceptionUtils.getRootCause(e)))
+                                    .build(),
+                            new ThreadPoolExecutor.CallerRunsPolicy());
+                }
+            }
+        }
+        return testSuiteThreadPool;
     }
 }
