@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bluett.entity.enums.FileTypeEnum;
 import org.bluett.entity.enums.OperationEnum;
 import org.bluett.entity.vo.TestCaseVO;
-import org.bluett.ui.builder.UIBuilder;
+import org.bluett.builder.UIBuilder;
 
 import java.io.File;
 import java.util.Arrays;

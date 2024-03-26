@@ -9,25 +9,24 @@ import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bluett.core.thread.TestSuiteCallable;
+import org.bluett.builder.UIBuilder;
+import org.bluett.core.executor.TestSuiteExecutor;
 import org.bluett.entity.Page;
-import org.bluett.entity.cache.ExecutorServiceCache;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
-import org.bluett.helper.TestCaseCallableHelper;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.ImageProcessService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
+import org.bluett.thread.ThreadPools;
 import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
 import org.bluett.ui.TestSuiteListCell;
-import org.bluett.ui.builder.UIBuilder;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Log4j2
@@ -53,7 +52,7 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final ExecutorService testSuiteExecutor = ExecutorServiceCache.getTestSuiteThreadPool();
+    private final ThreadPoolExecutor suiteThreadPool = ThreadPools.TEST_SUITE_THREAD_POOL;
     private final ImageProcessService imageProcessService = new ImageProcessService();
 
     @FXML
@@ -102,30 +101,38 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
-        CompletableFuture.runAsync(() -> {
-                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
-                    Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
-                }, testSuiteExecutor)
-                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
-                .whenCompleteAsync((unused, throwable) -> {
-                    if (Objects.isNull(throwable)) return;
-                    log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
-                    UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
-                }, Platform::runLater)
-                .join();
-        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+//        CompletableFuture.runAsync(() -> {
+//                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
+//                    Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
+//                }, suiteThreadPool)
+//                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+//                .whenCompleteAsync((unused, throwable) -> {
+//                    if (Objects.isNull(throwable)) return;
+//                    log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
+//                    UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
+//                }, Platform::runLater)
+//                .join();
+//        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
         UIHelper.minimizeMainWindow();
-        CompletableFuture.supplyAsync(new TestSuiteCallable(testCaseVOLV.getItems()), testSuiteExecutor)
+        CompletableFuture.supplyAsync(new TestSuiteExecutor(testCaseVOLV.getItems()), suiteThreadPool)
                 .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
-                .whenCompleteAsync((aBoolean, throwable) -> {
-                    if (Objects.isNull(throwable) || aBoolean) return;
+                .exceptionallyAsync(throwable -> {
                     log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
                     UIBuilder.showErrorAlert("测试集执行失败", 0.8);
+                    UIHelper.showMainWindow();
+                    return false;
+                }, Platform::runLater)
+                .thenAcceptAsync(ret -> {
+                    if (!ret) {
+                        log.error("测试集执行失败");
+                        UIBuilder.showErrorAlert("测试集执行失败", 0.8);
+                    } else UIBuilder.showInfoAlert("测试集执行成功", 0.8);
+                    UIHelper.showMainWindow();
                 }, Platform::runLater)
                 .join();
     }

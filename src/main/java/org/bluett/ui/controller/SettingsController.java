@@ -11,7 +11,7 @@ import org.bluett.entity.Settings;
 import org.bluett.entity.enums.MouseMoveTypeEnum;
 import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.service.SettingsService;
-import org.bluett.ui.builder.UIBuilder;
+import org.bluett.builder.UIBuilder;
 
 @Log4j2
 public class  SettingsController {

@@ -4,7 +4,7 @@ import com.dtflys.forest.Forest;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.entity.dto.ImageProcessDTO;
-import org.bluett.request.ImageProcessClient;
+import org.bluett.client.ImageProcessClient;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

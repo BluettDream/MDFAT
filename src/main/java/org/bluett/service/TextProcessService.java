@@ -2,7 +2,7 @@ package org.bluett.service;
 
 import com.dtflys.forest.Forest;
 import lombok.extern.log4j.Log4j2;
-import org.bluett.request.ImageProcessClient;
+import org.bluett.client.ImageProcessClient;
 
 @Log4j2
 public class TextProcessService {

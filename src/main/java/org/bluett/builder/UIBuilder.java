@@ -1,4 +1,4 @@
-package org.bluett.ui.builder;
+package org.bluett.builder;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Rectangle2D;

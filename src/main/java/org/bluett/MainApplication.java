@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.bluett.entity.Settings;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.enums.SettingsEnum;
+import org.bluett.handler.GlobalForestLogHandler;
 import org.bluett.helper.UIHelper;
 import org.bluett.service.SettingsService;
 
@@ -25,7 +26,9 @@ public class MainApplication extends Application {
         Forest.config()
                 .setVariableValue("imageProcessURL", settingsMap.get(SettingsEnum.IMAGE_OPERATE_URL).getValue())
                 .setVariableValue("textProcessURL", settingsMap.get(SettingsEnum.TEXT_OPERATE_URL).getValue())
-                .setConnectTimeout(3, TimeUnit.SECONDS)
+                .setConnectTimeout(10, TimeUnit.SECONDS)
+                .setLogHandler(new GlobalForestLogHandler())
+                .setLogResponseContent(true)
                 .setJsonConverter(new ForestFastjson2Converter());
     }
 
