@@ -125,6 +125,7 @@ public class IndexController {
                     log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
                     UIBuilder.showErrorAlert("测试集执行失败", 0.8);
                     UIHelper.showMainWindow();
+                    UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
                     return false;
                 }, Platform::runLater)
                 .thenAcceptAsync(ret -> {
@@ -133,8 +134,8 @@ public class IndexController {
                         UIBuilder.showErrorAlert("测试集执行失败", 0.8);
                     } else UIBuilder.showInfoAlert("测试集执行成功", 0.8);
                     UIHelper.showMainWindow();
-                }, Platform::runLater)
-                .join();
+                    UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
+                }, Platform::runLater);
     }
 
     @FXML

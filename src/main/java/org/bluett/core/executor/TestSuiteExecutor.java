@@ -9,19 +9,26 @@ import org.bluett.thread.ThreadPools;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class TestSuiteExecutor implements Callable<Boolean>, Supplier<Boolean> {
     private final ThreadPoolExecutor caseThreadPool = ThreadPools.TEST_CASE_THREAD_POOL;
-    private final List<TestCaseVO> testCaseVOList;
     private final ImageProcessService imageProcessService = new ImageProcessService();
     private final AutomaticOperation automaticOperation = new PCAutoMaticOperationImpl();
+    private final List<TestCaseVO> testCaseVOList;
+
 
     @Override
     public Boolean call() {
-        testCaseVOList.forEach(testCaseVO -> caseThreadPool.submit(new TestCaseExecutor(testCaseVO, imageProcessService, automaticOperation)));
+        CompletableFuture.allOf(testCaseVOList.stream()
+                        .map(testCaseVO -> CompletableFuture.supplyAsync(
+                                new TestCaseExecutor(testCaseVO, imageProcessService, automaticOperation),
+                                caseThreadPool))
+                        .toArray(CompletableFuture[]::new))
+                .join();
         return true;
     }
 
