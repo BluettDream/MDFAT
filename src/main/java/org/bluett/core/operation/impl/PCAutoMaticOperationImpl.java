@@ -1,10 +1,12 @@
 package org.bluett.core.operation.impl;
 
+import org.bluett.core.operation.PCAutomaticOperation;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 
-public class WinAutoMaticOperation extends PCAutomaticOperation {
+public class PCAutoMaticOperationImpl extends PCAutomaticOperation {
     private static final Robot ROBOT;
     static {
         try {
@@ -41,7 +43,7 @@ public class WinAutoMaticOperation extends PCAutomaticOperation {
     }
 
     @Override
-    public BufferedImage screenCapture(Rectangle rectangle) throws Exception {
+    public BufferedImage screenCapture(Rectangle rectangle) {
         return ROBOT.createScreenCapture(rectangle);
     }
 }
