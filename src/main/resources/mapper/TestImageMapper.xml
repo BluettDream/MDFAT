@@ -4,15 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestImageMapper">
 
-    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
-
     <resultMap id="BaseResultMap" type="org.bluett.entity.TestImage">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="caseId" column="case_id" jdbcType="INTEGER"/>
             <result property="path" column="path" jdbcType="VARCHAR"/>
             <result property="confidence" column="confidence" jdbcType="REAL"/>
-            <result property="pointX" column="point_x" jdbcType="VARCHAR"/>
-            <result property="pointY" column="point_y" jdbcType="VARCHAR"/>
+            <result property="pointX" column="point_x" jdbcType="INTEGER"/>
+            <result property="pointY" column="point_y" jdbcType="INTEGER"/>
             <result property="width" column="width" jdbcType="INTEGER"/>
             <result property="height" column="height" jdbcType="INTEGER"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -20,10 +17,9 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,case_id,path,
-        confidence,point_x,point_y,
-        width,height,update_time,
-        create_time
+        id,path,confidence,
+        point_x,point_y,width,
+        height,update_time,create_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -32,66 +28,46 @@
         from test_image
         where  id = #{id,jdbcType=INTEGER} 
     </select>
-    <select id="selectTestImageByCaseIds" resultType="org.bluett.entity.TestImage">
-        select
-        <include refid="Base_Column_List" />
-        from test_image
-        where case_id in
-        <foreach collection="list" item="caseId" open="(" separator="," close=")">
-            #{caseId}
-        </foreach>
-    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from test_image
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
-    <delete id="deleteByIds">
-        delete from test_image
-        where id in
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
         insert into test_image
-        ( case_id,path
-        ,confidence,point_x,point_y
-        ,width,height,update_time
-        ,create_time)
-        values (#{caseId,jdbcType=INTEGER},#{path,jdbcType=VARCHAR}
-        ,#{confidence,jdbcType=REAL},#{pointX,jdbcType=VARCHAR},#{pointY,jdbcType=VARCHAR}
-        ,#{width,jdbcType=INTEGER},#{height,jdbcType=INTEGER},datetime('now', '+8 hour'),datetime('now', '+8 hour'))
+        ( path,confidence
+        ,point_x,point_y,width
+        ,height,update_time,create_time
+        )
+        values (#{path,jdbcType=VARCHAR},#{confidence,jdbcType=REAL}
+        ,#{pointX,jdbcType=INTEGER},#{pointY,jdbcType=INTEGER},#{width,jdbcType=INTEGER}
+        ,#{height,jdbcType=INTEGER},datetime('now', '+8 hour'),datetime('now', '+8 hour')
+        )
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
         insert into test_image
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="caseId != null">case_id,</if>
                 <if test="path != null">path,</if>
                 <if test="confidence != null">confidence,</if>
                 <if test="pointX != null">point_x,</if>
                 <if test="pointY != null">point_y,</if>
                 <if test="width != null">width,</if>
                 <if test="height != null">height,</if>
-                update_time,create_time,
+                update_time,create_time
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="caseId != null">#{caseId,jdbcType=INTEGER},</if>
                 <if test="path != null">#{path,jdbcType=VARCHAR},</if>
                 <if test="confidence != null">#{confidence,jdbcType=REAL},</if>
-                <if test="pointX != null">#{pointX,jdbcType=VARCHAR},</if>
-                <if test="pointY != null">#{pointY,jdbcType=VARCHAR},</if>
+                <if test="pointX != null">#{pointX,jdbcType=INTEGER},</if>
+                <if test="pointY != null">#{pointY,jdbcType=INTEGER},</if>
                 <if test="width != null">#{width,jdbcType=INTEGER},</if>
                 <if test="height != null">#{height,jdbcType=INTEGER},</if>
-                datetime('now', '+8 hour'),datetime('now', '+8 hour'),
+                datetime('now', '+8 hour'),datetime('now', '+8 hour')
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestImage">
         update test_image
         <set>
-                <if test="caseId != null">
-                    case_id = #{caseId,jdbcType=INTEGER},
-                </if>
                 <if test="path != null">
                     path = #{path,jdbcType=VARCHAR},
                 </if>
@@ -99,10 +75,10 @@
                     confidence = #{confidence,jdbcType=REAL},
                 </if>
                 <if test="pointX != null">
-                    point_x = #{pointX,jdbcType=VARCHAR},
+                    point_x = #{pointX,jdbcType=INTEGER},
                 </if>
                 <if test="pointY != null">
-                    point_y = #{pointY,jdbcType=VARCHAR},
+                    point_y = #{pointY,jdbcType=INTEGER},
                 </if>
                 <if test="width != null">
                     width = #{width,jdbcType=INTEGER},
@@ -117,11 +93,10 @@
     <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestImage">
         update test_image
         set 
-            case_id =  #{caseId,jdbcType=INTEGER},
             path =  #{path,jdbcType=VARCHAR},
             confidence =  #{confidence,jdbcType=REAL},
-            point_x =  #{pointX,jdbcType=VARCHAR},
-            point_y =  #{pointY,jdbcType=VARCHAR},
+            point_x =  #{pointX,jdbcType=INTEGER},
+            point_y =  #{pointY,jdbcType=INTEGER},
             width =  #{width,jdbcType=INTEGER},
             height =  #{height,jdbcType=INTEGER},
             update_time =  datetime('now', '+8 hour')

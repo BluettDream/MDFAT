@@ -1,43 +1,56 @@
 package org.bluett.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.bluett.entity.enums.TestResultEnum;
-import org.bluett.entity.vo.TestSuiteVO;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 
  * @TableName test_suite
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TestSuite implements Serializable {
     @Serial
     private static final long serialVersionUID = -8273915465376885304L;
+    /**
+     * 测试集id
+     */
     private Integer id;
-    private String name;
-    private Integer runTime;
-    private Integer timeout;
-    private TestResultEnum status;
-    private String description;
-    private Date updateTime;
-    private Date createTime;
 
-    public static TestSuite convertToTestSuite(TestSuiteVO testSuiteVO) {
-        return TestSuite.builder()
-                .id(testSuiteVO.getId())
-                .name(testSuiteVO.getName())
-                .runTime(testSuiteVO.getRunTime())
-                .timeout(testSuiteVO.getTimeout())
-                .status(testSuiteVO.getStatus())
-                .description(testSuiteVO.getDescription())
-                .build();
-    }
+    /**
+     * 测试集名称
+     */
+    private String name;
+
+    /**
+     * 测试集运行时间
+     */
+    private Integer runTime;
+
+    /**
+     * 测试集超时时间
+     */
+    private Integer timeout;
+
+    /**
+     * 测试集状态
+     */
+    private Integer status;
+
+    /**
+     * 测试集描述
+     */
+    private String description;
+
+    /**
+     * 测试集更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 测试集创建时间
+     */
+    private Date createTime;
 }

@@ -31,7 +31,6 @@ public class TestCaseExecutor implements Callable<ImageProcessDTO>, Supplier<Ima
         if(Objects.isNull(imageVO)){
             throw new Exception("ImageVO is null");
         }
-
         if(StringUtils.isNotBlank(imageVO.getPath())){
             BufferedImage screenCapture = automaticOperation.screenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
             return imageProcessService.getMatchLocation(imageVO.getPath(), screenCapture, imageVO.getConfidence());

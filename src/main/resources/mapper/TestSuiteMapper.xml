@@ -4,8 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestSuiteMapper">
 
-    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
-
     <resultMap id="BaseResultMap" type="org.bluett.entity.TestSuite">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
@@ -29,35 +27,10 @@
         from test_suite
         where  id = #{id,jdbcType=INTEGER} 
     </select>
-    <select id="selectTestSuiteList" resultType="org.bluett.entity.TestSuite">
-        select
-        <include refid="Base_Column_List"/>
-        from test_suite
-        <where>
-            <if test="testSuite.id != null">and id = #{testSuite.id}</if>
-            <if test="testSuite.name != null">and name = #{testSuite.name}</if>
-            <if test="testSuite.runTime != null">and run_time = #{testSuite.runTime}</if>
-            <if test="testSuite.timeout != null">and timeout = #{testSuite.timeout}</if>
-            <if test="testSuite.status != null">and status = #{testSuite.status}</if>
-            <if test="testSuite.description != null">and description = #{testSuite.description}</if>
-            <if test="testSuite.updateTime != null">and update_time = #{testSuite.updateTime}</if>
-            <if test="testSuite.createTime != null">and create_time = #{testSuite.createTime}</if>
-        </where>
-        <if test="page != null">
-            limit #{page.pageNum},#{page.pageSize}
-        </if>
-    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from test_suite
         where  id = #{id,jdbcType=INTEGER} 
-    </delete>
-    <delete id="deleteByIds">
-        delete from test_suite
-        where id in
-        <foreach collection="list" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuite" useGeneratedKeys="true">
         insert into test_suite
@@ -105,7 +78,7 @@
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
                 </if>
-                    update_time = datetime('now', '+8 hour')
+                    update_time = datetime('now', '+8 hour'),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>

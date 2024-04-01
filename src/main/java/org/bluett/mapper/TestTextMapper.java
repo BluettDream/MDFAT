@@ -2,11 +2,10 @@ package org.bluett.mapper;
 
 import org.bluett.entity.TestText;
 
-import java.util.List;
-
 /**
 * @author BluettDream
 * @description 针对表【test_text】的数据库操作Mapper
+* @createDate 2024-04-01 22:26:14
 * @Entity org.bluett.entity.TestText
 */
 public interface TestTextMapper {
@@ -23,7 +22,4 @@ public interface TestTextMapper {
 
     int updateByPrimaryKey(TestText record);
 
-    Integer deleteByIds(List<Integer> textIdList);
-
-    List<TestText> selectByCaseIds(List<Integer> caseIdList);
 }

@@ -8,13 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.Page;
-import org.bluett.entity.TestCase;
 import org.bluett.entity.TestImage;
 import org.bluett.entity.TestText;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestImageVO;
 import org.bluett.entity.vo.TestTextVO;
-import org.bluett.helper.DatabaseHelper;
+import org.bluett.helper.MybatisHelper;
 import org.bluett.mapper.TestCaseMapper;
 import org.bluett.mapper.TestImageMapper;
 import org.bluett.mapper.TestTextMapper;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TestCaseService {
     public boolean save(TestCaseVO testCaseVO) {
-        try(SqlSession session = DatabaseHelper.getSqlSession()){
+        try(SqlSession session = MybatisHelper.getSqlSession()){
             // 插入测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
             TestCase testCase = TestCase.convertToTestCase(testCaseVO);
@@ -51,7 +50,7 @@ public class TestCaseService {
     }
 
     public boolean delete(List<TestCaseVO> caseVOList) {
-        try(SqlSession session = DatabaseHelper.getSqlSession()) {
+        try(SqlSession session = MybatisHelper.getSqlSession()) {
             // 删除测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = caseMapper.deleteByIds(caseVOList.stream().map(TestCaseVO::getId).toList());
@@ -113,7 +112,7 @@ public class TestCaseService {
      * @return 是否更新成功
      */
     public boolean update(TestCaseVO testCaseVO) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 更新测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
             Integer cnt = caseMapper.updateByPrimaryKeySelective(TestCase.convertToTestCase(testCaseVO));
@@ -172,7 +171,7 @@ public class TestCaseService {
     }
 
     public ObservableList<TestCaseVO> selectBySuiteId(int suiteId, Page page) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 查询测试用例列表
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
             List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().suiteId(suiteId).build(), page);
@@ -223,7 +222,7 @@ public class TestCaseService {
     }
 
     public TestCaseVO selectById(int caseId) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 查询测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
             List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().id(caseId).build(), new Page(0, 1));

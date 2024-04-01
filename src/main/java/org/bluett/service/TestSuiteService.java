@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.Page;
 import org.bluett.entity.TestSuite;
 import org.bluett.entity.vo.TestSuiteVO;
-import org.bluett.helper.DatabaseHelper;
+import org.bluett.helper.MybatisHelper;
 import org.bluett.mapper.TestSuiteMapper;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TestSuiteService {
     public ObservableList<TestSuiteVO> selectTestSuiteVOList(TestSuite testSuite, Page page) {
-        try(SqlSession session = DatabaseHelper.getSqlSession()){
+        try(SqlSession session = MybatisHelper.getSqlSession()){
             // 获取testSuiteVO列表
             TestSuiteMapper testSuiteMapper = session.getMapper(TestSuiteMapper.class);
             List<TestSuite> suiteList = testSuiteMapper.selectTestSuiteList(testSuite, page);
@@ -33,7 +33,7 @@ public class TestSuiteService {
     }
 
     public boolean save(TestSuiteVO testSuiteVO) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
             TestSuite testSuite = TestSuite.convertToTestSuite(testSuiteVO);
             int cnt = mapper.insert(testSuite);
@@ -48,7 +48,7 @@ public class TestSuiteService {
     }
 
     public boolean deleteBatchByIds(List<Integer> idList) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
             Integer cnt = mapper.deleteByIds(idList);
             if(cnt == idList.size()) session.commit();
@@ -60,7 +60,7 @@ public class TestSuiteService {
     }
 
     public boolean update(TestSuiteVO testSuiteVO) {
-        try (SqlSession session = DatabaseHelper.getSqlSession()) {
+        try (SqlSession session = MybatisHelper.getSqlSession()) {
             TestSuiteMapper mapper = session.getMapper(TestSuiteMapper.class);
             int cnt = mapper.updateByPrimaryKey(TestSuite.convertToTestSuite(testSuiteVO));
             if(cnt > 0) session.commit();

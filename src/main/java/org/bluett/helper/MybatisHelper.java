@@ -14,14 +14,14 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 @Log4j2
-public class DatabaseHelper {
-    public static final Path DATABASE_PATH = Paths.get(System.getProperty("user.dir")).resolve("cache").resolve("mdfat.db");
+public class MybatisHelper {
+    public static final Path DATABASE_PATH = Paths.get(System.getProperty("user.dir")).resolve("db").resolve("mdfat.db");
     private static final URL MAPPER_URL = MainApplication.class.getResource("/mapper");
     private static final String DB_URL = "jdbc:sqlite:" + DATABASE_PATH;
     private static final String MYBATIS_CONFIG = "mybatis-config.xml";
     private static final SqlSessionFactory FACTORY = getSqlSessionFactory();
 
-    private DatabaseHelper(){}
+    private MybatisHelper(){}
 
     public static SqlSession getSqlSession(){
         if(FACTORY == null) throw new RuntimeException("数据库初始化失败");

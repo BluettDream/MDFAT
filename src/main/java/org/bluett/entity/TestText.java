@@ -1,42 +1,51 @@
 package org.bluett.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.bluett.entity.vo.TestTextVO;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 
  * @TableName test_text
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TestText implements Serializable {
     @Serial
-    private static final long serialVersionUID = -2896054250646119072L;
+    private static final long serialVersionUID = 2964467311200710185L;
+    /**
+     * text_id
+     */
     private Integer id;
-    private Integer caseId;
-    private String text;
-    private Float confidence;
-    private Integer pointX;
-    private Integer pointY;
-    private Date updateTime;
-    private Date createTime;
 
-    public static TestText convertToTestText(TestTextVO testTextVO) {
-        return TestText.builder()
-                .id(testTextVO.getId())
-                .caseId(testTextVO.getCaseId())
-                .text(testTextVO.getText())
-                .confidence(testTextVO.getConfidence())
-                .pointX(testTextVO.getPointX())
-                .pointY(testTextVO.getPointY())
-                .build();
-    }
+    /**
+     * text文本
+     */
+    private String text;
+
+    /**
+     * 置信度
+     */
+    private Float confidence;
+
+    /**
+     * 左上角x坐标
+     */
+    private Integer pointX;
+
+    /**
+     * 左上角y坐标
+     */
+    private Integer pointY;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
 }

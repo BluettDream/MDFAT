@@ -1,46 +1,61 @@
 package org.bluett.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.bluett.entity.vo.TestImageVO;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 
  * @TableName test_image
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TestImage implements Serializable {
     @Serial
-    private static final long serialVersionUID = -5118586449662427554L;
+    private static final long serialVersionUID = 7228045970890297460L;
+    /**
+     * 测试图像id
+     */
     private Integer id;
-    private Integer caseId;
-    private String path;
-    private Float confidence;
-    private Integer pointX;
-    private Integer pointY;
-    private Integer width;
-    private Integer height;
-    private Date updateTime;
-    private Date createTime;
 
-    public static TestImage convertToTestImage(TestImageVO testImageVO) {
-        return TestImage.builder()
-                .id(testImageVO.getId())
-                .caseId(testImageVO.getCaseId())
-                .path(testImageVO.getPath())
-                .confidence(testImageVO.getConfidence())
-                .pointX(testImageVO.getPointX())
-                .pointY(testImageVO.getPointY())
-                .width(testImageVO.getWidth())
-                .height(testImageVO.getHeight())
-                .build();
-    }
+    /**
+     * 测试图像路径
+     */
+    private String path;
+
+    /**
+     * 测试图像置信度
+     */
+    private Float confidence;
+
+    /**
+     * 测试图像左上角x坐标
+     */
+    private Integer pointX;
+
+    /**
+     * 测试图像左上角y坐标
+     */
+    private Integer pointY;
+
+    /**
+     * 测试图像宽度
+     */
+    private Integer width;
+
+    /**
+     * 测试图像高度
+     */
+    private Integer height;
+
+    /**
+     * 测试图像更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 测试图像创建时间
+     */
+    private Date createTime;
 }

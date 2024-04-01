@@ -1,18 +1,23 @@
 package org.bluett.core.executor;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.bluett.core.operation.AutomaticOperation;
 import org.bluett.core.operation.impl.PCAutoMaticOperationImpl;
+import org.bluett.entity.dto.ImageProcessDTO;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.service.ImageProcessService;
 import org.bluett.thread.ThreadPools;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
+@Log4j2
 @RequiredArgsConstructor
 public class TestSuiteExecutor implements Callable<Boolean>, Supplier<Boolean> {
     private final ThreadPoolExecutor caseThreadPool = ThreadPools.TEST_CASE_THREAD_POOL;
@@ -23,12 +28,16 @@ public class TestSuiteExecutor implements Callable<Boolean>, Supplier<Boolean> {
 
     @Override
     public Boolean call() {
-        CompletableFuture.allOf(testCaseVOList.stream()
-                        .map(testCaseVO -> CompletableFuture.supplyAsync(
-                                new TestCaseExecutor(testCaseVO, imageProcessService, automaticOperation),
-                                caseThreadPool))
-                        .toArray(CompletableFuture[]::new))
-                .join();
+        List<CompletableFuture<ImageProcessDTO>> futures = new ArrayList<>(testCaseVOList.stream()
+                .map(testCaseVO -> CompletableFuture.supplyAsync(
+                        new TestCaseExecutor(testCaseVO, imageProcessService, automaticOperation),
+                        caseThreadPool))
+                .toList());
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        futures.sort(Comparator.comparing(o -> o.join().getSimilarity()));
+        if(log.isDebugEnabled()){
+            log.debug("TestSuiteExecutor finished, result: {}", futures.getFirst().join());
+        }
         return true;
     }
 

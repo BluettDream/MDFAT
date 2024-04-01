@@ -6,11 +6,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.bluett.entity.TestCase;
 import org.bluett.entity.enums.OperationEnum;
 import org.bluett.entity.enums.TestResultEnum;
-
-import java.util.Objects;
 
 public class TestCaseVO {
     private final IntegerProperty id = new SimpleIntegerProperty(0);
@@ -24,23 +21,6 @@ public class TestCaseVO {
     private final StringProperty description = new SimpleStringProperty("");
     private final ObjectProperty<TestImageVO> imageVO = new SimpleObjectProperty<>(new TestImageVO());
     private final ObjectProperty<TestTextVO> textVO = new SimpleObjectProperty<>(new TestTextVO());
-
-    public static TestCaseVO convertToTestCaseVO(TestCase testCase) {
-        if(Objects.isNull(testCase)) return null;
-        TestCaseVO testCaseVO = new TestCaseVO();
-        testCaseVO.setId(testCase.getId());
-        testCaseVO.setSuiteId(testCase.getSuiteId());
-        testCaseVO.setName(testCase.getName());
-        testCaseVO.setOperation(testCase.getOperation());
-        testCaseVO.setRunTime(testCase.getRunTime());
-        testCaseVO.setTimeout(testCase.getTimeout());
-        testCaseVO.setDescription(testCase.getDescription());
-        testCaseVO.setPriority(testCase.getPriority());
-        testCaseVO.setStatus(testCase.getStatus());
-        testCaseVO.setImageVO(new TestImageVO());
-        testCaseVO.setTextVO(new TestTextVO());
-        return testCaseVO;
-    }
 
     public OperationEnum getOperation() {
         return operation.get();

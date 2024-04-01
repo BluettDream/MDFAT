@@ -5,7 +5,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.Settings;
 import org.bluett.entity.enums.SettingsEnum;
-import org.bluett.helper.DatabaseHelper;
+import org.bluett.helper.MybatisHelper;
 import org.bluett.mapper.SettingsMapper;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class SettingsService {
     public Map<SettingsEnum, Settings> getSettingsMap(){
-        try(SqlSession session = DatabaseHelper.getSqlSession()){
+        try(SqlSession session = MybatisHelper.getSqlSession()){
             SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
             return settingsMapper.selectAll().stream()
                     .collect(Collectors.toMap(settings ->
@@ -29,7 +29,7 @@ public class SettingsService {
     }
 
     public boolean saveSettings(List<Settings> settingsList) {
-        try(SqlSession session = DatabaseHelper.getSqlSession()){
+        try(SqlSession session = MybatisHelper.getSqlSession()){
             SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
             int cnt = settingsMapper.deleteAll();
             if(cnt != settingsList.size()) return false;
@@ -43,7 +43,7 @@ public class SettingsService {
     }
 
     public boolean updateSettings(List<Settings> settingsList) {
-        try(SqlSession session = DatabaseHelper.getSqlSession()){
+        try(SqlSession session = MybatisHelper.getSqlSession()){
             SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
             settingsList.forEach(settingsMapper::updateByPrimaryKeySelective);
             session.commit();
