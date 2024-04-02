@@ -101,18 +101,6 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
-//        CompletableFuture.runAsync(() -> {
-//                    while (TestCaseCallableHelper.RUNNING_TEST_CASE_COUNT.get() > 0) ;
-//                    Platform.runLater(() -> UIBuilder.showInfoAlert("测试集关闭成功", 0.8));
-//                }, suiteThreadPool)
-//                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
-//                .whenCompleteAsync((unused, throwable) -> {
-//                    if (Objects.isNull(throwable)) return;
-//                    log.error("关闭测试集失败:", ExceptionUtils.getRootCause(throwable));
-//                    UIBuilder.showErrorAlert("关闭测试集失败", 0.8);
-//                }, Platform::runLater)
-//                .join();
-//        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
     }
 
     @FXML
