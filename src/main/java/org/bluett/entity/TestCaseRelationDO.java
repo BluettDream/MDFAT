@@ -7,14 +7,14 @@ import java.io.Serializable;
 
 /**
  * 
- * @TableName test_case_extend
+ * @TableName test_case_relation
  */
 @Data
-public class TestCaseExtend implements Serializable {
+public class TestCaseRelationDO implements Serializable {
     @Serial
-    private static final long serialVersionUID = 5347668595839275056L;
+    private static final long serialVersionUID = 1907201095055146977L;
     /**
-     * id
+     * 测试用例关联关系id
      */
     private Integer id;
 
@@ -24,7 +24,7 @@ public class TestCaseExtend implements Serializable {
     private Integer caseId;
 
     /**
-     * 测试图像id
+     * 测试图片id
      */
     private Integer imageId;
 
@@ -32,14 +32,4 @@ public class TestCaseExtend implements Serializable {
      * 测试文本id
      */
     private Integer textId;
-
-    /**
-     * 前置测试用例id
-     */
-    private Integer preCaseId;
-
-    /**
-     * 后置测试用例id
-     */
-    private Integer postCaseId;
 }

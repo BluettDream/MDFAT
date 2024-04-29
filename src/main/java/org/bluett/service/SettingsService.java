@@ -3,10 +3,10 @@ package org.bluett.service;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.bluett.entity.Settings;
+import org.bluett.entity.SettingDO;
 import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.helper.MybatisHelper;
-import org.bluett.mapper.SettingsMapper;
+import org.bluett.mapper.SettingMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,36 +16,36 @@ import java.util.stream.Collectors;
 
 @Log4j2
 public class SettingsService {
-    public Map<SettingsEnum, Settings> getSettingsMap(){
+    public Map<SettingsEnum, SettingDO> getSettingsMap(){
         try(SqlSession session = MybatisHelper.getSqlSession()){
-            SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
-            return settingsMapper.selectAll().stream()
-                    .collect(Collectors.toMap(settings ->
-                            SettingsEnum.valueOf(settings.getKey()), Function.identity()));
+            SettingMapper settingMapper = session.getMapper(SettingMapper.class);
+            return settingMapper.selectAll().stream()
+                    .collect(Collectors.toMap(settingDO ->
+                            SettingsEnum.valueOf(settingDO.getKey()), Function.identity()));
         }catch (Exception e){
             log.error("SettingsService static init error", ExceptionUtils.getRootCause(e));
         }
         return new HashMap<>();
     }
 
-    public boolean saveSettings(List<Settings> settingsList) {
+    public boolean saveSettings(List<SettingDO> settingDOList) {
         try(SqlSession session = MybatisHelper.getSqlSession()){
-            SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
-            int cnt = settingsMapper.deleteAll();
-            if(cnt != settingsList.size()) return false;
-            cnt = settingsMapper.insertAll(settingsList);
-            if(cnt == settingsList.size()) session.commit();
-            return cnt == settingsList.size();
+            SettingMapper settingMapper = session.getMapper(SettingMapper.class);
+            int cnt = settingMapper.deleteAll();
+            if(cnt != settingDOList.size()) return false;
+            cnt = settingMapper.insertAll(settingDOList);
+            if(cnt == settingDOList.size()) session.commit();
+            return cnt == settingDOList.size();
         }catch (Exception e){
             log.error("SettingsService saveSettings error", ExceptionUtils.getRootCause(e));
         }
         return false;
     }
 
-    public boolean updateSettings(List<Settings> settingsList) {
+    public boolean updateSettings(List<SettingDO> settingDOList) {
         try(SqlSession session = MybatisHelper.getSqlSession()){
-            SettingsMapper settingsMapper = session.getMapper(SettingsMapper.class);
-            settingsList.forEach(settingsMapper::updateByPrimaryKeySelective);
+            SettingMapper settingMapper = session.getMapper(SettingMapper.class);
+            settingDOList.forEach(settingMapper::updateByPrimaryKeySelective);
             session.commit();
             return true;
         }catch (Exception e){

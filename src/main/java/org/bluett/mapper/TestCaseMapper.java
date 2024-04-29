@@ -1,25 +1,25 @@
 package org.bluett.mapper;
 
-import org.bluett.entity.TestCase;
+import org.bluett.entity.TestCaseDO;
 
 /**
 * @author BluettDream
 * @description 针对表【test_case】的数据库操作Mapper
-* @createDate 2024-04-01 22:15:06
-* @Entity org.bluett.entity.TestCase
+* @createDate 2024-04-30 00:16:55
+* @Entity org.bluett.entity.TestCaseDO
 */
 public interface TestCaseMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(TestCase record);
+    int insert(TestCaseDO record);
 
-    int insertSelective(TestCase record);
+    int insertSelective(TestCaseDO record);
 
-    TestCase selectByPrimaryKey(Long id);
+    TestCaseDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(TestCase record);
+    int updateByPrimaryKeySelective(TestCaseDO record);
 
-    int updateByPrimaryKey(TestCase record);
+    int updateByPrimaryKey(TestCaseDO record);
 
 }

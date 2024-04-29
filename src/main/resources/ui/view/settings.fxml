@@ -38,7 +38,7 @@
          <children>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="%settings.image.operate.url" HBox.hgrow="ALWAYS">
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="%settingDO.image.operate.url" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -61,7 +61,7 @@
          <children>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="%settings.text.operate.url" HBox.hgrow="ALWAYS">
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="%settingDO.text.operate.url" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="15.0" />
                      </font>

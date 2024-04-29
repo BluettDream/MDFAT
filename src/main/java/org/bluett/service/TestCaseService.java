@@ -8,15 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.entity.Page;
-import org.bluett.entity.TestImage;
-import org.bluett.entity.TestText;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestImageVO;
 import org.bluett.entity.vo.TestTextVO;
 import org.bluett.helper.MybatisHelper;
-import org.bluett.mapper.TestCaseMapper;
-import org.bluett.mapper.TestImageMapper;
-import org.bluett.mapper.TestTextMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -30,10 +25,10 @@ public class TestCaseService {
         try(SqlSession session = MybatisHelper.getSqlSession()){
             // 插入测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            TestCase testCase = TestCase.convertToTestCase(testCaseVO);
-            Integer cnt = caseMapper.insert(testCase);
+            TestCaseDO testCaseDO = TestCaseDO.convertToTestCase(testCaseVO);
+            Integer cnt = caseMapper.insert(testCaseDO);
             if(cnt == 0) return false;
-            testCaseVO.setId(testCase.getId()); // 设置插入后的ID
+            testCaseVO.setId(testCaseDO.getId()); // 设置插入后的ID
             // 插入测试图片和测试文本(必须所有的都执行成功才算成功)
             if(StringUtils.isNotBlank(testCaseVO.getImageVO().getPath())){
                 cnt = insertOrUpdateTestImage(testCaseVO, session);
@@ -115,7 +110,7 @@ public class TestCaseService {
         try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 更新测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            Integer cnt = caseMapper.updateByPrimaryKeySelective(TestCase.convertToTestCase(testCaseVO));
+            Integer cnt = caseMapper.updateByPrimaryKeySelective(TestCaseDO.convertToTestCase(testCaseVO));
             if (cnt == 0) return false;
             // 更新或插入测试图片和测试文本(必须所有的都执行成功才算成功)
             if (StringUtils.isNotBlank(testCaseVO.getImageVO().getPath())) {
@@ -143,11 +138,11 @@ public class TestCaseService {
         TestTextVO testTextVO = testCaseVO.getTextVO();
         if(testTextVO.getCaseId() == 0) testTextVO.setCaseId(testCaseVO.getId());
         TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
-        TestText testText = TestText.convertToTestText(testTextVO);
-        if(testText.getId() == 0) {
-            cnt = textMapper.insert(testText);
-            testTextVO.setId(testText.getId());
-        } else cnt = textMapper.updateByPrimaryKeySelective(TestText.convertToTestText(testTextVO));
+        TestTextDO testTextDO = TestTextDO.convertToTestText(testTextVO);
+        if(testTextDO.getId() == 0) {
+            cnt = textMapper.insert(testTextDO);
+            testTextVO.setId(testTextDO.getId());
+        } else cnt = textMapper.updateByPrimaryKeySelective(TestTextDO.convertToTestText(testTextVO));
         return cnt;
     }
 
@@ -162,11 +157,11 @@ public class TestCaseService {
         TestImageVO testImageVO = testCaseVO.getImageVO();
         if(testImageVO.getCaseId() == 0) testImageVO.setCaseId(testCaseVO.getId());
         TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
-        TestImage testImage = TestImage.convertToTestImage(testImageVO);
-        if(testImage.getId() == 0) {
-            cnt = imageMapper.insert(testImage);
-            testImageVO.setId(testImage.getId());
-        } else cnt = imageMapper.updateByPrimaryKeySelective(testImage);
+        TestImageDO testImageDO = TestImageDO.convertToTestImage(testImageVO);
+        if(testImageDO.getId() == 0) {
+            cnt = imageMapper.insert(testImageDO);
+            testImageVO.setId(testImageDO.getId());
+        } else cnt = imageMapper.updateByPrimaryKeySelective(testImageDO);
         return cnt;
     }
 
@@ -174,9 +169,9 @@ public class TestCaseService {
         try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 查询测试用例列表
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().suiteId(suiteId).build(), page);
-            if(CollectionUtils.isEmpty(testCaseList)) return FXCollections.emptyObservableList();
-            List<TestCaseVO> results = testCaseList.stream().map(TestCaseVO::convertToTestCaseVO).toList();
+            List<TestCaseDO> testCaseDOList = caseMapper.selectListSelective(TestCaseDO.builder().suiteId(suiteId).build(), page);
+            if(CollectionUtils.isEmpty(testCaseDOList)) return FXCollections.emptyObservableList();
+            List<TestCaseVO> results = testCaseDOList.stream().map(TestCaseVO::convertToTestCaseVO).toList();
             List<Integer> caseIdList = results.stream().map(TestCaseVO::getId).toList();
             // 查询测试用例的图片并填充
             fillTestImageVO(session, caseIdList, results);
@@ -197,7 +192,7 @@ public class TestCaseService {
      */
     private static void fillTestTextVO(SqlSession session, List<Integer> caseIdList, List<TestCaseVO> results) {
         TestTextMapper textMapper = session.getMapper(TestTextMapper.class);
-        List<TestText> textList = textMapper.selectByCaseIds(caseIdList);
+        List<TestTextDO> textList = textMapper.selectByCaseIds(caseIdList);
         if(CollectionUtils.isEmpty(textList)) return ;
         Map<Integer, TestTextVO> textVOMap = textList.stream()
                 .map(TestTextVO::convertToTestTextVO)
@@ -213,7 +208,7 @@ public class TestCaseService {
      */
     private static void fillTestImageVO(SqlSession session, List<Integer> caseIdList, List<TestCaseVO> results) {
         TestImageMapper imageMapper = session.getMapper(TestImageMapper.class);
-        List<TestImage> imageList = imageMapper.selectTestImageByCaseIds(caseIdList);
+        List<TestImageDO> imageList = imageMapper.selectTestImageByCaseIds(caseIdList);
         if(CollectionUtils.isEmpty(imageList)) return ;
         Map<Integer, TestImageVO> imageVOMap = imageList.stream()
                 .map(TestImageVO::convertToTestImageVO)
@@ -225,10 +220,10 @@ public class TestCaseService {
         try (SqlSession session = MybatisHelper.getSqlSession()) {
             // 查询测试用例
             TestCaseMapper caseMapper = session.getMapper(TestCaseMapper.class);
-            List<TestCase> testCaseList = caseMapper.selectListSelective(TestCase.builder().id(caseId).build(), new Page(0, 1));
-            if (CollectionUtils.isEmpty(testCaseList)) return null;
-            TestCase testCase = testCaseList.stream().findFirst().orElse(null);
-            TestCaseVO testCaseVO = TestCaseVO.convertToTestCaseVO(testCase);
+            List<TestCaseDO> testCaseDOList = caseMapper.selectListSelective(TestCaseDO.builder().id(caseId).build(), new Page(0, 1));
+            if (CollectionUtils.isEmpty(testCaseDOList)) return null;
+            TestCaseDO testCaseDO = testCaseDOList.stream().findFirst().orElse(null);
+            TestCaseVO testCaseVO = TestCaseVO.convertToTestCaseVO(testCaseDO);
             // 查询测试用例的图片
             if(Objects.isNull(testCaseVO)) return null;
             List<TestCaseVO> caseVOList = List.of(testCaseVO);

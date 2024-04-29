@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.bluett.entity.TestText;
 
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ public class TestTextVO {
     private final IntegerProperty pointX = new SimpleIntegerProperty(0);
     private final IntegerProperty pointY = new SimpleIntegerProperty(0);
 
-    public static TestTextVO convertToTestTextVO(TestText text) {
+    public static TestTextVO convertToTestTextVO(TestTextDO text) {
         if(Objects.isNull(text)) return null;
         TestTextVO testTextVO = new TestTextVO();
         testTextVO.setId(text.getId());

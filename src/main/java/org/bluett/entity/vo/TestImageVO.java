@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.bluett.entity.TestImage;
 
 public class TestImageVO {
     private final IntegerProperty id = new SimpleIntegerProperty(0);
@@ -19,7 +18,7 @@ public class TestImageVO {
     private final IntegerProperty width = new SimpleIntegerProperty(0);
     private final IntegerProperty height = new SimpleIntegerProperty(0);
 
-    public static TestImageVO convertToTestImageVO(TestImage image) {
+    public static TestImageVO convertToTestImageVO(TestImageDO image) {
         TestImageVO imageVO = new TestImageVO();
         imageVO.setId(image.getId());
         imageVO.setCaseId(image.getCaseId());

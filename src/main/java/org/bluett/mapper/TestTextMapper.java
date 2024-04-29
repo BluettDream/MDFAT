@@ -1,25 +1,25 @@
 package org.bluett.mapper;
 
-import org.bluett.entity.TestText;
+import org.bluett.entity.TestTextDO;
 
 /**
 * @author BluettDream
 * @description 针对表【test_text】的数据库操作Mapper
-* @createDate 2024-04-01 22:26:14
-* @Entity org.bluett.entity.TestText
+* @createDate 2024-04-30 00:19:06
+* @Entity org.bluett.entity.TestTextDO
 */
 public interface TestTextMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(TestText record);
+    int insert(TestTextDO record);
 
-    int insertSelective(TestText record);
+    int insertSelective(TestTextDO record);
 
-    TestText selectByPrimaryKey(Long id);
+    TestTextDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(TestText record);
+    int updateByPrimaryKeySelective(TestTextDO record);
 
-    int updateByPrimaryKey(TestText record);
+    int updateByPrimaryKey(TestTextDO record);
 
 }

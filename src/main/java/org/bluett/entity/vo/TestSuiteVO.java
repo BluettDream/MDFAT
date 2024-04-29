@@ -9,7 +9,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.bluett.entity.TestSuite;
 import org.bluett.entity.enums.TestResultEnum;
 
 public class TestSuiteVO {
@@ -20,17 +19,6 @@ public class TestSuiteVO {
     private final ObjectProperty<TestResultEnum> status = new SimpleObjectProperty<>(TestResultEnum.READY);
     private final StringProperty description = new SimpleStringProperty("");
     private final SimpleListProperty<TestCaseVO> testCaseList = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    public static TestSuiteVO convertToTestSuiteVO(TestSuite testSuite) {
-        TestSuiteVO testSuiteVO = new TestSuiteVO();
-        testSuiteVO.setId(testSuite.getId());
-        testSuiteVO.setName(testSuite.getName());
-        testSuiteVO.setRunTime(testSuite.getRunTime());
-        testSuiteVO.setTimeout(testSuite.getTimeout());
-        testSuiteVO.setStatus(testSuite.getStatus());
-        testSuiteVO.setDescription(testSuite.getDescription());
-        return testSuiteVO;
-    }
 
     public int getRunTime() {
         return runTime.get();

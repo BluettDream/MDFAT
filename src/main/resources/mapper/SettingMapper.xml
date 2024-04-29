@@ -2,60 +2,58 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.bluett.mapper.SettingsMapper">
+<mapper namespace="org.bluett.mapper.SettingMapper">
 
-    <resultMap id="BaseResultMap" type="org.bluett.entity.Settings">
+    <resultMap id="BaseResultMap" type="org.bluett.entity.SettingDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="key" column="key" jdbcType="VARCHAR"/>
             <result property="value" column="value" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateDt" column="update_dt" jdbcType="TIMESTAMP"/>
+            <result property="createDt" column="create_dt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,key,value,
-        description,update_time,create_time
+        description,update_dt,create_dt
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from settings
+        from setting
         where  id = #{id,jdbcType=INTEGER} 
     </select>
     <select id="selectSettingsByKey" resultType="java.lang.String">
-        select value from settings where `key` = #{key}
+        select value from setting where `key` = #{key}
     </select>
-    <select id="selectAll" resultType="org.bluett.entity.Settings">
+    <select id="selectAll" resultType="org.bluett.entity.SettingDO">
         select
         <include refid="Base_Column_List" />
-        from settings
+        from setting
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from settings
+        delete from setting
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
     <delete id="deleteAll">
-        delete from settings
+        delete from setting
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.Settings" useGeneratedKeys="true">
-        insert into settings
-        ( key,value
-        ,description,update_time,create_time
-        )
-        values (#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR}
-        ,#{description,jdbcType=VARCHAR},datetime('now', '+8 hour'),datetime('now', '+8 hour')
-        )
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.SettingDO" useGeneratedKeys="true">
+        insert into setting
+        ( key, value
+        , description, update_dt, create_dt)
+        values ( #{key,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}
+               , #{description,jdbcType=VARCHAR}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.Settings" useGeneratedKeys="true">
-        insert into settings
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.SettingDO" useGeneratedKeys="true">
+        insert into setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="key != null">key,</if>
                 <if test="value != null">value,</if>
                 <if test="description != null">description,</if>
-            update_time,create_time,
+            update_dt,create_dt,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="key != null">#{key,jdbcType=VARCHAR},</if>
@@ -65,16 +63,16 @@
         </trim>
     </insert>
     <insert id="insertAll">
-        insert into settings
-        ( key,value,description,update_time,create_time)
+        insert into setting
+        ( key,value,description,update_dt,create_dt)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.key,jdbcType=VARCHAR},#{item.value,jdbcType=VARCHAR},#{item.description,jdbcType=VARCHAR},
             datetime('now', '+8 hour'),datetime('now', '+8 hour'))
         </foreach>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.Settings">
-        update settings
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.SettingDO">
+        update setting
         <set>
                 <if test="key != null">
                     key = #{key,jdbcType=VARCHAR},
@@ -85,17 +83,17 @@
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
                 </if>
-                    update_time = datetime('now', '+8 hour'),
+                    update_dt = datetime('now', '+8 hour'),
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.Settings">
-        update settings
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.SettingDO">
+        update setting
         set 
             key =  #{key,jdbcType=VARCHAR},
             value =  #{value,jdbcType=VARCHAR},
             description =  #{description,jdbcType=VARCHAR},
-            update_time =  datetime('now', '+8 hour')
+            update_dt =  datetime('now', '+8 hour')
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

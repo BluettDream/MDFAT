@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.bluett.mapper.TestSuiteExtendMapper">
+<mapper namespace="org.bluett.mapper.TestSuiteRelationMapper">
 
-    <resultMap id="BaseResultMap" type="org.bluett.entity.TestSuiteExtend">
+    <resultMap id="BaseResultMap" type="org.bluett.entity.TestSuiteRelationDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="suiteId" column="suite_id" jdbcType="INTEGER"/>
             <result property="caseId" column="case_id" jdbcType="INTEGER"/>
@@ -17,34 +17,36 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from test_suite_extend
+        from test_suite_relation
         where  id = #{id,jdbcType=INTEGER} 
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from test_suite_extend
+        delete from test_suite_relation
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteExtend" useGeneratedKeys="true">
-        insert into test_suite_extend
-        ( suite_id,case_id
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteRelationDO" useGeneratedKeys="true">
+        insert into test_suite_relation
+        ( id,suite_id,case_id
         )
-        values (#{suiteId,jdbcType=INTEGER},#{caseId,jdbcType=INTEGER}
+        values (#{id,jdbcType=INTEGER},#{suiteId,jdbcType=INTEGER},#{caseId,jdbcType=INTEGER}
         )
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteExtend" useGeneratedKeys="true">
-        insert into test_suite_extend
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteRelationDO" useGeneratedKeys="true">
+        insert into test_suite_relation
         <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
                 <if test="suiteId != null">suite_id,</if>
                 <if test="caseId != null">case_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
                 <if test="suiteId != null">#{suiteId,jdbcType=INTEGER},</if>
                 <if test="caseId != null">#{caseId,jdbcType=INTEGER},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestSuiteExtend">
-        update test_suite_extend
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestSuiteRelationDO">
+        update test_suite_relation
         <set>
                 <if test="suiteId != null">
                     suite_id = #{suiteId,jdbcType=INTEGER},
@@ -55,8 +57,8 @@
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestSuiteExtend">
-        update test_suite_extend
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestSuiteRelationDO">
+        update test_suite_relation
         set 
             suite_id =  #{suiteId,jdbcType=INTEGER},
             case_id =  #{caseId,jdbcType=INTEGER}

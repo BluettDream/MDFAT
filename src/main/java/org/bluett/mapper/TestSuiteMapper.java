@@ -1,25 +1,25 @@
 package org.bluett.mapper;
 
-import org.bluett.entity.TestSuite;
+import org.bluett.entity.TestSuiteDO;
 
 /**
 * @author BluettDream
 * @description 针对表【test_suite】的数据库操作Mapper
-* @createDate 2024-04-01 22:25:55
-* @Entity org.bluett.entity.TestSuite
+* @createDate 2024-04-30 00:18:20
+* @Entity org.bluett.entity.TestSuiteDO
 */
 public interface TestSuiteMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(TestSuite record);
+    int insert(TestSuiteDO record);
 
-    int insertSelective(TestSuite record);
+    int insertSelective(TestSuiteDO record);
 
-    TestSuite selectByPrimaryKey(Long id);
+    TestSuiteDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(TestSuite record);
+    int updateByPrimaryKeySelective(TestSuiteDO record);
 
-    int updateByPrimaryKey(TestSuite record);
+    int updateByPrimaryKey(TestSuiteDO record);
 
 }

@@ -4,12 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestImageMapper">
 
-    <resultMap id="BaseResultMap" type="org.bluett.entity.TestImage">
+    <resultMap id="BaseResultMap" type="org.bluett.entity.TestImageDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="link" column="link" jdbcType="VARCHAR"/>
             <result property="confidence" column="confidence" jdbcType="REAL"/>
-            <result property="pointX" column="point_x" jdbcType="INTEGER"/>
-            <result property="pointY" column="point_y" jdbcType="INTEGER"/>
+            <result property="point" column="point" jdbcType="VARCHAR"/>
             <result property="width" column="width" jdbcType="INTEGER"/>
             <result property="height" column="height" jdbcType="INTEGER"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -17,9 +16,9 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,path,confidence,
-        point_x,point_y,width,
-        height,update_time,create_time
+        id,link,confidence,
+        point,width,height,
+        update_time,create_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -33,52 +32,49 @@
         delete from test_image
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImageDO" useGeneratedKeys="true">
         insert into test_image
-        ( path,confidence
-        ,point_x,point_y,width
-        ,height,update_time,create_time
-        )
-        values (#{path,jdbcType=VARCHAR},#{confidence,jdbcType=REAL}
-        ,#{pointX,jdbcType=INTEGER},#{pointY,jdbcType=INTEGER},#{width,jdbcType=INTEGER}
-        ,#{height,jdbcType=INTEGER},datetime('now', '+8 hour'),datetime('now', '+8 hour')
-        )
+        ( id,link,confidence
+        ,point,width,height
+        ,update_time,create_time)
+        values (#{id,jdbcType=INTEGER},#{link,jdbcType=VARCHAR},#{confidence,jdbcType=REAL}
+        ,#{point,jdbcType=VARCHAR},#{width,jdbcType=INTEGER},#{height,jdbcType=INTEGER}
+        ,#{updateTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImage" useGeneratedKeys="true">
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestImageDO" useGeneratedKeys="true">
         insert into test_image
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="path != null">path,</if>
+                <if test="id != null">id,</if>
+                <if test="link != null">link,</if>
                 <if test="confidence != null">confidence,</if>
-                <if test="pointX != null">point_x,</if>
-                <if test="pointY != null">point_y,</if>
+                <if test="point != null">point,</if>
                 <if test="width != null">width,</if>
                 <if test="height != null">height,</if>
-                update_time,create_time
+                <if test="updateTime != null">update_time,</if>
+                <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="path != null">#{path,jdbcType=VARCHAR},</if>
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="link != null">#{link,jdbcType=VARCHAR},</if>
                 <if test="confidence != null">#{confidence,jdbcType=REAL},</if>
-                <if test="pointX != null">#{pointX,jdbcType=INTEGER},</if>
-                <if test="pointY != null">#{pointY,jdbcType=INTEGER},</if>
+                <if test="point != null">#{point,jdbcType=VARCHAR},</if>
                 <if test="width != null">#{width,jdbcType=INTEGER},</if>
                 <if test="height != null">#{height,jdbcType=INTEGER},</if>
-                datetime('now', '+8 hour'),datetime('now', '+8 hour')
+                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestImage">
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestImageDO">
         update test_image
         <set>
-                <if test="path != null">
-                    path = #{path,jdbcType=VARCHAR},
+                <if test="link != null">
+                    link = #{link,jdbcType=VARCHAR},
                 </if>
                 <if test="confidence != null">
                     confidence = #{confidence,jdbcType=REAL},
                 </if>
-                <if test="pointX != null">
-                    point_x = #{pointX,jdbcType=INTEGER},
-                </if>
-                <if test="pointY != null">
-                    point_y = #{pointY,jdbcType=INTEGER},
+                <if test="point != null">
+                    point = #{point,jdbcType=VARCHAR},
                 </if>
                 <if test="width != null">
                     width = #{width,jdbcType=INTEGER},
@@ -86,20 +82,25 @@
                 <if test="height != null">
                     height = #{height,jdbcType=INTEGER},
                 </if>
-                    update_time = datetime('now', '+8 hour'),
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestImage">
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestImageDO">
         update test_image
         set 
-            path =  #{path,jdbcType=VARCHAR},
+            link =  #{link,jdbcType=VARCHAR},
             confidence =  #{confidence,jdbcType=REAL},
-            point_x =  #{pointX,jdbcType=INTEGER},
-            point_y =  #{pointY,jdbcType=INTEGER},
+            point =  #{point,jdbcType=VARCHAR},
             width =  #{width,jdbcType=INTEGER},
             height =  #{height,jdbcType=INTEGER},
-            update_time =  datetime('now', '+8 hour')
+            update_time =  #{updateTime,jdbcType=TIMESTAMP},
+            create_time =  #{createTime,jdbcType=TIMESTAMP}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

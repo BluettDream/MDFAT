@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.bluett.entity.Settings;
+import org.bluett.entity.SettingDO;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.handler.GlobalForestLogHandler;
@@ -22,7 +22,7 @@ public class MainApplication extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        Map<SettingsEnum, Settings> settingsMap = settingsService.getSettingsMap();
+        Map<SettingsEnum, SettingDO> settingsMap = settingsService.getSettingsMap();
         Forest.config()
                 .setVariableValue("imageProcessURL", settingsMap.get(SettingsEnum.IMAGE_OPERATE_URL).getValue())
                 .setVariableValue("textProcessURL", settingsMap.get(SettingsEnum.TEXT_OPERATE_URL).getValue())
@@ -36,6 +36,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) {
         Parent root = UIHelper.createAndSaveNode(NodeEnum.MAIN);
         stage.setTitle(UIHelper.getI18nStr("title"));
+
         stage.setScene(new Scene(root));
         stage.show();
     }

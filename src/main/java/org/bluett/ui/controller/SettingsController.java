@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import lombok.extern.log4j.Log4j2;
-import org.bluett.entity.Settings;
+import org.bluett.entity.SettingDO;
 import org.bluett.entity.enums.MouseMoveTypeEnum;
 import org.bluett.entity.enums.SettingsEnum;
 import org.bluett.service.SettingsService;
@@ -23,7 +23,7 @@ public class  SettingsController {
     private TextField textOperateUrlTF;
 
     private final SettingsService settingsService = new SettingsService();
-    private final MapProperty<SettingsEnum, Settings> settingsMap = new SimpleMapProperty<>(FXCollections.observableHashMap());
+    private final MapProperty<SettingsEnum, SettingDO> settingsMap = new SimpleMapProperty<>(FXCollections.observableHashMap());
 
     @FXML
     public void initialize() {

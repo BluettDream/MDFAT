@@ -4,21 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.bluett.mapper.TestSuiteMapper">
 
-    <resultMap id="BaseResultMap" type="org.bluett.entity.TestSuite">
+    <resultMap id="BaseResultMap" type="org.bluett.entity.TestSuiteDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="runTime" column="run_time" jdbcType="INTEGER"/>
             <result property="timeout" column="timeout" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateDt" column="update_dt" jdbcType="TIMESTAMP"/>
+            <result property="createDt" column="create_dt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,name,run_time,
         timeout,status,description,
-        update_time,create_time
+        update_dt,create_dt
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -32,35 +32,39 @@
         delete from test_suite
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuite" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteDO" useGeneratedKeys="true">
         insert into test_suite
-        ( name,run_time
+        ( id,name,run_time
         ,timeout,status,description
-        ,update_time,create_time)
-        values (#{name,jdbcType=VARCHAR},#{runTime,jdbcType=INTEGER}
-        ,#{timeout,jdbcType=INTEGER},#{status,jdbcType=INTEGER},#{description,jdbcType=VARCHAR}
-        ,datetime('now', '+8 hour'),datetime('now', '+8 hour'))
+        ,update_dt,create_dt)
+        values (#{id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{runTime,jdbcType=INTEGER}
+        ,#{timeout,jdbcType=INTEGER},#{status,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR}
+        ,#{updateDt,jdbcType=TIMESTAMP},#{createDt,jdbcType=TIMESTAMP})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuite" useGeneratedKeys="true">
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteDO" useGeneratedKeys="true">
         insert into test_suite
         <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
                 <if test="name != null">name,</if>
                 <if test="runTime != null">run_time,</if>
                 <if test="timeout != null">timeout,</if>
                 <if test="status != null">status,</if>
                 <if test="description != null">description,</if>
-                update_time,create_time,
+                <if test="updateDt != null">update_dt,</if>
+                <if test="createDt != null">create_dt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
                 <if test="name != null">#{name,jdbcType=VARCHAR},</if>
                 <if test="runTime != null">#{runTime,jdbcType=INTEGER},</if>
                 <if test="timeout != null">#{timeout,jdbcType=INTEGER},</if>
-                <if test="status != null">#{status,jdbcType=INTEGER},</if>
+                <if test="status != null">#{status,jdbcType=VARCHAR},</if>
                 <if test="description != null">#{description,jdbcType=VARCHAR},</if>
-                datetime('now', '+8 hour'),datetime('now', '+8 hour'),
+                <if test="updateDt != null">#{updateDt,jdbcType=TIMESTAMP},</if>
+                <if test="createDt != null">#{createDt,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestSuite">
+    <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestSuiteDO">
         update test_suite
         <set>
                 <if test="name != null">
@@ -73,24 +77,30 @@
                     timeout = #{timeout,jdbcType=INTEGER},
                 </if>
                 <if test="status != null">
-                    status = #{status,jdbcType=INTEGER},
+                    status = #{status,jdbcType=VARCHAR},
                 </if>
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
                 </if>
-                    update_time = datetime('now', '+8 hour'),
+                <if test="updateDt != null">
+                    update_dt = #{updateDt,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createDt != null">
+                    create_dt = #{createDt,jdbcType=TIMESTAMP},
+                </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
-    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestSuite">
+    <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestSuiteDO">
         update test_suite
         set 
             name =  #{name,jdbcType=VARCHAR},
             run_time =  #{runTime,jdbcType=INTEGER},
             timeout =  #{timeout,jdbcType=INTEGER},
-            status =  #{status,jdbcType=INTEGER},
+            status =  #{status,jdbcType=VARCHAR},
             description =  #{description,jdbcType=VARCHAR},
-            update_time =  datetime('now', '+8 hour')
+            update_dt =  #{updateDt,jdbcType=TIMESTAMP},
+            create_dt =  #{createDt,jdbcType=TIMESTAMP}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>
