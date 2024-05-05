@@ -8,50 +8,29 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 
  * @TableName test_image
  */
 @Data
 public class TestImageDO implements Serializable {
     @Serial
-    private static final long serialVersionUID = -163087908939885047L;
-    /**
-     * 测试图片id
-     */
-    private Integer id;
+    private static final long serialVersionUID = -4936344382646533202L;
+    private Long id;
 
-    /**
-     * 测试图片链接
-     */
+    private Long caseId;
+
     private String link;
 
-    /**
-     * 测试图片置信度
-     */
     private BigDecimal confidence;
 
-    /**
-     * 测试图片坐标
-     */
-    private String point;
+    private Integer x;
 
-    /**
-     * 测试图片宽度
-     */
+    private Integer y;
+
     private Integer width;
 
-    /**
-     * 测试图片高度
-     */
     private Integer height;
 
-    /**
-     * 测试图片更新时间
-     */
-    private LocalDateTime updateTime;
+    private LocalDateTime updateDt;
 
-    /**
-     * 测试图片创建时间
-     */
-    private LocalDateTime createTime;
+    private LocalDateTime createDt;
 }

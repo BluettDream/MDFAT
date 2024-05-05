@@ -27,6 +27,12 @@
     </environments>
 
     <mappers>
-        <package name="org.bluett.mapper"/>
+        <mapper url="${mapperUrl}/SettingMapper.xml"/>
+        <mapper url="${mapperUrl}/InputOperationMapper.xml"/>
+        <mapper url="${mapperUrl}/OperationMapper.xml"/>
+        <mapper url="${mapperUrl}/TestSuiteMapper.xml"/>
+        <mapper url="${mapperUrl}/TestCaseMapper.xml"/>
+        <mapper url="${mapperUrl}/TestTextMapper.xml"/>
+        <mapper url="${mapperUrl}/TestImageMapper.xml"/>
     </mappers>
 </configuration>

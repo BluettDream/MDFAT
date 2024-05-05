@@ -1,59 +1,94 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.FloatProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
+@Builder
+@RequiredArgsConstructor
 public class TestImageVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(0);
-    private final IntegerProperty caseId = new SimpleIntegerProperty(0);
-    private final StringProperty path = new SimpleStringProperty("");
-    private final FloatProperty similarity = new SimpleFloatProperty(0.0f);
-    private final FloatProperty confidence = new SimpleFloatProperty(0.0f);
-    private final IntegerProperty pointX = new SimpleIntegerProperty(0);
-    private final IntegerProperty pointY = new SimpleIntegerProperty(0);
-    private final IntegerProperty width = new SimpleIntegerProperty(0);
-    private final IntegerProperty height = new SimpleIntegerProperty(0);
+    private final LongProperty id;
 
-    public static TestImageVO convertToTestImageVO(TestImageDO image) {
-        TestImageVO imageVO = new TestImageVO();
-        imageVO.setId(image.getId());
-        imageVO.setCaseId(image.getCaseId());
-        imageVO.setPath(image.getPath());
-        imageVO.setSimilarity(image.getConfidence());
-        imageVO.setConfidence(image.getConfidence());
-        imageVO.setPointX(image.getPointX());
-        imageVO.setPointY(image.getPointY());
-        imageVO.setWidth(image.getWidth());
-        imageVO.setHeight(image.getHeight());
-        return imageVO;
+    private final LongProperty caseId;
+
+    private final StringProperty link;
+
+    private final DoubleProperty confidence;
+
+    private final IntegerProperty x;
+
+    private final IntegerProperty y;
+
+    private final IntegerProperty width;
+
+    private final IntegerProperty height;
+
+    public static TestImageVO init(){
+        return TestImageVO.builder()
+                .id(new SimpleLongProperty(-1L))
+                .caseId(new SimpleLongProperty(-1L))
+                .link(new SimpleStringProperty(""))
+                .confidence(new SimpleDoubleProperty())
+                .x(new SimpleIntegerProperty())
+                .y(new SimpleIntegerProperty())
+                .width(new SimpleIntegerProperty())
+                .height(new SimpleIntegerProperty())
+                .build();
     }
 
-    public int getPointX() {
-        return pointX.get();
+    public long getId() {
+        return id.get();
     }
 
-    public IntegerProperty pointXProperty() {
-        return pointX;
+    public LongProperty idProperty() {
+        return id;
     }
 
-    public void setPointX(int pointX) {
-        this.pointX.set(pointX);
+    public long getCaseId() {
+        return caseId.get();
     }
 
-    public int getPointY() {
-        return pointY.get();
+    public LongProperty caseIdProperty() {
+        return caseId;
     }
 
-    public IntegerProperty pointYProperty() {
-        return pointY;
+    public String getLink() {
+        return link.get();
     }
 
-    public void setPointY(int pointY) {
-        this.pointY.set(pointY);
+    public StringProperty linkProperty() {
+        return link;
+    }
+
+    public double getConfidence() {
+        return confidence.get();
+    }
+
+    public DoubleProperty confidenceProperty() {
+        return confidence;
+    }
+
+    public int getX() {
+        return x.get();
+    }
+
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
     }
 
     public int getWidth() {
@@ -64,79 +99,11 @@ public class TestImageVO {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width.set(width);
-    }
-
     public int getHeight() {
         return height.get();
     }
 
     public IntegerProperty heightProperty() {
         return height;
-    }
-
-    public void setHeight(int height) {
-        this.height.set(height);
-    }
-
-    public int getId() {
-        return id.get();
-    }
-
-    public IntegerProperty idProperty() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public int getCaseId() {
-        return caseId.get();
-    }
-
-    public IntegerProperty caseIdProperty() {
-        return caseId;
-    }
-
-    public void setCaseId(int caseId) {
-        this.caseId.set(caseId);
-    }
-
-    public String getPath() {
-        return path.get();
-    }
-
-    public StringProperty pathProperty() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path.set(path);
-    }
-
-    public float getSimilarity() {
-        return similarity.get();
-    }
-
-    public FloatProperty similarityProperty() {
-        return similarity;
-    }
-
-    public void setSimilarity(float similarity) {
-        this.similarity.set(similarity);
-    }
-
-    public float getConfidence() {
-        return confidence.get();
-    }
-
-    public FloatProperty confidenceProperty() {
-        return confidence;
-    }
-
-    public void setConfidence(float confidence) {
-        this.confidence.set(confidence);
     }
 }

@@ -9,7 +9,6 @@
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="runTime" column="run_time" jdbcType="INTEGER"/>
             <result property="timeout" column="timeout" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="updateDt" column="update_dt" jdbcType="TIMESTAMP"/>
             <result property="createDt" column="create_dt" jdbcType="TIMESTAMP"/>
@@ -17,8 +16,8 @@
 
     <sql id="Base_Column_List">
         id,name,run_time,
-        timeout,status,description,
-        update_dt,create_dt
+        timeout,description,update_dt,
+        create_dt
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -26,6 +25,15 @@
         <include refid="Base_Column_List" />
         from test_suite
         where  id = #{id,jdbcType=INTEGER} 
+    </select>
+    <select id="selectPage" resultType="org.bluett.entity.TestSuiteDO">
+        select
+        <include refid="Base_Column_List" />
+        from test_suite
+        limit #{page.offset},#{page.size}
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from test_suite
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -35,11 +43,11 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteDO" useGeneratedKeys="true">
         insert into test_suite
         ( id,name,run_time
-        ,timeout,status,description
-        ,update_dt,create_dt)
+        ,timeout,description,update_dt
+        ,create_dt)
         values (#{id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{runTime,jdbcType=INTEGER}
-        ,#{timeout,jdbcType=INTEGER},#{status,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR}
-        ,#{updateDt,jdbcType=TIMESTAMP},#{createDt,jdbcType=TIMESTAMP})
+        ,#{timeout,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{updateDt,jdbcType=TIMESTAMP}
+        ,#{createDt,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestSuiteDO" useGeneratedKeys="true">
         insert into test_suite
@@ -48,7 +56,6 @@
                 <if test="name != null">name,</if>
                 <if test="runTime != null">run_time,</if>
                 <if test="timeout != null">timeout,</if>
-                <if test="status != null">status,</if>
                 <if test="description != null">description,</if>
                 <if test="updateDt != null">update_dt,</if>
                 <if test="createDt != null">create_dt,</if>
@@ -58,7 +65,6 @@
                 <if test="name != null">#{name,jdbcType=VARCHAR},</if>
                 <if test="runTime != null">#{runTime,jdbcType=INTEGER},</if>
                 <if test="timeout != null">#{timeout,jdbcType=INTEGER},</if>
-                <if test="status != null">#{status,jdbcType=VARCHAR},</if>
                 <if test="description != null">#{description,jdbcType=VARCHAR},</if>
                 <if test="updateDt != null">#{updateDt,jdbcType=TIMESTAMP},</if>
                 <if test="createDt != null">#{createDt,jdbcType=TIMESTAMP},</if>
@@ -75,9 +81,6 @@
                 </if>
                 <if test="timeout != null">
                     timeout = #{timeout,jdbcType=INTEGER},
-                </if>
-                <if test="status != null">
-                    status = #{status,jdbcType=VARCHAR},
                 </if>
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
@@ -97,7 +100,6 @@
             name =  #{name,jdbcType=VARCHAR},
             run_time =  #{runTime,jdbcType=INTEGER},
             timeout =  #{timeout,jdbcType=INTEGER},
-            status =  #{status,jdbcType=VARCHAR},
             description =  #{description,jdbcType=VARCHAR},
             update_dt =  #{updateDt,jdbcType=TIMESTAMP},
             create_dt =  #{createDt,jdbcType=TIMESTAMP}

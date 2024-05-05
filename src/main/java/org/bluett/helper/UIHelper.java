@@ -6,11 +6,18 @@ import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.MainApplication;
+import org.bluett.entity.dto.OperationDialogDTO;
 import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestCaseVO;
+import org.bluett.entity.vo.TestImageVO;
 import org.bluett.entity.vo.TestSuiteVO;
+import org.bluett.entity.vo.TestTextVO;
+import org.bluett.ui.controller.OperationDialogContentController;
 import org.bluett.ui.controller.TestCaseDialogContentController;
+import org.bluett.ui.controller.TestCaseListCellContentController;
+import org.bluett.ui.controller.TestImageDialogContentController;
 import org.bluett.ui.controller.TestSuiteDialogContentController;
+import org.bluett.ui.controller.TestTextDialogContentController;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -110,6 +117,18 @@ public class UIHelper {
             }
             case TEST_SUITE_DIALOG_CONTENT -> {
                 return new TestSuiteDialogContentController((TestSuiteVO) data);
+            }
+            case TEST_CASE_LIST_CELL_CONTENT -> {
+                return new TestCaseListCellContentController((TestCaseVO) data);
+            }
+            case TEST_IMAGE_DIALOG_CONTENT -> {
+                return new TestImageDialogContentController((TestImageVO) data);
+            }
+            case TEST_TEXT_DIALOG_CONTENT -> {
+                return new TestTextDialogContentController((TestTextVO) data);
+            }
+            case OPERATION_DIALOG_CONTENT -> {
+                return new OperationDialogContentController((OperationDialogDTO) data);
             }
             default -> {
                 try {

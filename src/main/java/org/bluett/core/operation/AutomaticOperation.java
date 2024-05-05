@@ -59,5 +59,7 @@ public interface AutomaticOperation {
      * @param point 移动位置
      * @throws InterruptedException 异常
      */
-    public void moveTo(Point point) throws InterruptedException;
+    void moveTo(Point point) throws InterruptedException;
+
+    void input(String text) throws Exception;
 }

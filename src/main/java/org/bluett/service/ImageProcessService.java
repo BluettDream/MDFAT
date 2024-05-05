@@ -12,16 +12,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
 public class ImageProcessService {
+
     public ImageProcessDTO getMatchLocation(String matchImagePath, BufferedImage templateImage, double threshold) {
         ImageProcessClient client = Forest.client(ImageProcessClient.class);
         Map<String, byte[]> byteMap = new HashMap<>();
         byteMap.put("matchImage.png", imageToByteArray(matchImagePath));
         byteMap.put("templateImage.png", bufferedImageToByteArray(templateImage));
-        return client.matchPoints(byteMap, threshold).getResult();
+        return client.matchPoints(List.of(matchImagePath)).getResult();
     }
 
     private byte[] imageToByteArray(String imagePath) {

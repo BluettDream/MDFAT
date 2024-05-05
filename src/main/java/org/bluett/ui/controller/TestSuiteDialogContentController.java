@@ -24,15 +24,6 @@ public class TestSuiteDialogContentController {
 
     @FXML
     void initialize() {
-        setLayout();
-        bindVO();
-    }
-
-    private void setLayout() {
-
-    }
-
-    private void bindVO() {
         nameTF.textProperty().bindBidirectional(testSuiteVO.nameProperty());
         descriptionTA.textProperty().bindBidirectional(testSuiteVO.descriptionProperty());
         runTimeTF.textProperty().bindBidirectional(testSuiteVO.runTimeProperty(), new NumberStringConverter());

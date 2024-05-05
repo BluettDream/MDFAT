@@ -1,81 +1,56 @@
 package org.bluett.entity.vo;
 
-import javafx.beans.property.FloatProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
-
+@Builder
+@RequiredArgsConstructor
 public class TestTextVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(0);
-    private final IntegerProperty caseId = new SimpleIntegerProperty(0);
-    private final StringProperty text = new SimpleStringProperty("");
-    private final FloatProperty similarity = new SimpleFloatProperty(0.0f);
-    private final FloatProperty confidence = new SimpleFloatProperty(0.0f);
-    private final IntegerProperty pointX = new SimpleIntegerProperty(0);
-    private final IntegerProperty pointY = new SimpleIntegerProperty(0);
+    private final LongProperty id;
 
-    public static TestTextVO convertToTestTextVO(TestTextDO text) {
-        if(Objects.isNull(text)) return null;
-        TestTextVO testTextVO = new TestTextVO();
-        testTextVO.setId(text.getId());
-        testTextVO.setCaseId(text.getCaseId());
-        testTextVO.setText(text.getText());
-        testTextVO.setConfidence(text.getConfidence());
-        testTextVO.setPointX(text.getPointX());
-        testTextVO.setPointY(text.getPointY());
-        return testTextVO;
+    private final LongProperty caseId;
+
+    private final StringProperty text;
+
+    private final DoubleProperty confidence;
+
+    private final IntegerProperty x;
+
+    private final IntegerProperty y;
+
+    public static TestTextVO init(){
+        return TestTextVO.builder()
+                .id(new SimpleLongProperty(-1L))
+                .caseId(new SimpleLongProperty(-1L))
+                .text(new SimpleStringProperty(""))
+                .confidence(new SimpleDoubleProperty())
+                .x(new SimpleIntegerProperty())
+                .y(new SimpleIntegerProperty())
+                .build();
     }
 
-    public int getPointX() {
-        return pointX.get();
-    }
-
-    public IntegerProperty pointXProperty() {
-        return pointX;
-    }
-
-    public void setPointX(int pointX) {
-        this.pointX.set(pointX);
-    }
-
-    public int getPointY() {
-        return pointY.get();
-    }
-
-    public IntegerProperty pointYProperty() {
-        return pointY;
-    }
-
-    public void setPointY(int pointY) {
-        this.pointY.set(pointY);
-    }
-
-    public int getId() {
+    public long getId() {
         return id.get();
     }
 
-    public IntegerProperty idProperty() {
+    public LongProperty idProperty() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public int getCaseId() {
+    public long getCaseId() {
         return caseId.get();
     }
 
-    public IntegerProperty caseIdProperty() {
+    public LongProperty caseIdProperty() {
         return caseId;
-    }
-
-    public void setCaseId(int caseId) {
-        this.caseId.set(caseId);
     }
 
     public String getText() {
@@ -86,31 +61,27 @@ public class TestTextVO {
         return text;
     }
 
-    public void setText(String text) {
-        this.text.set(text);
-    }
-
-    public float getSimilarity() {
-        return similarity.get();
-    }
-
-    public FloatProperty similarityProperty() {
-        return similarity;
-    }
-
-    public void setSimilarity(float similarity) {
-        this.similarity.set(similarity);
-    }
-
-    public float getConfidence() {
+    public double getConfidence() {
         return confidence.get();
     }
 
-    public FloatProperty confidenceProperty() {
+    public DoubleProperty confidenceProperty() {
         return confidence;
     }
 
-    public void setConfidence(float confidence) {
-        this.confidence.set(confidence);
+    public int getX() {
+        return x.get();
+    }
+
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
     }
 }

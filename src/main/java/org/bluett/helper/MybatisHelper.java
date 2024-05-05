@@ -6,16 +6,16 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.bluett.MainApplication;
+import org.bluett.entity.BaseConstants;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 @Log4j2
 public class MybatisHelper {
-    public static final Path DATABASE_PATH = Paths.get(System.getProperty("user.dir")).resolve("db").resolve("mdfat.db");
+    public static final Path DATABASE_PATH = BaseConstants.BASE_PATH.resolve("db").resolve("mdfat.db");
     private static final URL MAPPER_URL = MainApplication.class.getResource("/mapper");
     private static final String DB_URL = "jdbc:sqlite:" + DATABASE_PATH;
     private static final String MYBATIS_CONFIG = "mybatis-config.xml";

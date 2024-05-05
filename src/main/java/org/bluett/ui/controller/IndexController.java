@@ -7,9 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.builder.UIBuilder;
+import org.bluett.config.ThreadPoolConfig;
 import org.bluett.core.executor.TestSuiteExecutor;
 import org.bluett.entity.Page;
 import org.bluett.entity.vo.TestCaseVO;
@@ -18,7 +18,6 @@ import org.bluett.helper.UIHelper;
 import org.bluett.service.ImageProcessService;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
-import org.bluett.thread.ThreadPools;
 import org.bluett.ui.TestCaseDialog;
 import org.bluett.ui.TestCaseListCell;
 import org.bluett.ui.TestSuiteDialog;
@@ -52,33 +51,13 @@ public class IndexController {
 
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
-    private final ThreadPoolExecutor suiteThreadPool = ThreadPools.TEST_SUITE_THREAD_POOL;
+    private final ThreadPoolExecutor suiteThreadPool = ThreadPoolConfig.TEST_SUITE_THREAD_POOL;
     private final ImageProcessService imageProcessService = new ImageProcessService();
+    private TestSuiteVO currentSuiteVO;
+    private TestCaseVO currentCaseVO;
 
     @FXML
     void initialize() {
-        setLayout();
-        bindVO();
-    }
-
-    private void bindVO() {
-        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectTestSuiteVOList(null, new Page(0, 200));
-        testSuiteVOLV.getItems().setAll(suiteVOObservableList);
-        testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.isNull(newValue)) {
-                testCaseVOLV.getItems().clear();
-                return;
-            }
-            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId(), new Page(0, 200));
-            testCaseVOLV.getItems().setAll(caseVOObservableList);
-            testCaseVOLV.requestFocus();
-            testCaseVOLV.getSelectionModel().selectFirst();
-        });
-        testCaseVOLV.requestFocus();
-        testCaseVOLV.getSelectionModel().selectFirst();
-    }
-
-    private void setLayout() {
         testSuiteVOLV.setCellFactory(param -> new TestSuiteListCell());
         testCaseVOLV.setCellFactory(param -> new TestCaseListCell());
         testSuiteVOLV.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -86,17 +65,28 @@ public class IndexController {
         testCaseVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (Objects.isNull(newValue)) {
                 UIHelper.setDisable(true, updateCaseBtn, deleteCaseBtn);
+                currentCaseVO = null;
                 return;
             }
+            currentCaseVO = newValue;
             UIHelper.setDisable(false, updateCaseBtn, deleteCaseBtn);
         });
+        ObservableList<TestSuiteVO> suiteVOObservableList = suiteService.selectPage(new Page<>(0, 200));
         testSuiteVOLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (Objects.isNull(newValue)) {
+                testCaseVOLV.getItems().clear();
+                currentSuiteVO = null;
                 UIHelper.setDisable(true, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
                 return;
             }
+            ObservableList<TestCaseVO> caseVOObservableList = caseService.selectBySuiteId(newValue.getId());
+            testCaseVOLV.getItems().setAll(caseVOObservableList);
+            testCaseVOLV.requestFocus();
+            testCaseVOLV.getSelectionModel().selectFirst();
+            currentSuiteVO = newValue;
             UIHelper.setDisable(false, addCaseBtn, updateSuiteBtn, deleteSuiteBtn);
         });
+        testSuiteVOLV.getItems().setAll(suiteVOObservableList);
     }
 
     @FXML
@@ -108,7 +98,7 @@ public class IndexController {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
         UIHelper.minimizeMainWindow();
         CompletableFuture.supplyAsync(new TestSuiteExecutor(testCaseVOLV.getItems()), suiteThreadPool)
-                .orTimeout(testSuiteVOLV.getSelectionModel().getSelectedItem().getTimeout(), TimeUnit.SECONDS)
+                .orTimeout(currentSuiteVO.getTimeout(), TimeUnit.SECONDS)
                 .exceptionallyAsync(throwable -> {
                     log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
                     UIBuilder.showErrorAlert("测试集执行失败", 0.8);
@@ -129,7 +119,7 @@ public class IndexController {
     @FXML
     void addCaseBtnClick() {
         new TestCaseDialog("new").showAndWait().ifPresent(testCaseVO -> {
-            testCaseVO.setSuiteId(testSuiteVOLV.getSelectionModel().getSelectedItem().getId());
+            testCaseVO.suiteIdProperty().set(currentSuiteVO.getId());
             if (!caseService.save(testCaseVO)) {
                 log.error("保存测试用例失败:{}", testCaseVO);
                 UIBuilder.showErrorAlert("保存测试用例失败", 0.8);
@@ -155,33 +145,35 @@ public class IndexController {
 
     @FXML
     void deleteCaseBtnClick() {
-        ObservableList<TestCaseVO> selectedItems = testCaseVOLV.getSelectionModel().getSelectedItems();
-        if (CollectionUtils.isEmpty(selectedItems)) return;
-        if (!caseService.delete(selectedItems)) {
-            log.error("删除测试用例失败:{}", selectedItems);
+        if(Objects.isNull(currentCaseVO)) {
+            return;
+        }
+        if (!caseService.delete(currentCaseVO.getId())) {
+            log.error("删除测试用例失败:{}", currentCaseVO);
             UIBuilder.showErrorAlert("删除测试用例失败", 0.8);
             return;
         }
-        testCaseVOLV.getItems().removeAll(selectedItems);
+        testCaseVOLV.getItems().removeAll(currentCaseVO);
         UIBuilder.showInfoAlert("删除测试用例成功", 0.8);
     }
 
     @FXML
     void deleteSuiteBtnClick() {
-        ObservableList<TestSuiteVO> selectedItems = testSuiteVOLV.getSelectionModel().getSelectedItems();
-        if (CollectionUtils.isEmpty(selectedItems)) return;
-        if (!suiteService.deleteBatchByIds(selectedItems.stream().map(TestSuiteVO::getId).toList())) {
-            log.error("删除测试集失败:{}", selectedItems);
+        if (Objects.isNull(currentSuiteVO)) {
+            return;
+        }
+        if (!suiteService.delete(currentSuiteVO.getId())) {
+            log.error("删除测试集失败:{}", currentSuiteVO);
             UIBuilder.showErrorAlert("删除测试集失败", 0.8);
             return;
         }
-        testSuiteVOLV.getItems().removeAll(selectedItems);
+        testSuiteVOLV.getItems().removeAll(currentSuiteVO);
         UIBuilder.showInfoAlert("删除测试集成功", 0.8);
     }
 
     @FXML
     void updateCaseBtnClick() {
-        new TestCaseDialog("update", testCaseVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testCaseVO -> {
+        new TestCaseDialog("update", currentCaseVO).showAndWait().ifPresent(testCaseVO -> {
             if (!caseService.update(testCaseVO)) {
                 log.error("更新测试用例失败:{}", testCaseVO);
                 UIBuilder.showErrorAlert("更新测试用例失败", 0.8);
@@ -197,7 +189,7 @@ public class IndexController {
 
     @FXML
     void updateSuiteBtnClick() {
-        new TestSuiteDialog("update", testSuiteVOLV.getSelectionModel().getSelectedItem()).showAndWait().ifPresent(testSuiteVO -> {
+        new TestSuiteDialog("update", currentSuiteVO).showAndWait().ifPresent(testSuiteVO -> {
             if (!suiteService.update(testSuiteVO)) {
                 log.error("更新测试集失败:{}", testSuiteVO);
                 UIBuilder.showErrorAlert("更新测试集失败", 0.8);

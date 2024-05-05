@@ -8,6 +8,8 @@ import org.bluett.entity.enums.NodeEnum;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
 
+import java.util.Objects;
+
 @Log4j2
 public class TestSuiteDialog extends Dialog<TestSuiteVO> {
     private final TestSuiteVO testSuiteVO;
@@ -17,7 +19,7 @@ public class TestSuiteDialog extends Dialog<TestSuiteVO> {
     }
 
     public TestSuiteDialog(String operateType, TestSuiteVO testSuiteVO) {
-        this.testSuiteVO = testSuiteVO == null ? new TestSuiteVO() : testSuiteVO;
+        this.testSuiteVO = Objects.isNull(testSuiteVO) ? TestSuiteVO.init() : testSuiteVO;
         setTitle(UIHelper.getI18nStr("test.suite." + operateType));
         setLayout();
         setData();

@@ -8,27 +8,27 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.bluett.entity.SettingDO;
 import org.bluett.entity.enums.NodeEnum;
-import org.bluett.entity.enums.SettingsEnum;
+import org.bluett.entity.enums.SettingKeyEnum;
 import org.bluett.handler.GlobalForestLogHandler;
 import org.bluett.helper.UIHelper;
-import org.bluett.service.SettingsService;
+import org.bluett.service.SettingService;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class MainApplication extends Application {
-    private final SettingsService settingsService = new SettingsService();
+    private final SettingService settingService = new SettingService();
 
     @Override
     public void init() throws Exception {
         super.init();
-        Map<SettingsEnum, SettingDO> settingsMap = settingsService.getSettingsMap();
+        Map<SettingKeyEnum, SettingDO> settingsMap = settingService.getSettingMap();
         Forest.config()
-                .setVariableValue("imageProcessURL", settingsMap.get(SettingsEnum.IMAGE_OPERATE_URL).getValue())
-                .setVariableValue("textProcessURL", settingsMap.get(SettingsEnum.TEXT_OPERATE_URL).getValue())
+                .setVariableValue("imageProcessURL", settingsMap.get(SettingKeyEnum.IMAGE_OPERATE_URL).getValue())
+                .setVariableValue("textProcessURL", settingsMap.get(SettingKeyEnum.TEXT_OPERATE_URL).getValue())
                 .setConnectTimeout(10, TimeUnit.SECONDS)
                 .setLogHandler(new GlobalForestLogHandler())
-                .setLogResponseContent(true)
+                .setLogResponseContent(false)
                 .setJsonConverter(new ForestFastjson2Converter());
     }
 
@@ -36,7 +36,6 @@ public class MainApplication extends Application {
     public void start(Stage stage) {
         Parent root = UIHelper.createAndSaveNode(NodeEnum.MAIN);
         stage.setTitle(UIHelper.getI18nStr("title"));
-
         stage.setScene(new Scene(root));
         stage.show();
     }

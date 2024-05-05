@@ -2,85 +2,89 @@
 drop table if exists test_suite;
 create table test_suite
 (
-    id          integer                                          not null
+    id          integer                                       not null
         constraint test_suite_pk
             primary key autoincrement,
-    name        varchar(64)                                      not null,
-    run_time    integer     default 0                            not null,
-    timeout     integer     default 0                            not null,
-    status      varchar(16) default 'READY'                      not null,
+    name        varchar(64)                                   not null,
+    run_time    integer  default -1                           not null,
+    timeout     integer  default -1                           not null,
     description text,
-    update_dt   DATETIME    default (datetime('now', '+8 hour')) not null,
-    create_dt   DATETIME    default (datetime('now', '+8 hour')) not null
+    update_dt   DATETIME default (datetime('now', '+8 hour')) not null,
+    create_dt   DATETIME default (datetime('now', '+8 hour')) not null
 );
-
--- test_suite_extend
-drop table if exists test_suite_relation;
-create table test_suite_relation
-(
-    id       integer           not null
-        constraint test_suite_relation_pk
-            primary key autoincrement,
-    suite_id integer default 0 not null,
-    case_id  integer default 0 not null
-);
-
-create index `idx_suite_case`
-    on test_suite_relation (suite_id, case_id);
 
 -- test_case
 drop table if exists test_case;
 create table test_case
 (
-    id           integer                                          not null
+    id          integer                                          not null
         constraint test_case_pk
             primary key autoincrement,
-    pre_case_id  integer     default -1,
-    post_case_id integer     default -1,
-    name         varchar(64) default ''                           not null,
-    description  TEXT,
-    priority     integer     default 0                            not null,
-    operation    integer     default 0                            not null,
-    timeout      integer     default 0                            not null,
-    run_time     integer     default 0                            not null,
-    status       varchar(16) default 'READY'                      not null,
-    update_dt    DATETIME    default (datetime('now', '+8 hour')) not null,
-    create_dt    DATETIME    default (datetime('now', '+8 hour')) not null
+    suite_id    integer     default -1                           not null,
+    next_id     integer     default -1                           not null,
+    name        varchar(64) default ''                           not null,
+    description TEXT,
+    priority    integer     default -1                           not null,
+    timeout     integer     default -1                           not null,
+    run_time    integer     default -1                           not null,
+    status      varchar(16) default 'NORMAL'                     not null,
+    update_dt   DATETIME    default (datetime('now', '+8 hour')) not null,
+    create_dt   DATETIME    default (datetime('now', '+8 hour')) not null
 );
 
--- test_case_relation
-drop table if exists test_case_relation;
-create table test_case_relation
+create index `idx_suite_next`
+    on test_case (suite_id, next_id);
+
+-- operation
+drop table if exists operation;
+create table operation
 (
-    id       integer           not null
-        constraint test_case_relation_pk
+    id        integer                                       not null
+        constraint operation_pk
             primary key autoincrement,
-    case_id  integer default 0 not null,
-    image_id integer default 0 not null,
-    text_id  integer default 0 not null
+    case_id   integer                                       not null,
+    operate   varchar(16)                                   not null,
+    update_dt DATETIME default (datetime('now', '+8 hour')) not null,
+    create_dt DATETIME default (datetime('now', '+8 hour')) not null
 );
 
-create index `idx_case_image`
-    on test_case_relation (case_id, image_id);
+create index `idx_operation_case`
+    on operation (case_id);
 
-create index `idx_case_text`
-    on test_case_relation (case_id, text_id);
+-- input_operation
+drop table if exists input_operation;
+create table input_operation
+(
+    id           integer      not null
+        constraint input_operation_pk
+            primary key autoincrement,
+    operation_id integer      not null,
+    value        varchar(128) not null
+);
+
+create unique index `uniq_operation`
+    on input_operation (operation_id);
 
 -- test_image
 drop table if exists test_image;
 create table test_image
 (
-    id         integer                                             not null
+    id         integer                                            not null
         constraint test_image_pk
             primary key autoincrement,
-    link       varchar(128)                                        not null,
-    confidence decimal(10, 2) default 0.0                          not null,
-    point      varchar(32)    default '[]'                         not null,
-    width      integer                                             not null,
-    height     integer                                             not null,
-    update_dt  DATETIME       default (datetime('now', '+8 hour')) not null,
-    create_dt  DATETIME       default (datetime('now', '+8 hour')) not null
+    case_id    integer       default -1                           not null,
+    link       varchar(128)                                       not null,
+    confidence decimal(5, 2) default 0.0                          not null,
+    x          integer       default 0                            not null,
+    y          integer       default 0                            not null,
+    width      integer                                            not null,
+    height     integer                                            not null,
+    update_dt  DATETIME      default (datetime('now', '+8 hour')) not null,
+    create_dt  DATETIME      default (datetime('now', '+8 hour')) not null
 );
+
+create index `idx_image_case`
+    on test_image (case_id);
 
 -- test_text
 drop table if exists test_text;
@@ -89,12 +93,17 @@ create table test_text
     id         integer                                             not null
         constraint test_text_pk
             primary key autoincrement,
+    case_id    integer        default -1                           not null,
     text       TEXT                                                not null,
     confidence decimal(10, 2) default 0.0                          not null,
-    point      varchar(32)    default '[]'                         not null,
+    x          integer        default 0                            not null,
+    y          integer        default 0                            not null,
     update_dt  DATETIME       default (datetime('now', '+8 hour')) not null,
     create_dt  DATETIME       default (datetime('now', '+8 hour')) not null
 );
+
+create index `idx_text_case`
+    on test_text (case_id);
 
 -- setting
 drop table if exists setting;
@@ -110,7 +119,7 @@ create table setting
     create_dt   DATETIME default (datetime('now', '+8 hour')) not null
 );
 
-create index `idx_setting`
+create unique index `uniq_setting`
     on setting (key);
 
 DROP TRIGGER IF EXISTS update_test_suite_dt;
@@ -129,6 +138,24 @@ CREATE TRIGGER insert_test_suite_dt
     FOR EACH ROW
 BEGIN
     UPDATE test_suite SET create_dt = datetime('now', '+8 hour') WHERE id = NEW.id;
+END;
+
+DROP TRIGGER IF EXISTS update_operation_dt;
+CREATE TRIGGER update_operation_dt
+    AFTER UPDATE
+    ON operation
+    FOR EACH ROW
+BEGIN
+    UPDATE operation SET update_dt = datetime('now', '+8 hour') WHERE id = NEW.id;
+END;
+
+DROP TRIGGER IF EXISTS insert_operation_dt;
+CREATE TRIGGER insert_operation_dt
+    AFTER INSERT
+    ON operation
+    FOR EACH ROW
+BEGIN
+    UPDATE operation SET create_dt = datetime('now', '+8 hour') WHERE id = NEW.id;
 END;
 
 DROP TRIGGER IF EXISTS update_test_case_dt;

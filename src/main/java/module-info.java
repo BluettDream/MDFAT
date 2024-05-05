@@ -14,11 +14,4 @@ open module org.bluett {
     requires org.apache.commons.codec;
     requires forest.core;
     requires com.alibaba.fastjson2;
-
-    exports org.bluett;
-    exports org.bluett.ui.controller;
-    exports org.bluett.entity;
-    exports org.bluett.entity.vo;
-    exports org.bluett.entity.enums;
-    exports org.bluett.helper;
 }

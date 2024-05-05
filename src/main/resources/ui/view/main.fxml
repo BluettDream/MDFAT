@@ -24,7 +24,7 @@
                <content>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                      <children>
-                        <fx:include source="settingDO.fxml" />
+                        <fx:include source="setting.fxml" />
                      </children></AnchorPane>
                </content>
           </Tab>

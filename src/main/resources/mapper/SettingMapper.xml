@@ -24,52 +24,47 @@
         from setting
         where  id = #{id,jdbcType=INTEGER} 
     </select>
-    <select id="selectSettingsByKey" resultType="java.lang.String">
-        select value from setting where `key` = #{key}
-    </select>
-    <select id="selectAll" resultType="org.bluett.entity.SettingDO">
+    <select id="selectPage" resultType="org.bluett.entity.SettingDO">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from setting
+        limit #{page.offset},#{page.size}
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from setting
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from setting
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
-    <delete id="deleteAll">
-        delete from setting
-    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.SettingDO" useGeneratedKeys="true">
         insert into setting
-        ( key, value
-        , description, update_dt, create_dt)
-        values ( #{key,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}
-               , #{description,jdbcType=VARCHAR}, datetime('now', '+8 hour'), datetime('now', '+8 hour'))
+        ( id,key,value
+        ,description,update_dt,create_dt
+        )
+        values (#{id,jdbcType=INTEGER},#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR}
+        ,#{description,jdbcType=VARCHAR},#{updateDt,jdbcType=TIMESTAMP},#{createDt,jdbcType=TIMESTAMP}
+        )
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.SettingDO" useGeneratedKeys="true">
         insert into setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
                 <if test="key != null">key,</if>
                 <if test="value != null">value,</if>
                 <if test="description != null">description,</if>
-            update_dt,create_dt,
+                <if test="updateDt != null">update_dt,</if>
+                <if test="createDt != null">create_dt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=INTEGER},</if>
                 <if test="key != null">#{key,jdbcType=VARCHAR},</if>
                 <if test="value != null">#{value,jdbcType=VARCHAR},</if>
                 <if test="description != null">#{description,jdbcType=VARCHAR},</if>
-            datetime('now', '+8 hour'),datetime('now', '+8 hour'),
+                <if test="updateDt != null">#{updateDt,jdbcType=TIMESTAMP},</if>
+                <if test="createDt != null">#{createDt,jdbcType=TIMESTAMP},</if>
         </trim>
-    </insert>
-    <insert id="insertAll">
-        insert into setting
-        ( key,value,description,update_dt,create_dt)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.key,jdbcType=VARCHAR},#{item.value,jdbcType=VARCHAR},#{item.description,jdbcType=VARCHAR},
-            datetime('now', '+8 hour'),datetime('now', '+8 hour'))
-        </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.SettingDO">
         update setting
@@ -83,7 +78,12 @@
                 <if test="description != null">
                     description = #{description,jdbcType=VARCHAR},
                 </if>
-                    update_dt = datetime('now', '+8 hour'),
+                <if test="updateDt != null">
+                    update_dt = #{updateDt,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createDt != null">
+                    create_dt = #{createDt,jdbcType=TIMESTAMP},
+                </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -93,7 +93,8 @@
             key =  #{key,jdbcType=VARCHAR},
             value =  #{value,jdbcType=VARCHAR},
             description =  #{description,jdbcType=VARCHAR},
-            update_dt =  datetime('now', '+8 hour')
+            update_dt =  #{updateDt,jdbcType=TIMESTAMP},
+            create_dt =  #{createDt,jdbcType=TIMESTAMP}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

@@ -46,4 +46,12 @@ public class PCAutoMaticOperationImpl extends PCAutomaticOperation {
     public BufferedImage screenCapture(Rectangle rectangle) {
         return ROBOT.createScreenCapture(rectangle);
     }
+
+    @Override
+    public void input(String text) throws Exception {
+        for (char c : text.toCharArray()) {
+            ROBOT.keyPress(c);
+            ROBOT.keyRelease(c);
+        }
+    }
 }

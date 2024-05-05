@@ -1,85 +1,66 @@
 package org.bluett.entity.vo;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.bluett.entity.enums.OperationEnum;
-import org.bluett.entity.enums.TestResultEnum;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import org.bluett.entity.enums.TestCaseStatusEnum;
 
+@Builder
+@RequiredArgsConstructor
 public class TestCaseVO {
-    private final IntegerProperty id = new SimpleIntegerProperty(0);
-    private final IntegerProperty suiteId = new SimpleIntegerProperty(0);
-    private final StringProperty name = new SimpleStringProperty("");
-    private final IntegerProperty priority = new SimpleIntegerProperty(0);
-    private final ObjectProperty<OperationEnum> operation = new SimpleObjectProperty<>(OperationEnum.NONE);
-    private final IntegerProperty runTime = new SimpleIntegerProperty(0);
-    private final IntegerProperty timeout = new SimpleIntegerProperty(0);
-    private final ObjectProperty<TestResultEnum> status = new SimpleObjectProperty<>(TestResultEnum.READY);
-    private final StringProperty description = new SimpleStringProperty("");
-    private final ObjectProperty<TestImageVO> imageVO = new SimpleObjectProperty<>(new TestImageVO());
-    private final ObjectProperty<TestTextVO> textVO = new SimpleObjectProperty<>(new TestTextVO());
+    private final LongProperty id;
 
-    public OperationEnum getOperation() {
-        return operation.get();
+    private final LongProperty suiteId;
+
+    private final LongProperty nextId;
+
+    private final StringProperty name;
+
+    private final StringProperty description;
+
+    private final IntegerProperty priority;
+
+    private final IntegerProperty timeout;
+
+    private final IntegerProperty runTime;
+
+    private final ObjectProperty<TestCaseStatusEnum> status;
+
+    public static TestCaseVO init(){
+        return TestCaseVO.builder()
+                .id(new SimpleLongProperty(-1L))
+                .name(new SimpleStringProperty(""))
+                .nextId(new SimpleLongProperty(-1L))
+                .description(new SimpleStringProperty(""))
+                .status(new SimpleObjectProperty<>(TestCaseStatusEnum.NORMAL))
+                .runTime(new SimpleIntegerProperty())
+                .priority(new SimpleIntegerProperty())
+                .suiteId(new SimpleLongProperty(-1L))
+                .timeout(new SimpleIntegerProperty())
+                .build();
     }
 
-    public ObjectProperty<OperationEnum> operationProperty() {
-        return operation;
-    }
-
-    public void setOperation(OperationEnum operation) {
-        this.operation.set(operation);
-    }
-
-    public int getRunTime() {
-        return runTime.get();
-    }
-
-    public IntegerProperty runTimeProperty() {
-        return runTime;
-    }
-
-    public void setRunTime(int runTime) {
-        this.runTime.set(runTime);
-    }
-
-    public int getTimeout() {
-        return timeout.get();
-    }
-
-    public IntegerProperty timeoutProperty() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout.set(timeout);
-    }
-
-    public int getId() {
+    public long getId() {
         return id.get();
     }
 
-    public IntegerProperty idProperty() {
+    public LongProperty idProperty() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public int getSuiteId() {
+    public long getSuiteId() {
         return suiteId.get();
     }
 
-    public IntegerProperty suiteIdProperty() {
+    public LongProperty suiteIdProperty() {
         return suiteId;
-    }
-
-    public void setSuiteId(int suiteId) {
-        this.suiteId.set(suiteId);
     }
 
     public String getName() {
@@ -90,20 +71,12 @@ public class TestCaseVO {
         return name;
     }
 
-    public void setName(String name) {
-        this.name.set(name);
-    }
-
     public String getDescription() {
         return description.get();
     }
 
     public StringProperty descriptionProperty() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description.set(description);
     }
 
     public int getPriority() {
@@ -114,43 +87,35 @@ public class TestCaseVO {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority.set(priority);
+    public int getTimeout() {
+        return timeout.get();
     }
 
-    public TestResultEnum getStatus() {
+    public IntegerProperty timeoutProperty() {
+        return timeout;
+    }
+
+    public int getRunTime() {
+        return runTime.get();
+    }
+
+    public IntegerProperty runTimeProperty() {
+        return runTime;
+    }
+
+    public long getNextId() {
+        return nextId.get();
+    }
+
+    public LongProperty nextIdProperty() {
+        return nextId;
+    }
+
+    public TestCaseStatusEnum getStatus() {
         return status.get();
     }
 
-    public ObjectProperty<TestResultEnum> statusProperty() {
+    public ObjectProperty<TestCaseStatusEnum> statusProperty() {
         return status;
-    }
-
-    public void setStatus(TestResultEnum status) {
-        this.status.set(status);
-    }
-
-    public TestImageVO getImageVO() {
-        return imageVO.get();
-    }
-
-    public ObjectProperty<TestImageVO> imageVOProperty() {
-        return imageVO;
-    }
-
-    public void setImageVO(TestImageVO imageVO) {
-        this.imageVO.set(imageVO);
-    }
-
-    public TestTextVO getTextVO() {
-        return textVO.get();
-    }
-
-    public ObjectProperty<TestTextVO> textVOProperty() {
-        return textVO;
-    }
-
-    public void setTextVO(TestTextVO textVO) {
-        this.textVO.set(textVO);
     }
 }

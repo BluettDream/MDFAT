@@ -6,16 +6,19 @@
 
     <resultMap id="BaseResultMap" type="org.bluett.entity.TestTextDO">
             <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="caseId" column="case_id" jdbcType="INTEGER"/>
             <result property="text" column="text" jdbcType="VARCHAR"/>
-            <result property="confidence" column="confidence" jdbcType="REAL"/>
-            <result property="point" column="point" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="confidence" column="confidence" jdbcType="DECIMAL"/>
+            <result property="x" column="x" jdbcType="INTEGER"/>
+            <result property="y" column="y" jdbcType="INTEGER"/>
+            <result property="updateDt" column="update_dt" jdbcType="TIMESTAMP"/>
+            <result property="createDt" column="create_dt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,text,confidence,
-        point,update_time,create_time
+        id,case_id,text,
+        confidence,x,y,
+        update_dt,create_dt
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -24,56 +27,79 @@
         from test_text
         where  id = #{id,jdbcType=INTEGER} 
     </select>
+    <select id="selectByCaseId" resultType="org.bluett.entity.TestTextDO">
+        select
+        <include refid="Base_Column_List" />
+        from test_text
+        where case_id = #{caseId,jdbcType=INTEGER}
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from test_text
         where  id = #{id,jdbcType=INTEGER} 
     </delete>
+    <delete id="deleteByCaseIdList">
+        delete from test_text
+        where case_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestTextDO" useGeneratedKeys="true">
         insert into test_text
-        ( id,text,confidence
-        ,point,update_time,create_time
-        )
-        values (#{id,jdbcType=INTEGER},#{text,jdbcType=VARCHAR},#{confidence,jdbcType=REAL}
-        ,#{point,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}
-        )
+        ( id,case_id,text
+        ,confidence,x,y
+        ,update_dt,create_dt)
+        values (#{id,jdbcType=INTEGER},#{caseId,jdbcType=INTEGER},#{text,jdbcType=VARCHAR}
+        ,#{confidence,jdbcType=DECIMAL},#{x,jdbcType=INTEGER},#{y,jdbcType=INTEGER}
+        ,#{updateDt,jdbcType=TIMESTAMP},#{createDt,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.bluett.entity.TestTextDO" useGeneratedKeys="true">
         insert into test_text
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
+                <if test="caseId != null">case_id,</if>
                 <if test="text != null">text,</if>
                 <if test="confidence != null">confidence,</if>
-                <if test="point != null">point,</if>
-                <if test="updateTime != null">update_time,</if>
-                <if test="createTime != null">create_time,</if>
+                <if test="x != null">x,</if>
+                <if test="y != null">y,</if>
+                <if test="updateDt != null">update_dt,</if>
+                <if test="createDt != null">create_dt,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id,jdbcType=INTEGER},</if>
+                <if test="caseId != null">#{caseId,jdbcType=INTEGER},</if>
                 <if test="text != null">#{text,jdbcType=VARCHAR},</if>
-                <if test="confidence != null">#{confidence,jdbcType=REAL},</if>
-                <if test="point != null">#{point,jdbcType=VARCHAR},</if>
-                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
-                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="confidence != null">#{confidence,jdbcType=DECIMAL},</if>
+                <if test="x != null">#{x,jdbcType=INTEGER},</if>
+                <if test="y != null">#{y,jdbcType=INTEGER},</if>
+                <if test="updateDt != null">#{updateDt,jdbcType=TIMESTAMP},</if>
+                <if test="createDt != null">#{createDt,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="org.bluett.entity.TestTextDO">
         update test_text
         <set>
+                <if test="caseId != null">
+                    case_id = #{caseId,jdbcType=INTEGER},
+                </if>
                 <if test="text != null">
                     text = #{text,jdbcType=VARCHAR},
                 </if>
                 <if test="confidence != null">
-                    confidence = #{confidence,jdbcType=REAL},
+                    confidence = #{confidence,jdbcType=DECIMAL},
                 </if>
-                <if test="point != null">
-                    point = #{point,jdbcType=VARCHAR},
+                <if test="x != null">
+                    x = #{x,jdbcType=INTEGER},
                 </if>
-                <if test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                <if test="y != null">
+                    y = #{y,jdbcType=INTEGER},
                 </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                <if test="updateDt != null">
+                    update_dt = #{updateDt,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createDt != null">
+                    create_dt = #{createDt,jdbcType=TIMESTAMP},
                 </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
@@ -81,11 +107,13 @@
     <update id="updateByPrimaryKey" parameterType="org.bluett.entity.TestTextDO">
         update test_text
         set 
+            case_id =  #{caseId,jdbcType=INTEGER},
             text =  #{text,jdbcType=VARCHAR},
-            confidence =  #{confidence,jdbcType=REAL},
-            point =  #{point,jdbcType=VARCHAR},
-            update_time =  #{updateTime,jdbcType=TIMESTAMP},
-            create_time =  #{createTime,jdbcType=TIMESTAMP}
+            confidence =  #{confidence,jdbcType=DECIMAL},
+            x =  #{x,jdbcType=INTEGER},
+            y =  #{y,jdbcType=INTEGER},
+            update_dt =  #{updateDt,jdbcType=TIMESTAMP},
+            create_dt =  #{createDt,jdbcType=TIMESTAMP}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>
