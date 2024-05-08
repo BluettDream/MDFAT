@@ -15,7 +15,7 @@ import org.bluett.entity.Page;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
-import org.bluett.service.ImageProcessService;
+import org.bluett.core.recognizer.ImageRecognizer;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
@@ -52,7 +52,7 @@ public class IndexController {
     private final TestSuiteService suiteService = new TestSuiteService();
     private final TestCaseService caseService = new TestCaseService();
     private final ThreadPoolExecutor suiteThreadPool = ThreadPoolConfig.TEST_SUITE_THREAD_POOL;
-    private final ImageProcessService imageProcessService = new ImageProcessService();
+    private final ImageRecognizer imageRecognizer = new ImageRecognizer();
     private TestSuiteVO currentSuiteVO;
     private TestCaseVO currentCaseVO;
 
@@ -98,7 +98,7 @@ public class IndexController {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
         UIHelper.minimizeMainWindow();
         CompletableFuture.supplyAsync(new TestSuiteExecutor(testCaseVOLV.getItems()), suiteThreadPool)
-                .orTimeout(currentSuiteVO.getTimeout(), TimeUnit.SECONDS)
+                .orTimeout(currentSuiteVO.getRunTime() + currentSuiteVO.getTimeout(), TimeUnit.SECONDS)
                 .exceptionallyAsync(throwable -> {
                     log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
                     UIBuilder.showErrorAlert("测试集执行失败", 0.8);
@@ -110,7 +110,9 @@ public class IndexController {
                     if (!ret) {
                         log.error("测试集执行失败");
                         UIBuilder.showErrorAlert("测试集执行失败", 0.8);
-                    } else UIBuilder.showInfoAlert("测试集执行成功", 0.8);
+                    } else {
+                        UIBuilder.showInfoAlert("测试集执行成功", 0.8);
+                    }
                     UIHelper.showMainWindow();
                     UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
                 }, Platform::runLater);
@@ -145,7 +147,7 @@ public class IndexController {
 
     @FXML
     void deleteCaseBtnClick() {
-        if(Objects.isNull(currentCaseVO)) {
+        if (Objects.isNull(currentCaseVO)) {
             return;
         }
         if (!caseService.delete(currentCaseVO.getId())) {

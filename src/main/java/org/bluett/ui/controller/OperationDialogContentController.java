@@ -77,6 +77,7 @@ public class OperationDialogContentController {
     @FXML
     void addOperationBtnClick() {
         currentOperationVO.caseIdProperty().set(caseId);
+        currentOperationVO.idProperty().set(-1L);
         if (!operationService.save(currentOperationVO)) {
             UIBuilder.showErrorAlert("添加操作失败", 0.8);
             return;

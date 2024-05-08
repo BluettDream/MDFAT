@@ -1,6 +1,6 @@
-package org.bluett.core.operation.impl;
+package org.bluett.core.operator.impl;
 
-import org.bluett.core.operation.AutomaticOperation;
+import org.bluett.core.operator.AutomaticOperator;
 import org.bluett.entity.BaseConstants;
 import org.bluett.entity.SettingDO;
 import org.bluett.entity.enums.SettingKeyEnum;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AdbAutoMaticOperation implements AutomaticOperation {
+public class AdbAutoMaticOperator implements AutomaticOperator {
     public static final String SCREEN_CAPTURE_PNG = "screenCapture.png";
     public static final String SDCARD_SCREEN_CAPTURE_PNG = "/sdcard/" + SCREEN_CAPTURE_PNG;
     private final Map<SettingKeyEnum, SettingDO> settingsMap = new SettingService().getSettingMap();
     private final CommandService commandService = new CommandService();
     private final List<String> adbCommand = new ArrayList<>(List.of("adb", "-s"));
 
-    public AdbAutoMaticOperation() {
+    public AdbAutoMaticOperator() {
         adbCommand.add(settingsMap.get(SettingKeyEnum.ADB_DEVICE).getValue());
     }
 

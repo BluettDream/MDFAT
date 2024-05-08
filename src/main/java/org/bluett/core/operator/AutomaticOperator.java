@@ -1,4 +1,4 @@
-package org.bluett.core.operation;
+package org.bluett.core.operator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 /**
  * 自动化引擎, 用于模拟点击、滑动、截图等操作
  */
-public interface AutomaticOperation {
+public interface AutomaticOperator {
 
     /**
      * 点击指定位置

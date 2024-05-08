@@ -1,29 +1,24 @@
-package org.bluett.service;
+package org.bluett.core.recognizer;
 
 import com.dtflys.forest.Forest;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bluett.entity.dto.ImageProcessDTO;
-import org.bluett.client.ImageProcessClient;
+import org.bluett.client.ImageRecongnizeClient;
+import org.bluett.entity.dto.ImageRecognitionReq;
+import org.bluett.entity.dto.RecognitionResp;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Log4j2
-public class ImageProcessService {
+public class ImageRecognizer {
+    ImageRecongnizeClient client = Forest.client(ImageRecongnizeClient.class);
 
-    public ImageProcessDTO getMatchLocation(String matchImagePath, BufferedImage templateImage, double threshold) {
-        ImageProcessClient client = Forest.client(ImageProcessClient.class);
-        Map<String, byte[]> byteMap = new HashMap<>();
-        byteMap.put("matchImage.png", imageToByteArray(matchImagePath));
-        byteMap.put("templateImage.png", bufferedImageToByteArray(templateImage));
-        return client.matchPoints(List.of(matchImagePath)).getResult();
+    public RecognitionResp recongnize(ImageRecognitionReq req) {
+        return client.recongnize(req).getResult();
     }
 
     private byte[] imageToByteArray(String imagePath) {

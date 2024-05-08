@@ -1,4 +1,4 @@
-package org.bluett.core.operation;
+package org.bluett.core.operator;
 
 import com.github.joonasvali.naturalmouse.api.MouseMotionFactory;
 import com.github.joonasvali.naturalmouse.util.FactoryTemplates;
@@ -7,7 +7,7 @@ import org.bluett.entity.enums.MouseMoveTypeEnum;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class PCAutomaticOperation implements AutomaticOperation {
+public abstract class PCAutomaticOperator implements AutomaticOperator {
 
     public static MouseMoveTypeEnum MOUSE_MOVE_TYPE = MouseMoveTypeEnum.PROFESSIONAL;
 

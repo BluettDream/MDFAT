@@ -1,12 +1,12 @@
-package org.bluett.core.operation.impl;
+package org.bluett.core.operator.impl;
 
-import org.bluett.core.operation.PCAutomaticOperation;
+import org.bluett.core.operator.PCAutomaticOperator;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 
-public class PCAutoMaticOperationImpl extends PCAutomaticOperation {
+public class PCAutoMaticOperatorImpl extends PCAutomaticOperator {
     private static final Robot ROBOT;
     static {
         try {
