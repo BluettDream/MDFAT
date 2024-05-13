@@ -18,6 +18,8 @@ public class TextRecognitionReq implements Serializable {
 
     private String text;
 
+    private String captureLink;
+
     private Double confidence;
 
     private Integer x;

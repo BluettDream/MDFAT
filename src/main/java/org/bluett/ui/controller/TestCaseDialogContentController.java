@@ -59,7 +59,7 @@ public class TestCaseDialogContentController {
             }
         });
         statusCB.getItems().addAll(TestCaseStatusEnum.values());
-        statusCB.getSelectionModel().select(TestCaseStatusEnum.NORMAL);
+        statusCB.getSelectionModel().select(testCaseVO.getStatus());
         List<TestCaseVO> caseVOList = caseService.selectBySuiteId(testCaseVO.getSuiteId()).stream().filter(testCase -> testCase.getId() != testCaseVO.getId()).toList();
         nextTestCaseCB.getItems().addAll(caseVOList);
         nextTestCaseCB.setConverter(new StringConverter<>() {

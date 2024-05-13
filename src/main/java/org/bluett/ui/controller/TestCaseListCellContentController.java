@@ -66,6 +66,7 @@ public class TestCaseListCellContentController {
     void addOrUpdateTestImageClick() {
         new TestImageDialog("", currentTestImageVO).showAndWait().ifPresent(testImageVO -> {
             testImageVO.caseIdProperty().set(testCaseVO.getId());
+            testImageVO.idProperty().set(currentTestImageVO.getId());
             if (!imageService.update(testImageVO)) {
                 log.error("update testImage error");
                 UIBuilder.showErrorAlert("编辑测试图像异常", 0.8);
@@ -80,6 +81,7 @@ public class TestCaseListCellContentController {
     void addOrUpdateTestTextClick() {
         new TestTextDialog("", currentTestTextVO).showAndWait().ifPresent(testTextVO -> {
             testTextVO.caseIdProperty().set(testCaseVO.getId());
+            testTextVO.idProperty().set(currentTestTextVO.getId());
             if (!textService.update(testTextVO)) {
                 log.error("update testText error");
                 UIBuilder.showErrorAlert("编辑测试文本异常", 0.8);

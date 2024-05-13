@@ -5,18 +5,25 @@ import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.bluett.convertor.OperationVOConvertor;
+import org.bluett.core.operator.AutomaticOperator;
+import org.bluett.core.operator.impl.PCAutoMaticOperatorImpl;
 import org.bluett.dao.InputOperationDAO;
 import org.bluett.dao.OperationDAO;
 import org.bluett.entity.InputOperationDO;
 import org.bluett.entity.OperationDO;
 import org.bluett.entity.Page;
+import org.bluett.entity.dto.RecognitionResp;
+import org.bluett.entity.dto.TestCaseDTO;
 import org.bluett.entity.enums.OperationEnum;
 import org.bluett.entity.vo.OperationVO;
 import org.bluett.helper.MybatisHelper;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -93,5 +100,46 @@ public class OperationService {
             log.error("select operation by caseId error", e);
         }
         return FXCollections.observableArrayList();
+    }
+
+    public void execute(TestCaseDTO testCaseDTO) {
+        final AutomaticOperator automaticOperator = new PCAutoMaticOperatorImpl();
+        ObservableList<OperationVO> operationVOList = selectBatchByCaseId(testCaseDTO.getId());
+        RecognitionResp imageDTOResp = testCaseDTO.getTestImageDTO().getResp();
+        RecognitionResp textDTOResp = testCaseDTO.getTestTextDTO().getResp();
+        operationVOList.forEach(operationVO -> {
+            Point point = new Point();
+            if (Objects.nonNull(imageDTOResp) && imageDTOResp.getSuccess()) {
+                point.setLocation(imageDTOResp.getCoordinate().get(0), imageDTOResp.getCoordinate().get(1));
+            }
+            if (Objects.nonNull(textDTOResp) && textDTOResp.getSuccess()) {
+                point.setLocation(textDTOResp.getCoordinate().get(0), textDTOResp.getCoordinate().get(1));
+            }
+            switch (operationVO.getOperate()) {
+                case CLICK -> {
+                    try {
+                        automaticOperator.click(point);
+                    } catch (Exception e) {
+                        log.error("点击异常:", ExceptionUtils.getRootCause(e));
+                    }
+                }
+                case INPUT -> {
+                    try {
+                        automaticOperator.input(operationVO.getValue());
+                    } catch (Exception e) {
+                        log.error("输入异常:", ExceptionUtils.getRootCause(e));
+                    }
+                }
+                case CLICK_RANDOM -> {
+                    try {
+                        automaticOperator.multipleClick(point, Math.toIntExact(Math.round(Math.random() * 5)));
+                    } catch (Exception e) {
+                        log.error("随机多击异常:", ExceptionUtils.getRootCause(e));
+                    }
+                }
+                default -> {
+                }
+            }
+        });
     }
 }

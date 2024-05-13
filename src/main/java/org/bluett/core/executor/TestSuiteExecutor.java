@@ -3,6 +3,7 @@ package org.bluett.core.executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.bluett.config.ThreadPoolConfig;
@@ -17,9 +18,12 @@ import org.bluett.entity.dto.TestCaseDTO;
 import org.bluett.entity.dto.TestImageDTO;
 import org.bluett.entity.dto.TestTextDTO;
 import org.bluett.entity.dto.TextRecognitionReq;
+import org.bluett.entity.enums.TestCaseStatusEnum;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestImageVO;
 import org.bluett.entity.vo.TestTextVO;
+import org.bluett.service.OperationService;
+import org.bluett.service.TestCaseService;
 import org.bluett.service.TestImageService;
 import org.bluett.service.TestTextService;
 
@@ -41,43 +45,103 @@ public class TestSuiteExecutor implements Supplier<Boolean> {
     private final static String PNG = "png";
     private final ThreadPoolExecutor caseThreadPool = ThreadPoolConfig.TEST_CASE_THREAD_POOL;
     private final List<TestCaseVO> testCaseVOList;
+    private final Integer timeout;
 
     private final ImageRecognizer imageRecognizer = new ImageRecognizer();
     private final TextRecognizer textRecognizer = new TextRecognizer();
     private final TestImageService imageService = new TestImageService();
     private final TestTextService textService = new TestTextService();
     private final AutomaticOperator automaticOperator = new PCAutoMaticOperatorImpl();
+    private final OperationService operationService = new OperationService();
+    private final TestCaseService caseService = new TestCaseService();
 
     @Override
     public Boolean get() {
         List<TestCaseDTO> caseDtoList = buildTestCaseDTOList();
         StopWatch stopwatch = StopWatch.createStarted();
-        List<CompletableFuture<TestCaseDTO>> caseDTOFutureList = caseDtoList.stream()
-                .map(this::buildTestCaseDTOCompletableFuture)
-                .toList();
-        CompletableFuture.allOf(caseDTOFutureList.toArray(new CompletableFuture[0]))
-                .orTimeout(caseDtoList.getFirst().getRunTime() + caseDtoList.getFirst().getTimeout(), TimeUnit.SECONDS)
-                .join();
-        // TODO: 过滤掉失败的用例，并且排序获取优先级最高的用例，执行对应测试用例的操作
-        // TODO: 判断是否有下一个测试用例，如果有则发送testCaseExecutor事件，否则发送testSuiteExecutor事件
-        return true;
+        while (!checkIsTimeout(stopwatch) && !Thread.currentThread().isInterrupted()) {
+            log.debug("开始执行测试用例, 当前用时: {}s", stopwatch.getTime(TimeUnit.SECONDS));
+            List<CompletableFuture<TestCaseDTO>> caseDTOFutureList = caseDtoList.stream()
+                    .map(this::buildTestCaseDTOCompletableFuture)
+                    .toList();
+            Integer maxTotalTimeout = getMaxTestCaseTimeout(caseDtoList);
+            try {
+                CompletableFuture.allOf(caseDTOFutureList.toArray(new CompletableFuture[0]))
+                        .orTimeout(maxTotalTimeout, TimeUnit.SECONDS)
+                        .join();
+            } catch (Exception e) {
+                log.error("测试用例执行超时", e);
+            }
+            TestCaseDTO resultTestCase = getRecognizeAndMaxPriorityTestCase(caseDTOFutureList);
+            if (Objects.isNull(resultTestCase)) {
+                continue;
+            }
+            operationService.execute(resultTestCase);
+            // 结束测试用例已经成功,则跳出循环
+            if (caseDTOFutureList.stream()
+                    .anyMatch(testCaseDTOCompletableFuture -> {
+                        TestCaseDTO caseDTO = testCaseDTOCompletableFuture.join();
+                        return caseDTO.getSuccess() && caseDTO.getStatus().equals(TestCaseStatusEnum.END.name());
+                    })) {
+                stopwatch.stop();
+                return true;
+            }
+            Long nextId = resultTestCase.getNextId();
+            while (nextId != -1L) {
+                TestCaseVO testCaseVO = caseService.selectById(nextId);
+                if (Objects.isNull(testCaseVO)) {
+                    break;
+                }
+                Boolean result = new TestCaseExecutor(testCaseVO).get();
+                if (!result) {
+                    stopwatch.stop();
+                    return false;
+                }
+                nextId = testCaseVO.getNextId();
+            }
+        }
+        stopwatch.stop();
+        return false;
+    }
+
+    private static TestCaseDTO getRecognizeAndMaxPriorityTestCase(List<CompletableFuture<TestCaseDTO>> caseDTOFutureList) {
+        return caseDTOFutureList.stream()
+                .map(CompletableFuture::join)
+                .filter(TestCaseDTO::getSuccess)
+                .min((o1, o2) -> o2.getPriority() - o1.getPriority())
+                .orElse(null);
+    }
+
+    private Integer getMaxTestCaseTimeout(List<TestCaseDTO> caseDtoList) {
+        return caseDtoList.stream()
+                .map(testCaseDTO -> testCaseDTO.getRunTime() + testCaseDTO.getTimeout())
+                .max(Integer::compareTo)
+                .orElse(0);
+    }
+
+    private boolean checkIsTimeout(StopWatch stopwatch) {
+        return stopwatch.getTime(TimeUnit.SECONDS) > timeout;
     }
 
     private CompletableFuture<TestCaseDTO> buildTestCaseDTOCompletableFuture(TestCaseDTO dto) {
         return CompletableFuture.supplyAsync(() -> {
             boolean success = false;
-            if (Objects.nonNull(dto.getTestImageDTO())) {
+            if (Objects.nonNull(dto.getTestImageDTO()) && StringUtils.isNotBlank(dto.getTestImageDTO().getLink())) {
                 TestImageDTO imageDTO = dto.getTestImageDTO();
                 captureScreenAndSaveImage();
-                RecognitionResp resp = imageRecognizer.recongnize(buildImageRecognitionReq(imageDTO));
-                imageDTO.setResp(resp);
-                success = resp.getSuccess();
+                RecognitionResp resp = imageRecognizer.recognize(buildImageRecognitionReq(imageDTO));
+                if(Objects.nonNull(resp)){
+                    imageDTO.setResp(resp);
+                    success = resp.getSuccess();
+                }
             }
-            if (Objects.nonNull(dto.getTestTextDTO())) {
+            if (Objects.nonNull(dto.getTestTextDTO()) && StringUtils.isNotBlank(dto.getTestTextDTO().getText())) {
                 TestTextDTO textDTO = dto.getTestTextDTO();
-                RecognitionResp resp = textRecognizer.recongnize(buildTextRecognitionReq(textDTO));
-                textDTO.setResp(resp);
-                success = success || resp.getSuccess();
+                RecognitionResp resp = textRecognizer.recognize(buildTextRecognitionReq(textDTO));
+                if (Objects.nonNull(resp)) {
+                    textDTO.setResp(resp);
+                    success = success || resp.getSuccess();
+                }
             }
             dto.setSuccess(success);
             return dto;
@@ -88,6 +152,7 @@ public class TestSuiteExecutor implements Supplier<Boolean> {
         return TextRecognitionReq.builder()
                 .text(textDTO.getText())
                 .confidence(textDTO.getConfidence())
+                .captureLink(SCREEN_CAPTURE_PATH.toAbsolutePath().toString())
                 .x(textDTO.getX())
                 .y(textDTO.getY())
                 .build();

@@ -7,15 +7,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bluett.builder.UIBuilder;
 import org.bluett.config.ThreadPoolConfig;
 import org.bluett.core.executor.TestSuiteExecutor;
+import org.bluett.core.recognizer.ImageRecognizer;
 import org.bluett.entity.Page;
 import org.bluett.entity.vo.TestCaseVO;
 import org.bluett.entity.vo.TestSuiteVO;
 import org.bluett.helper.UIHelper;
-import org.bluett.core.recognizer.ImageRecognizer;
 import org.bluett.service.TestCaseService;
 import org.bluett.service.TestSuiteService;
 import org.bluett.ui.TestCaseDialog;
@@ -26,7 +25,6 @@ import org.bluett.ui.TestSuiteListCell;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 @Log4j2
 public class IndexController {
@@ -91,27 +89,20 @@ public class IndexController {
 
     @FXML
     void stopTestSuiteBtnClick() {
+        UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
     }
 
     @FXML
     void runTestSuiteBtnClick() {
         UIHelper.switchNodeVisible(stopTestSuiteBtn, runTestSuiteBtn);
         UIHelper.minimizeMainWindow();
-        CompletableFuture.supplyAsync(new TestSuiteExecutor(testCaseVOLV.getItems()), suiteThreadPool)
-                .orTimeout(currentSuiteVO.getRunTime() + currentSuiteVO.getTimeout(), TimeUnit.SECONDS)
-                .exceptionallyAsync(throwable -> {
-                    log.error("测试集执行失败:", ExceptionUtils.getRootCause(throwable));
-                    UIBuilder.showErrorAlert("测试集执行失败", 0.8);
-                    UIHelper.showMainWindow();
-                    UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
-                    return false;
-                }, Platform::runLater)
+        CompletableFuture.supplyAsync(new TestSuiteExecutor(testCaseVOLV.getItems(), currentSuiteVO.getRunTime() + currentSuiteVO.getTimeout()), suiteThreadPool)
                 .thenAcceptAsync(ret -> {
                     if (!ret) {
                         log.error("测试集执行失败");
-                        UIBuilder.showErrorAlert("测试集执行失败", 0.8);
+                        UIBuilder.showErrorAlert("测试集执行失败", 1.5);
                     } else {
-                        UIBuilder.showInfoAlert("测试集执行成功", 0.8);
+                        UIBuilder.showInfoAlert("测试集执行成功", 2);
                     }
                     UIHelper.showMainWindow();
                     UIHelper.switchNodeVisible(runTestSuiteBtn, stopTestSuiteBtn);
@@ -128,6 +119,7 @@ public class IndexController {
                 return;
             }
             testCaseVOLV.getItems().add(testCaseVO);
+            testCaseVOLV.getSelectionModel().selectLast();
             UIBuilder.showInfoAlert("保存测试用例成功", 0.8);
         });
     }
@@ -141,6 +133,7 @@ public class IndexController {
                 return;
             }
             testSuiteVOLV.getItems().add(testSuiteVO);
+            testSuiteVOLV.getSelectionModel().selectLast();
             UIBuilder.showInfoAlert("保存测试集成功", 0.8);
         });
     }
@@ -156,6 +149,7 @@ public class IndexController {
             return;
         }
         testCaseVOLV.getItems().removeAll(currentCaseVO);
+        testCaseVOLV.getSelectionModel().selectFirst();
         UIBuilder.showInfoAlert("删除测试用例成功", 0.8);
     }
 
@@ -170,6 +164,7 @@ public class IndexController {
             return;
         }
         testSuiteVOLV.getItems().removeAll(currentSuiteVO);
+        testSuiteVOLV.getSelectionModel().selectFirst();
         UIBuilder.showInfoAlert("删除测试集成功", 0.8);
     }
 
@@ -186,6 +181,7 @@ public class IndexController {
             }
             UIBuilder.showInfoAlert("更新测试用例成功", 0.8);
             testCaseVOLV.getItems().set(testCaseVOLV.getSelectionModel().getSelectedIndex(), testCaseVO);
+            testCaseVOLV.getSelectionModel().select(testCaseVO);
         });
     }
 
@@ -199,6 +195,7 @@ public class IndexController {
             }
             UIBuilder.showInfoAlert("更新测试集成功", 0.8);
             testSuiteVOLV.getItems().set(testSuiteVOLV.getSelectionModel().getSelectedIndex(), testSuiteVO);
+            testSuiteVOLV.getSelectionModel().selectFirst();
         });
     }
 }

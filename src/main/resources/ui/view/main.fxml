@@ -8,7 +8,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <fx:include maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" source="header.fxml" VBox.vgrow="ALWAYS" />
+      <!--<fx:include maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" source="header.fxml" VBox.vgrow="ALWAYS" />-->
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="25.0" tabMaxWidth="50.0" tabMinHeight="25.0" tabMinWidth="50.0" VBox.vgrow="ALWAYS">
         <tabs>
           <Tab style="-fx-font-size: 18;" text="%home">
